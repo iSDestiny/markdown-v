@@ -1,8 +1,5 @@
 import AceEditor from 'react-ace';
-// import 'ace-builds/src-noconflict/theme-monokai';
-import '../ace-themes/palenight';
-import 'ace-builds/src-noconflict/theme-chaos';
-import 'ace-builds/src-noconflict/theme-dracula';
+import './palenight';
 import 'ace-builds/src-noconflict/keybinding-vim';
 import 'ace-builds/src-noconflict/keybinding-vscode';
 import 'ace-builds/src-noconflict/mode-markdown';
@@ -16,7 +13,7 @@ interface AceProps {
     width: string | number;
 }
 
-const AceReact = (props: AceProps) => {
+const AceReact = ({ theme, onChange, value, width }: AceProps) => {
     Vim.map('jj', '<Esc>', 'insert');
     Vim.map('jk', '<Esc>', 'insert');
     Vim.map('kj', '<Esc>', 'insert');
@@ -27,19 +24,19 @@ const AceReact = (props: AceProps) => {
     return (
         <AceEditor
             mode="markdown"
-            theme={props.theme}
-            onChange={props.onChange}
-            name="UNIQUE_ID_OF_DIV"
+            theme={theme}
+            onChange={onChange}
+            name="ace-editor"
             editorProps={{
                 $blockScrolling: true
             }}
             showPrintMargin={false}
             wrapEnabled={true}
             fontSize={16}
-            value={props.value}
+            value={value}
             keyboardHandler="vim"
             height="100%"
-            width={'' + props.width}
+            width={'' + width}
             setOptions={{
                 wrap: true
             }}

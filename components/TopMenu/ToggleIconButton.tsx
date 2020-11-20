@@ -6,6 +6,9 @@ import classes from './TopMenu.module.scss';
 interface toggleProps {
     children: JSX.Element;
     value: string;
+    toggle: boolean;
+    setToggle: React.Dispatch<React.SetStateAction<boolean>>;
+    disabled?: boolean;
     selectedTitle?: string;
     deselectedTitle?: string;
 }
@@ -14,10 +17,11 @@ const ToggleIconButton = ({
     value,
     selectedTitle,
     deselectedTitle,
-    children
+    children,
+    toggle,
+    setToggle,
+    disabled
 }: toggleProps) => {
-    const [toggle, setToggle] = useState(false);
-
     return (
         <Tooltip title={toggle ? deselectedTitle : selectedTitle}>
             <ToggleButton
@@ -25,9 +29,11 @@ const ToggleIconButton = ({
                 selected={toggle}
                 classes={{
                     root: classes['toggle-button'],
-                    selected: classes['toggle-button-selected']
+                    selected: classes['toggle-button-selected'],
+                    disabled: classes['toggle-button-disabled']
                 }}
                 onChange={() => setToggle((prev) => !prev)}
+                disabled={disabled}
             >
                 {children}
             </ToggleButton>

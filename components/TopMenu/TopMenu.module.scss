@@ -1,5 +1,6 @@
 .top-menu {
     display: flex;
+    flex-shrink: 1;
     padding: 0.3rem 0.6rem;
     background-color: #363845;
     border-bottom: 1px solid #202331;
@@ -9,6 +10,7 @@
 
 .toggle-button {
     color: #d6d7d9 !important;
+    flex-shrink: 1;
     margin: 0 3px !important;
     border: 1px solid rgba(0, 0, 0, 0.12) !important;
 }
@@ -16,4 +18,10 @@
 .toggle-button-selected {
     color: #7cbfaf !important;
     background-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+.toggle-button-disabled {
+    color: rgba(214, 215, 217, 0.12) !important;
+    cursor: default;
+    pointer-events: none;
 }

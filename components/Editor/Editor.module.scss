@@ -1,0 +1,14 @@
+.ace-editor {
+    height: 100%;
+    width: 100%;
+    padding-top: 1rem;
+    min-width: 200px;
+}
+
+.preview-on {
+    max-width: calc(100% - 200px);
+}
+
+.preview-off {
+    max-width: 100%;
+}
