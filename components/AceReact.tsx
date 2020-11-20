@@ -13,6 +13,7 @@ interface AceProps {
     theme: string;
     onChange: (val: string) => void;
     value: string;
+    width: string | number;
 }
 
 const AceReact = (props: AceProps) => {
@@ -32,11 +33,13 @@ const AceReact = (props: AceProps) => {
             editorProps={{
                 $blockScrolling: true
             }}
+            showPrintMargin={false}
+            wrapEnabled={true}
             fontSize={16}
             value={props.value}
             keyboardHandler="vim"
             height="100%"
-            width="100%"
+            width={'' + props.width}
             setOptions={{
                 wrap: true
             }}

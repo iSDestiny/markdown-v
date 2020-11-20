@@ -9,6 +9,7 @@
     height: 100%;
     width: 100%;
     padding-top: 1rem;
+    min-width: 200px;
 }
 
 .editor-container {
@@ -39,6 +40,7 @@
 .preview-container {
     height: 100%;
     padding-top: 1rem;
+    min-width: 200px;
     width: 100%;
     border-left: 1px solid #202331;
     overflow-y: auto;
