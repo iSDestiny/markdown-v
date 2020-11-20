@@ -1,30 +1,47 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MarkdownV (in-progress, mvp not available)
 
-## Getting Started
+I usually take all my notes using the code editor, Visual Studio Code, and store it all on github.
+The biggest reason why I take my notes this way is because of vscode's vim plugin. I prefer to do
+all of my writing with vim keybindings if it is possible and vscode's vim plugin makes that possible.
+I was looking for a project to work on in order to improve my skills and thought about the way that
+I took notes. I thought that it would be interesting to make a full stack web app of how I currently take
+notes so here I am.
 
-First, run the development server:
+I looked at several applications as references for MarkdownV. Specifically, I took vscode's material ui
+palenight theme and tried my best to replicate it with MarkdownV. I also used Notable, another markdown
+notetaking application, and Evernote, a rich text note taking application, as references for the design
+of my UI.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Markdown-based
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+Notes are written in markdown format with proper support for code blocks with syntax highlighting
 
-## Learn More
+### Vim-support
 
-To learn more about Next.js, take a look at the following resources:
+The markdown editor uses vim keybindings by default with the option to change to vscode keybindings
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Cloud-based
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+All notes will be stored on the cloud. MarkdownV uses a mongodb database that is hosted with MongoDB Atlas
 
-## Deploy on Vercel
+### Preview Screen
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+A preview screen is available as a split screen to check how your notes will look like while editing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Tech Stack
+
+### Frontend
+
+- React (Next.js)
+- Sass Modules
+- MaterialUI
+- [react-ace (built-in editor)](https://github.com/securingsincity/react-ace)
+- [react-markdown (markdown parser)](https://github.com/remarkjs/react-markdown)
+
+### Backend
+
+- Next.js api endpoints (Node.js w/ Express)
+- Mongoose (ODM)
+- MongoDB
