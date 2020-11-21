@@ -6,29 +6,30 @@ import Preview from '../components/Preview';
 import Editor from '../components/Editor';
 import AddIcon from '@material-ui/icons/Add';
 import {
-    Drawer,
+    // Drawer,
+    LinearProgress,
     IconButton,
     List,
     ListItem,
     ListItemText,
-    makeStyles,
+    // makeStyles,
     Tooltip
 } from '@material-ui/core';
 
-const useListItemStyles = makeStyles((theme) => ({
-    root: {
-        backngroundColor: 'transparent',
-        '&:hover': {
-            backgroundColor: '#292D3E'
-        }
-    },
-    selected: {
-        backgroundColor: '#292D3E'
-    }
-}));
+// const useListItemStyles = makeStyles((theme) => ({
+//     root: {
+//         backngroundColor: 'transparent',
+//         '&:hover': {
+//             backgroundColor: '#292D3E'
+//         }
+//     },
+//     selected: {
+//         backgroundColor: '#292D3E'
+//     }
+// }));
 
 export default function Home() {
-    const listItemClasses = useListItemStyles();
+    // const listItemClasses = useListItemStyles();
     const [notes, setNotes] = useState([
         { id: 1, title: 'note1', content: '' },
         { id: 2, title: 'note2', content: '' },
@@ -67,6 +68,7 @@ export default function Home() {
                 <title>Markdown Notes</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+            <LinearProgress style={{ position: 'fixed', width: '100%' }} />
             <section className={classes['side-menu']}>
                 <header>
                     <h3>All Notes</h3>
@@ -80,10 +82,6 @@ export default function Home() {
                     {notes.map((note, index) => (
                         <ListItem
                             button
-                            classes={{
-                                root: listItemClasses.root,
-                                selected: listItemClasses.selected
-                            }}
                             key={note.id}
                             selected={index === current}
                             alignItems="flex-start"
