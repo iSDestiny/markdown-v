@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Tooltip } from '@material-ui/core';
 import { ToggleButton } from '@material-ui/lab';
 import classes from './TopMenu.module.scss';
+import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 
 interface toggleProps {
     children: JSX.Element;
     value: string;
     toggle: boolean;
-    setToggle: React.Dispatch<React.SetStateAction<boolean>>;
+    setToggle: () => { payload: undefined; type: string };
     disabled?: boolean;
     selectedTitle?: string;
     deselectedTitle?: string;
@@ -32,7 +33,7 @@ const ToggleIconButton = ({
                     selected: classes['toggle-button-selected'],
                     disabled: classes['toggle-button-disabled']
                 }}
-                onChange={() => setToggle((prev) => !prev)}
+                onChange={() => setToggle()}
                 disabled={disabled}
             >
                 {children}

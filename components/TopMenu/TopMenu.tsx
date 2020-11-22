@@ -7,30 +7,31 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
 import { Button, ButtonGroup, IconButton, Tooltip } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    selectEditor,
+    toggleEdit,
+    togglePreview
+} from '../../store/slices/editorSlice';
 
 interface TopMenuProps {
-    canEdit: boolean;
-    setCanEdit: React.Dispatch<React.SetStateAction<boolean>>;
-    preview: boolean;
-    setPreview: React.Dispatch<React.SetStateAction<boolean>>;
+    // canEdit: boolean;
+    // setCanEdit: React.Dispatch<React.SetStateAction<boolean>>;
+    // preview: boolean;
+    // setPreview: React.Dispatch<React.SetStateAction<boolean>>;
     isFavorite: boolean;
     setIsFavorite: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TopMenu = (props: TopMenuProps) => {
-    const {
-        canEdit,
-        setCanEdit,
-        preview,
-        setPreview,
-        isFavorite,
-        setIsFavorite
-    } = props;
+const TopMenu = ({ isFavorite, setIsFavorite }: TopMenuProps) => {
+    const { canPreview, canEdit } = useSelector(selectEditor);
+    const dispatch = useDispatch();
+
     return (
         <div className={classes['top-menu']}>
             <ToggleIconButton
                 toggle={canEdit}
-                setToggle={setCanEdit}
+                setToggle={() => dispatch(toggleEdit())}
                 value="edit"
                 selectedTitle="Edit"
                 deselectedTitle="Stop Editing"
@@ -38,15 +39,15 @@ const TopMenu = (props: TopMenuProps) => {
                 <EditIcon fontSize="small" />
             </ToggleIconButton>
             <ToggleIconButton
-                toggle={preview}
-                setToggle={setPreview}
+                toggle={canPreview}
+                setToggle={() => dispatch(togglePreview())}
                 value="split"
                 selectedTitle="Open Preview"
                 deselectedTitle="Close Preview"
             >
                 <VerticalSplitIcon fontSize="small" />
             </ToggleIconButton>
-            <ToggleIconButton
+            {/* <ToggleIconButton
                 toggle={isFavorite}
                 setToggle={setIsFavorite}
                 value="favorite"
@@ -54,7 +55,7 @@ const TopMenu = (props: TopMenuProps) => {
                 deselectedTitle="Unfavorite"
             >
                 <StarIcon fontSize="small" />
-            </ToggleIconButton>
+            </ToggleIconButton> */}
             <ButtonGroup>
                 <Tooltip title="Save">
                     <Button

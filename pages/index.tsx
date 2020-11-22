@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useDispatch, useSelector } from 'react-redux';
 import React, { useState } from 'react';
 import classes from '../styles/Home.module.scss';
 import TopMenu from '../components/TopMenu';
@@ -15,6 +16,7 @@ import {
     // makeStyles,
     Tooltip
 } from '@material-ui/core';
+import { selectEditor, setCurrent } from '../store/slices/editorSlice';
 
 // const useListItemStyles = makeStyles((theme) => ({
 //     root: {
@@ -45,9 +47,8 @@ export default function Home() {
         { id: 12, title: 'note12', content: '' },
         { id: 13, title: 'note13', content: '' }
     ]);
-    const [current, setCurrent] = useState(0);
-    const [canEdit, setCanEdit] = useState(false);
-    const [preview, setPreview] = useState(false);
+    const { current, canEdit, canPreview } = useSelector(selectEditor);
+    const dispatch = useDispatch();
     const [isFavorite, setIsFavorite] = useState(false);
 
     const setNoteContent = (index: number, newContent: string) => {
@@ -59,7 +60,7 @@ export default function Home() {
     };
 
     const noteSelectionHandler = (index: number) => {
-        setCurrent(index);
+        dispatch(setCurrent({ current: index }));
     };
 
     return (
@@ -94,25 +95,25 @@ export default function Home() {
             </section>
             <section className={classes['editor-container']}>
                 <TopMenu
-                    canEdit={canEdit}
-                    setCanEdit={setCanEdit}
-                    preview={preview}
-                    setPreview={setPreview}
+                    // canEdit={canEdit}
+                    // setCanEdit={setCanEdit}
+                    // preview={preview}
+                    // setPreview={setPreview}
                     isFavorite={isFavorite}
                     setIsFavorite={setIsFavorite}
                 />
                 <div className={classes['editor-main']}>
                     {canEdit ? (
                         <Editor
-                            current={current}
+                            // current={current}
                             value={notes[current].content}
                             setValue={setNoteContent}
-                            preview={preview}
+                            // preview={preview}
                         />
                     ) : (
                         <Preview value={notes[current].content} />
                     )}
-                    {preview && (
+                    {canPreview && (
                         <Preview value={notes[current].content} isResizable />
                     )}
                 </div>

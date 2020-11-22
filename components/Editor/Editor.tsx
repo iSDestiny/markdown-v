@@ -3,25 +3,27 @@ import dynamic from 'next/dynamic';
 import ReactResizeDetector from 'react-resize-detector';
 import classes from './Editor.module.scss';
 import classNames from 'classnames';
+import { useSelector } from 'react-redux';
+import { selectEditor } from '../../store/slices/editorSlice';
 
 const AceReact = dynamic(() => import('./AceReact'), {
     ssr: false
 });
 
 interface EditorProps {
-    current: number;
     value: string;
-    preview: boolean;
     setValue: (index: number, value: string) => void;
 }
 
-const Editor = ({ value, setValue, preview, current }: EditorProps) => {
+const Editor = ({ value, setValue }: EditorProps) => {
+    const { current, canPreview } = useSelector(selectEditor);
+
     return (
         <ReactResizeDetector handleWidth>
             {({ width, targetRef }) => (
                 <div
                     className={classNames(classes['ace-editor'], {
-                        [classes['preview-on']]: preview
+                        [classes['preview-on']]: canPreview
                     })}
                     ref={targetRef}
                 >
