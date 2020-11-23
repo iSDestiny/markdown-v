@@ -13,19 +13,18 @@ import {
     toggleEdit,
     togglePreview
 } from '../../store/slices/editorSlice';
+import { useMutateDeleteNote } from '../../hooks/noteMutationHooks';
 
 interface TopMenuProps {
-    // canEdit: boolean;
-    // setCanEdit: React.Dispatch<React.SetStateAction<boolean>>;
-    // preview: boolean;
-    // setPreview: React.Dispatch<React.SetStateAction<boolean>>;
     isFavorite: boolean;
+    notes: Note[];
     setIsFavorite: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TopMenu = ({ isFavorite, setIsFavorite }: TopMenuProps) => {
-    const { canPreview, canEdit } = useSelector(selectEditor);
+const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
+    const { canPreview, canEdit, current } = useSelector(selectEditor);
     const dispatch = useDispatch();
+    const [mutateDeleteNote, { isLoading }] = useMutateDeleteNote();
 
     return (
         <div className={classes['top-menu']}>
@@ -82,6 +81,11 @@ const TopMenu = ({ isFavorite, setIsFavorite }: TopMenuProps) => {
                             color: '#d6d7d9',
                             border: '1px solid rgba(0, 0, 0, 0.12)'
                         }}
+                        onClick={() =>
+                            notes[current]
+                                ? mutateDeleteNote(notes[current]._id)
+                                : null
+                        }
                     >
                         <DeleteIcon fontSize="small" />
                     </Button>

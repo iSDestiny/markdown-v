@@ -1,60 +1,64 @@
 import Head from 'next/head';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { useState } from 'react';
+import fetchNotes from '../utility/fetchNotes';
+import React, { useEffect, useState } from 'react';
 import classes from '../styles/Home.module.scss';
 import TopMenu from '../components/TopMenu';
 import Preview from '../components/Preview';
 import Editor from '../components/Editor';
 import AddIcon from '@material-ui/icons/Add';
 import {
-    // Drawer,
     LinearProgress,
     IconButton,
     List,
     ListItem,
     ListItemText,
-    // makeStyles,
     Tooltip
 } from '@material-ui/core';
 import { selectEditor, setCurrent } from '../store/slices/editorSlice';
+import { GetServerSideProps } from 'next';
+import { QueryCache, useQuery } from 'react-query';
+import { dehydrate } from 'react-query/hydration';
+import { ReactQueryDevtools } from 'react-query-devtools';
+import { useMutateAddNote } from '../hooks/noteMutationHooks';
 
-// const useListItemStyles = makeStyles((theme) => ({
-//     root: {
-//         backngroundColor: 'transparent',
-//         '&:hover': {
-//             backgroundColor: '#292D3E'
-//         }
-//     },
-//     selected: {
-//         backgroundColor: '#292D3E'
-//     }
-// }));
+// interface propTypes {
+//     notes: any[];
+// }
 
 export default function Home() {
-    // const listItemClasses = useListItemStyles();
-    const [notes, setNotes] = useState([
-        { id: 1, title: 'note1', content: '' },
-        { id: 2, title: 'note2', content: '' },
-        { id: 3, title: 'note3', content: '' },
-        { id: 4, title: 'note4', content: '' },
-        { id: 5, title: 'note5', content: '' },
-        { id: 6, title: 'note6', content: '' },
-        { id: 7, title: 'note7', content: '' },
-        { id: 8, title: 'note8', content: '' },
-        { id: 9, title: 'note9', content: '' },
-        { id: 10, title: 'note10', content: '' },
-        { id: 11, title: 'note11', content: '' },
-        { id: 12, title: 'note12', content: '' },
-        { id: 13, title: 'note13', content: '' }
-    ]);
+    const { data: originalNotes, isLoading: isNotesLoading } = useQuery(
+        'notes',
+        fetchNotes
+    );
+    const [modifiedNotes, setModifiedNotes]: [
+        Note[],
+        React.Dispatch<React.SetStateAction<Note[]>>
+    ] = useState(originalNotes);
+    const [mutateAddNote, { isLoading: addIsLoading }] = useMutateAddNote();
     const { current, canEdit, canPreview } = useSelector(selectEditor);
     const dispatch = useDispatch();
     const [isFavorite, setIsFavorite] = useState(false);
 
+    useEffect(() => {
+        setModifiedNotes((prev) => {
+            const toKeep = prev.filter((pNote) => pNote.isTemp);
+            const toKeepDict = {};
+            toKeep.forEach((keepNote) => {
+                toKeepDict[keepNote._id] = keepNote;
+            });
+            // const toKeepIds = new Set(toKeep.map((pNote) => pNote._id) );
+            return originalNotes.map((note: Note) =>
+                note._id in toKeepDict ? toKeepDict[note._id] : note
+            );
+        });
+    }, [originalNotes]);
+
     const setNoteContent = (index: number, newContent: string) => {
-        setNotes((prev) => {
+        setModifiedNotes((prev) => {
             const newNotes = [...prev];
             newNotes[index].content = newContent;
+            newNotes[index].isTemp = true;
             return newNotes;
         });
     };
@@ -63,61 +67,94 @@ export default function Home() {
         dispatch(setCurrent({ current: index }));
     };
 
+    const addNoteHandler = () => {
+        dispatch(setCurrent({ current: 0 }));
+        mutateAddNote();
+    };
+
     return (
-        <main className={classes.container}>
-            <Head>
-                <title>Markdown Notes</title>
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
-            <LinearProgress style={{ position: 'fixed', width: '100%' }} />
-            <section className={classes['side-menu']}>
-                <header>
-                    <h3>All Notes</h3>
-                    <Tooltip title="New Note">
-                        <IconButton color="inherit">
-                            <AddIcon />
-                        </IconButton>
-                    </Tooltip>
-                </header>
-                <List style={{ padding: 0 }}>
-                    {notes.map((note, index) => (
-                        <ListItem
-                            button
-                            key={note.id}
-                            selected={index === current}
-                            alignItems="flex-start"
-                            onClick={() => noteSelectionHandler(index)}
-                        >
-                            <ListItemText primary={note.title} />
-                        </ListItem>
-                    ))}
-                </List>
-            </section>
-            <section className={classes['editor-container']}>
-                <TopMenu
-                    // canEdit={canEdit}
-                    // setCanEdit={setCanEdit}
-                    // preview={preview}
-                    // setPreview={setPreview}
-                    isFavorite={isFavorite}
-                    setIsFavorite={setIsFavorite}
-                />
-                <div className={classes['editor-main']}>
-                    {canEdit ? (
-                        <Editor
-                            // current={current}
-                            value={notes[current].content}
-                            setValue={setNoteContent}
-                            // preview={preview}
-                        />
-                    ) : (
-                        <Preview value={notes[current].content} />
-                    )}
-                    {canPreview && (
-                        <Preview value={notes[current].content} isResizable />
-                    )}
-                </div>
-            </section>
-        </main>
+        <>
+            <main className={classes.container}>
+                <Head>
+                    <title>Markdown Notes</title>
+                    <link rel="icon" href="/favicon.ico" />
+                </Head>
+                {(isNotesLoading || addIsLoading) && (
+                    <LinearProgress
+                        style={{ position: 'fixed', width: '100%' }}
+                    />
+                )}
+                <section className={classes['side-menu']}>
+                    <header>
+                        <h3>All Notes</h3>
+                        <Tooltip title="New Note">
+                            <IconButton
+                                color="inherit"
+                                onClick={() => addNoteHandler()}
+                            >
+                                <AddIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </header>
+                    <List style={{ padding: 0 }}>
+                        {modifiedNotes.map((note: Note, index: number) => (
+                            <ListItem
+                                button
+                                key={note._id}
+                                selected={index === current}
+                                alignItems="flex-start"
+                                onClick={() => noteSelectionHandler(index)}
+                            >
+                                <ListItemText primary={note.title} />
+                            </ListItem>
+                        ))}
+                    </List>
+                </section>
+                <section className={classes['editor-container']}>
+                    <TopMenu
+                        notes={modifiedNotes}
+                        isFavorite={isFavorite}
+                        setIsFavorite={setIsFavorite}
+                    />
+                    <div className={classes['editor-main']}>
+                        {canEdit ? (
+                            <Editor
+                                value={
+                                    modifiedNotes[current]
+                                        ? modifiedNotes[current].content
+                                        : ''
+                                }
+                                setValue={setNoteContent}
+                            />
+                        ) : (
+                            <Preview
+                                value={
+                                    modifiedNotes[current]
+                                        ? modifiedNotes[current].content
+                                        : ''
+                                }
+                            />
+                        )}
+                        {canPreview && (
+                            <Preview
+                                value={
+                                    modifiedNotes[current]
+                                        ? modifiedNotes[current].content
+                                        : ''
+                                }
+                                isResizable
+                            />
+                        )}
+                    </div>
+                </section>
+            </main>
+            <ReactQueryDevtools initialIsOpen={false} />
+        </>
     );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const queryCache = new QueryCache();
+    await queryCache.prefetchQuery('notes', fetchNotes);
+    return { props: { dehydratedState: dehydrate(queryCache) } };
+};
