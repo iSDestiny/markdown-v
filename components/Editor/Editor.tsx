@@ -3,20 +3,16 @@ import dynamic from 'next/dynamic';
 import ReactResizeDetector from 'react-resize-detector';
 import classes from './Editor.module.scss';
 import classNames from 'classnames';
-import { useSelector } from 'react-redux';
-import { selectEditor } from '../../store/slices/editorSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectEditor, setNotesFromEdit } from '../../store/slices/editorSlice';
 
 const AceReact = dynamic(() => import('./AceReact'), {
     ssr: false
 });
 
-interface EditorProps {
-    value: string;
-    setValue: (index: number, value: string) => void;
-}
-
-const Editor = ({ value, setValue }: EditorProps) => {
-    const { current, canPreview } = useSelector(selectEditor);
+const Editor = () => {
+    const dispatch = useDispatch();
+    const { current, canPreview, notes } = useSelector(selectEditor);
 
     return (
         <ReactResizeDetector handleWidth>
@@ -28,11 +24,11 @@ const Editor = ({ value, setValue }: EditorProps) => {
                     ref={targetRef}
                 >
                     <AceReact
-                        value={value}
+                        value={notes[current] ? notes[current].content : ''}
                         width={width}
                         theme="palenight"
                         onChange={(newVal) => {
-                            setValue(current, newVal);
+                            dispatch(setNotesFromEdit({ content: newVal }));
                         }}
                     />
                 </div>

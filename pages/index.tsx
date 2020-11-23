@@ -15,7 +15,11 @@ import {
     ListItemText,
     Tooltip
 } from '@material-ui/core';
-import { selectEditor, setCurrent } from '../store/slices/editorSlice';
+import {
+    selectEditor,
+    setCurrent,
+    setNotesFromOriginal
+} from '../store/slices/editorSlice';
 import { GetServerSideProps } from 'next';
 import { QueryCache, useQuery } from 'react-query';
 import { dehydrate } from 'react-query/hydration';
@@ -27,40 +31,14 @@ export default function Home() {
         'notes',
         fetchNotes
     );
-    const [modifiedNotes, setModifiedNotes]: [
-        Note[],
-        React.Dispatch<React.SetStateAction<Note[]>>
-    ] = useState(originalNotes);
     const [mutateAddNote, { isLoading: addIsLoading }] = useMutateAddNote();
-    const { current, canEdit, canPreview } = useSelector(selectEditor);
+    const { current, canEdit, canPreview, notes } = useSelector(selectEditor);
     const dispatch = useDispatch();
     const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {
-        setModifiedNotes((prev) => {
-            const toKeep = prev.filter((pNote) => pNote.isTemp);
-            const toKeepDict = {};
-            toKeep.forEach((keepNote) => {
-                toKeepDict[keepNote._id] = keepNote;
-            });
-            return originalNotes.map((note: Note) =>
-                note._id in toKeepDict ? toKeepDict[note._id] : note
-            );
-        });
+        dispatch(setNotesFromOriginal({ originalNotes }));
     }, [originalNotes]);
-
-    const setNoteContent = (index: number, newContent: string) => {
-        setModifiedNotes((prev) => {
-            const newNotes = [...prev];
-            const firstLine = newContent.trim().split('\n')[0];
-            const newTitle = firstLine.replace(/[^\w\s]/gi, '');
-            console.log(newTitle);
-            newNotes[index].title = newTitle ? newTitle : 'Untitled';
-            newNotes[index].content = newContent;
-            newNotes[index].isTemp = true;
-            return newNotes;
-        });
-    };
 
     const noteSelectionHandler = (index: number) => {
         dispatch(setCurrent({ current: index }));
@@ -96,7 +74,7 @@ export default function Home() {
                         </Tooltip>
                     </header>
                     <List style={{ padding: 0 }}>
-                        {modifiedNotes.map((note: Note, index: number) => (
+                        {notes.map((note: Note, index: number) => (
                             <ListItem
                                 button
                                 key={note._id}
@@ -111,39 +89,13 @@ export default function Home() {
                 </section>
                 <section className={classes['editor-container']}>
                     <TopMenu
-                        notes={modifiedNotes}
+                        notes={notes}
                         isFavorite={isFavorite}
                         setIsFavorite={setIsFavorite}
                     />
                     <div className={classes['editor-main']}>
-                        {canEdit ? (
-                            <Editor
-                                value={
-                                    modifiedNotes[current]
-                                        ? modifiedNotes[current].content
-                                        : ''
-                                }
-                                setValue={setNoteContent}
-                            />
-                        ) : (
-                            <Preview
-                                value={
-                                    modifiedNotes[current]
-                                        ? modifiedNotes[current].content
-                                        : ''
-                                }
-                            />
-                        )}
-                        {canPreview && (
-                            <Preview
-                                value={
-                                    modifiedNotes[current]
-                                        ? modifiedNotes[current].content
-                                        : ''
-                                }
-                                isResizable
-                            />
-                        )}
+                        {canEdit ? <Editor /> : <Preview />}
+                        {canPreview && <Preview isResizable />}
                     </div>
                 </section>
             </main>

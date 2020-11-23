@@ -1,17 +1,21 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { selectEditor } from '../../store/slices/editorSlice';
 import dynamic from 'next/dynamic';
 import ReactMarkdown from 'react-markdown';
 import CodeBlock from './CodeBlock';
 import gfm from 'remark-gfm';
 import classes from './Preview.module.scss';
-const ResizePanel = dynamic(() => import('react-resize-panel'), { ssr: false });
+const ResizePanel: any = dynamic(() => import('react-resize-panel'), {
+    ssr: false
+});
 
 interface PreviewProps {
-    value: string;
     isResizable?: boolean;
 }
 
-const Preview = ({ value, isResizable }: PreviewProps) => {
+const Preview = ({ isResizable }: PreviewProps) => {
+    const { notes, current } = useSelector(selectEditor);
     const content = (
         <div className={classes['preview-container']}>
             <ReactMarkdown
@@ -19,7 +23,7 @@ const Preview = ({ value, isResizable }: PreviewProps) => {
                 renderers={{ code: CodeBlock }}
                 linkTarget="_blank"
             >
-                {value}
+                {notes[current] ? notes[current].content : ''}
             </ReactMarkdown>
         </div>
     );
