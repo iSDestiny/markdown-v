@@ -71,6 +71,6 @@ export const modifyNote = async (
 
     return res.status(200).json({
         message: `Modified note with id ${note._id} successfully`,
-        ...note
+        note
     });
 };

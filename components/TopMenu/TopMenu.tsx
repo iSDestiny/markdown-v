@@ -13,7 +13,10 @@ import {
     toggleEdit,
     togglePreview
 } from '../../store/slices/editorSlice';
-import { useMutateDeleteNote } from '../../hooks/noteMutationHooks';
+import {
+    useMutateDeleteNote,
+    useMutateModifyNote
+} from '../../hooks/noteMutationHooks';
 
 interface TopMenuProps {
     isFavorite: boolean;
@@ -24,7 +27,14 @@ interface TopMenuProps {
 const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
     const { canPreview, canEdit, current } = useSelector(selectEditor);
     const dispatch = useDispatch();
-    const [mutateDeleteNote, { isLoading }] = useMutateDeleteNote();
+    const [
+        mutateDeleteNote,
+        { isLoading: deleteIsLoading }
+    ] = useMutateDeleteNote();
+    const [
+        mutateModifyNote,
+        { isLoading: editIsLoading }
+    ] = useMutateModifyNote();
 
     return (
         <div className={classes['top-menu']}>
@@ -67,6 +77,11 @@ const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
                             color: '#d6d7d9',
                             border: '1px solid rgba(0, 0, 0, 0.12)'
                         }}
+                        onClick={() =>
+                            notes[current]
+                                ? mutateModifyNote(notes[current])
+                                : null
+                        }
                     >
                         <SaveIcon fontSize="small" />
                     </Button>

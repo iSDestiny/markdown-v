@@ -22,10 +22,6 @@ import { dehydrate } from 'react-query/hydration';
 import { ReactQueryDevtools } from 'react-query-devtools';
 import { useMutateAddNote } from '../hooks/noteMutationHooks';
 
-// interface propTypes {
-//     notes: any[];
-// }
-
 export default function Home() {
     const { data: originalNotes, isLoading: isNotesLoading } = useQuery(
         'notes',
@@ -47,7 +43,6 @@ export default function Home() {
             toKeep.forEach((keepNote) => {
                 toKeepDict[keepNote._id] = keepNote;
             });
-            // const toKeepIds = new Set(toKeep.map((pNote) => pNote._id) );
             return originalNotes.map((note: Note) =>
                 note._id in toKeepDict ? toKeepDict[note._id] : note
             );
@@ -57,6 +52,10 @@ export default function Home() {
     const setNoteContent = (index: number, newContent: string) => {
         setModifiedNotes((prev) => {
             const newNotes = [...prev];
+            const firstLine = newContent.trim().split('\n')[0];
+            const newTitle = firstLine.replace(/[^\w\s]/gi, '');
+            console.log(newTitle);
+            newNotes[index].title = newTitle ? newTitle : 'Untitled';
             newNotes[index].content = newContent;
             newNotes[index].isTemp = true;
             return newNotes;
