@@ -20,7 +20,7 @@ const NotesMenu = () => {
     useLoader('add', isLoading);
 
     const addNoteHandler = () => {
-        dispatch(setCurrent({ current: 0 }));
+        dispatch(setCurrent({ current: notes.length }));
         mutateAddNote();
     };
 
@@ -42,17 +42,24 @@ const NotesMenu = () => {
                 </Tooltip>
             </header>
             <List style={{ padding: 0 }}>
-                {notes.map((note: Note, index: number) => (
-                    <ListItem
-                        button
-                        key={note._id}
-                        selected={index === current}
-                        alignItems="flex-start"
-                        onClick={() => noteSelectionHandler(index)}
-                    >
-                        <ListItemText primary={note.title} />
-                    </ListItem>
-                ))}
+                {notes.length > 0 ? (
+                    notes.map((note: Note, index: number) => (
+                        <ListItem
+                            button
+                            key={note._id}
+                            selected={index === current}
+                            alignItems="flex-start"
+                            onClick={() => noteSelectionHandler(index)}
+                        >
+                            <ListItemText primary={note.title} />
+                        </ListItem>
+                    ))
+                ) : (
+                    <ListItemText
+                        primary={'No notes available'}
+                        style={{ textAlign: 'center' }}
+                    />
+                )}
             </List>
         </section>
     );

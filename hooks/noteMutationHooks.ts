@@ -5,7 +5,7 @@ export const useMutateAddNote = () => {
     const queryCache = useQueryCache();
     return useMutation(addNote, {
         onSuccess: ({ data: { note } }) =>
-            queryCache.setQueryData('notes', (prev: Note[]) => [note, ...prev])
+            queryCache.setQueryData('notes', (prev: Note[]) => [...prev, note])
     });
 };
 

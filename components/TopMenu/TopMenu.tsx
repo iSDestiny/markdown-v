@@ -11,7 +11,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     selectEditor,
     toggleEdit,
-    togglePreview
+    togglePreview,
+    setNoteToSaved
 } from '../../store/slices/editorSlice';
 import {
     useMutateDeleteNote,
@@ -81,11 +82,10 @@ const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
                             color: '#d6d7d9',
                             border: '1px solid rgba(0, 0, 0, 0.12)'
                         }}
-                        onClick={() =>
-                            notes[current]
-                                ? mutateModifyNote(notes[current])
-                                : null
-                        }
+                        onClick={() => {
+                            dispatch(setNoteToSaved());
+                            notes[current] && mutateModifyNote(notes[current]);
+                        }}
                     >
                         <SaveIcon fontSize="small" />
                     </Button>
@@ -101,9 +101,8 @@ const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
                             border: '1px solid rgba(0, 0, 0, 0.12)'
                         }}
                         onClick={() =>
-                            notes[current]
-                                ? mutateDeleteNote(notes[current]._id)
-                                : null
+                            notes[current] &&
+                            mutateDeleteNote(notes[current]._id)
                         }
                     >
                         <DeleteIcon fontSize="small" />

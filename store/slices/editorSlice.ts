@@ -34,6 +34,8 @@ const editorSlice = createSlice({
             state.notes = originalNotes.map((note: Note) =>
                 note._id in toKeepDict ? toKeepDict[note._id] : note
             );
+            if (state.current >= state.notes.length)
+                state.current = state.notes.length - 1;
         },
 
         setNotesFromEdit: (state, action) => {
@@ -41,11 +43,17 @@ const editorSlice = createSlice({
             const current = state.current;
             const { content: newContent } = action.payload;
             const firstLine = newContent.trim().split('\n')[0];
-            const newTitle = firstLine.replace(/[^\w\s]/gi, '');
+            const newTitle = firstLine.replace(/[^\w\s]/gi, '').trim();
             newNotes[current].title = newTitle ? newTitle : 'Untitled';
             newNotes[current].content = newContent;
             newNotes[current].isTemp = true;
             state.notes = newNotes;
+        },
+
+        setNoteToSaved: (state) => {
+            const { current } = state;
+            if (current < state.notes.length)
+                state.notes[current].isTemp = false;
         },
 
         setLoader: (state, action) => {
@@ -72,6 +80,7 @@ export const {
     togglePreview,
     setNotesFromOriginal,
     setNotesFromEdit,
-    setLoader
+    setLoader,
+    setNoteToSaved
 } = editorSlice.actions;
 export default editorSlice.reducer;
