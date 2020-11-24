@@ -1,4 +1,5 @@
 import {
+    Chip,
     IconButton,
     List,
     ListItem,
@@ -34,7 +35,7 @@ const NotesMenu = () => {
                 <h3>All Notes</h3>
                 <Tooltip title="New Note">
                     <IconButton
-                        color="inherit"
+                        color="primary"
                         onClick={() => addNoteHandler()}
                     >
                         <AddIcon />
@@ -48,10 +49,22 @@ const NotesMenu = () => {
                             button
                             key={note._id}
                             selected={index === current}
-                            alignItems="flex-start"
+                            // alignItems="flex-start"
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between'
+                            }}
                             onClick={() => noteSelectionHandler(index)}
                         >
                             <ListItemText primary={note.title} />
+                            {note.isTemp && (
+                                <Chip
+                                    label="unsaved"
+                                    color="primary"
+                                    size="small"
+                                    variant="outlined"
+                                />
+                            )}
                         </ListItem>
                     ))
                 ) : (
