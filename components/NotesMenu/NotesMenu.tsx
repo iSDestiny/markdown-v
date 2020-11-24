@@ -1,3 +1,4 @@
+import React from 'react';
 import {
     Chip,
     IconButton,
@@ -7,7 +8,7 @@ import {
     Tooltip
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import React from 'react';
+import SortIcon from '@material-ui/icons/Sort';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutateAddNote } from '../../hooks/noteMutationHooks';
 import useLoader from '../../hooks/useLoader';
@@ -21,7 +22,6 @@ const NotesMenu = () => {
     useLoader('add', isLoading);
 
     const addNoteHandler = () => {
-        dispatch(setCurrent({ current: notes.length }));
         mutateAddNote();
     };
 
@@ -32,15 +32,27 @@ const NotesMenu = () => {
     return (
         <section className={classes['notes-menu']}>
             <header>
-                <h3>All Notes</h3>
-                <Tooltip title="New Note">
-                    <IconButton
-                        color="primary"
-                        onClick={() => addNoteHandler()}
-                    >
-                        <AddIcon />
-                    </IconButton>
-                </Tooltip>
+                <div className={classes.row1}>
+                    <h3>All Notes</h3>
+                    <Tooltip title="New Note">
+                        <IconButton
+                            color="primary"
+                            size="medium"
+                            edge="end"
+                            onClick={() => addNoteHandler()}
+                        >
+                            <AddIcon fontSize="inherit" />
+                        </IconButton>
+                    </Tooltip>
+                </div>
+                <div className={classes.row2}>
+                    <p>{notes.length} notes</p>
+                    <Tooltip title="Sort Options">
+                        <IconButton color="inherit" size="small" edge="end">
+                            <SortIcon fontSize="inherit" />
+                        </IconButton>
+                    </Tooltip>
+                </div>
             </header>
             <List style={{ padding: 0 }}>
                 {notes.length > 0 ? (

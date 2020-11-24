@@ -9,6 +9,13 @@
     }
     header {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
+        border-bottom: 1px solid #292d3e;
+        .row1,
+        .row2 {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
     }
 }
