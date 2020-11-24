@@ -17,18 +17,3 @@
         display: flex;
     }
 }
-
-.side-menu {
-    height: 100%;
-    width: 300px;
-    color: #8e94b2;
-    background-color: #1b1e2b;
-    overflow-y: auto;
-    > * {
-        padding: 0 1rem;
-    }
-    header {
-        display: flex;
-        justify-content: space-between;
-    }
-}

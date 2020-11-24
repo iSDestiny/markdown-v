@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { DefaultRootState } from 'react-redux';
 
 const editorSlice = createSlice({
     name: 'editor',
@@ -7,7 +6,8 @@ const editorSlice = createSlice({
         current: 0,
         canEdit: true,
         canPreview: false,
-        notes: []
+        notes: [],
+        loaders: {}
     },
     reducers: {
         setCurrent: (state, action) => {
@@ -46,6 +46,11 @@ const editorSlice = createSlice({
             newNotes[current].content = newContent;
             newNotes[current].isTemp = true;
             state.notes = newNotes;
+        },
+
+        setLoader: (state, action) => {
+            const { name, isLoading } = action.payload;
+            state.loaders[name] = isLoading;
         }
     }
 });
@@ -56,6 +61,7 @@ interface stateTypes {
         canEdit: boolean;
         canPreview: boolean;
         notes: Note[];
+        loaders: {};
     };
 }
 
@@ -65,6 +71,7 @@ export const {
     toggleEdit,
     togglePreview,
     setNotesFromOriginal,
-    setNotesFromEdit
+    setNotesFromEdit,
+    setLoader
 } = editorSlice.actions;
 export default editorSlice.reducer;

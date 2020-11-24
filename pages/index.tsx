@@ -6,48 +6,31 @@ import classes from '../styles/Home.module.scss';
 import TopMenu from '../components/TopMenu';
 import Preview from '../components/Preview';
 import Editor from '../components/Editor';
-import AddIcon from '@material-ui/icons/Add';
-import {
-    LinearProgress,
-    IconButton,
-    List,
-    ListItem,
-    ListItemText,
-    Tooltip
-} from '@material-ui/core';
+import { LinearProgress } from '@material-ui/core';
 import {
     selectEditor,
-    setCurrent,
     setNotesFromOriginal
 } from '../store/slices/editorSlice';
 import { GetServerSideProps } from 'next';
 import { QueryCache, useQuery } from 'react-query';
 import { dehydrate } from 'react-query/hydration';
 import { ReactQueryDevtools } from 'react-query-devtools';
-import { useMutateAddNote } from '../hooks/noteMutationHooks';
+import NotesMenu from '../components/NotesMenu';
+import useLoader from '../hooks/useLoader';
 
 export default function Home() {
     const { data: originalNotes, isLoading: isNotesLoading } = useQuery(
         'notes',
         fetchNotes
     );
-    const [mutateAddNote, { isLoading: addIsLoading }] = useMutateAddNote();
-    const { current, canEdit, canPreview, notes } = useSelector(selectEditor);
+    const { canEdit, canPreview, notes } = useSelector(selectEditor);
     const dispatch = useDispatch();
+    const isLoading = useLoader('notes', isNotesLoading);
     const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {
         dispatch(setNotesFromOriginal({ originalNotes }));
     }, [originalNotes]);
-
-    const noteSelectionHandler = (index: number) => {
-        dispatch(setCurrent({ current: index }));
-    };
-
-    const addNoteHandler = () => {
-        dispatch(setCurrent({ current: 0 }));
-        mutateAddNote();
-    };
 
     return (
         <>
@@ -56,37 +39,12 @@ export default function Home() {
                     <title>Markdown Notes</title>
                     <link rel="icon" href="/favicon.ico" />
                 </Head>
-                {(isNotesLoading || addIsLoading) && (
+                {isLoading && (
                     <LinearProgress
                         style={{ position: 'fixed', width: '100%' }}
                     />
                 )}
-                <section className={classes['side-menu']}>
-                    <header>
-                        <h3>All Notes</h3>
-                        <Tooltip title="New Note">
-                            <IconButton
-                                color="inherit"
-                                onClick={() => addNoteHandler()}
-                            >
-                                <AddIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </header>
-                    <List style={{ padding: 0 }}>
-                        {notes.map((note: Note, index: number) => (
-                            <ListItem
-                                button
-                                key={note._id}
-                                selected={index === current}
-                                alignItems="flex-start"
-                                onClick={() => noteSelectionHandler(index)}
-                            >
-                                <ListItemText primary={note.title} />
-                            </ListItem>
-                        ))}
-                    </List>
-                </section>
+                <NotesMenu />
                 <section className={classes['editor-container']}>
                     <TopMenu
                         notes={notes}
@@ -99,12 +57,14 @@ export default function Home() {
                     </div>
                 </section>
             </main>
-            <ReactQueryDevtools initialIsOpen={false} />
+            {process.env.NODE_ENV === 'development' && (
+                <ReactQueryDevtools initialIsOpen={false} />
+            )}
         </>
     );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async () => {
     const queryCache = new QueryCache();
     await queryCache.prefetchQuery('notes', fetchNotes);
     return { props: { dehydratedState: dehydrate(queryCache) } };
