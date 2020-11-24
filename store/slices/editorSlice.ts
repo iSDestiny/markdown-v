@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import markdownToTxt from 'markdown-to-txt';
 
 const editorSlice = createSlice({
     name: 'editor',
@@ -43,7 +44,8 @@ const editorSlice = createSlice({
             const current = state.current;
             const { content: newContent } = action.payload;
             const firstLine = newContent.trim().split('\n')[0];
-            const newTitle = firstLine.replace(/[^\w\s]/gi, '').trim();
+            // const newTitle = firstLine.replace(/[^\w\s]/gi, '').trim();
+            const newTitle = markdownToTxt(firstLine);
             newNotes[current].title = newTitle ? newTitle : 'Untitled';
             newNotes[current].content = newContent;
             newNotes[current].isTemp = true;

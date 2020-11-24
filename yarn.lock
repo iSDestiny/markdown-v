@@ -2807,6 +2807,18 @@ markdown-table@^2.0.0:
   dependencies:
     repeat-string "^1.0.0"
 
+markdown-to-txt@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/markdown-to-txt/-/markdown-to-txt-1.0.1.tgz#f02528acaf77366d6f29569546de61acd74ba2b7"
+  integrity sha512-PACe8GiGnJ5Nf/bkE+NWIMK36qRAGW6JP9mHLeiL6BBoUA51EqEmtJd9VEI0lGl74JYUUSoKHqX0FQV4ivo1nA==
+  dependencies:
+    marked "^0.6.2"
+
+marked@^0.6.2:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-0.6.3.tgz#79babad78af638ba4d522a9e715cdfdd2429e946"
+  integrity sha512-Fqa7eq+UaxfMriqzYLayfqAE40WN03jf+zHjT18/uXNuzjq3TY0XTbrAoPeqSJrAmPz11VuUA+kBPYOhHt9oOQ==
+
 match-sorter@^4.1.0:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/match-sorter/-/match-sorter-4.2.1.tgz#575b4b3737185ba9518b67612b66877ea0b37358"

@@ -15,6 +15,7 @@
     "ace-builds": "^1.4.12",
     "axios": "^0.21.0",
     "classnames": "^2.2.6",
+    "markdown-to-txt": "^1.0.1",
     "mongoose": "^5.10.15",
     "next": "10.0.2",
     "next-transpile-modules": "^4.1.0",
