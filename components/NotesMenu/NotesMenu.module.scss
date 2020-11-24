@@ -19,3 +19,20 @@
         }
     }
 }
+
+// .invisible {
+//     visibility: hidden;
+// }
+
+.sort-option-type {
+    .not-selected {
+        opacity: 0.3;
+    }
+    .descending {
+        margin-right: 5px;
+    }
+}
+
+.invisible {
+    visibility: hidden;
+}

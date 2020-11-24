@@ -14,6 +14,7 @@ import { useMutateAddNote } from '../../hooks/noteMutationHooks';
 import useLoader from '../../hooks/useLoader';
 import { selectEditor, setCurrent } from '../../store/slices/editorSlice';
 import classes from './NotesMenu.module.scss';
+import SortOptions from './SortOptions';
 
 const NotesMenu = () => {
     const [mutateAddNote, { isLoading }] = useMutateAddNote();
@@ -47,11 +48,12 @@ const NotesMenu = () => {
                 </div>
                 <div className={classes.row2}>
                     <p>{notes.length} notes</p>
-                    <Tooltip title="Sort Options">
+                    {/* <Tooltip title="Sort Options">
                         <IconButton color="inherit" size="small" edge="end">
                             <SortIcon fontSize="inherit" />
                         </IconButton>
-                    </Tooltip>
+                    </Tooltip> */}
+                    <SortOptions />
                 </div>
             </header>
             <List style={{ padding: 0 }}>

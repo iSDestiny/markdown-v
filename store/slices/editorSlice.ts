@@ -7,7 +7,13 @@ interface stateTypes {
         canPreview: boolean;
         notes: Note[];
         loaders: {};
-        sortType: 'titleAsc' | 'titleDesc';
+        sortType:
+            | 'titleAsc'
+            | 'titleDesc'
+            | 'dateUpdatedAsc'
+            | 'dateUpdatedDesc'
+            | 'dateCreatedAsc'
+            | 'dateCreatedDesc';
     };
 }
 // sort type: 0 is ascending, 1 is descending
@@ -18,9 +24,56 @@ const byTitle = (first: Note, second: Note, sortType: 0 | 1) => {
     return 0;
 };
 
+const byDateLogic = (
+    dateType: string,
+    first: Note,
+    second: Note,
+    sortType: 0 | 1
+) => {
+    const base = sortType ? -1 : 1;
+    const firstDate = new Date(first[dateType]);
+    const secondDate = new Date(second[dateType]);
+    console.log(firstDate.getTime() < secondDate.getTime());
+    if (firstDate.getTime() < secondDate.getTime()) return -base;
+    if (firstDate.getTime() > secondDate.getTime()) return base;
+    return 0;
+};
+
+const byDateUpdated = (first: Note, second: Note, sortType: 0 | 1) => {
+    const base = sortType ? -1 : 1;
+    const { updatedAt: firstUpdate } = first;
+    const { updatedAt: secondUpdate } = second;
+    const firstUpdateDate = new Date(firstUpdate);
+    const secondUpdateDate = new Date(secondUpdate);
+    if (firstUpdateDate.getTime() < secondUpdateDate.getTime()) return -base;
+    if (firstUpdateDate.getTime() > secondUpdateDate.getTime()) return base;
+    return 0;
+    // byDateLogic('updatedAt', first, second, sortType);
+};
+
+const byDateCreated = (first: Note, second: Note, sortType: 0 | 1) => {
+    const base = sortType ? -1 : 1;
+    const { createdAt: firstCreated } = first;
+    const { createdAt: secondCreated } = second;
+    const firstCreatedDate = new Date(firstCreated);
+    const secondCreatedDate = new Date(secondCreated);
+    if (firstCreatedDate.getTime() < secondCreatedDate.getTime()) return -base;
+    if (firstCreatedDate.getTime() > secondCreatedDate.getTime()) return base;
+    return 0;
+    // byDateLogic('createdAt', first, second, sortType);
+};
+
 const sortFuncs = {
     titleDesc: (first: Note, second: Note) => byTitle(first, second, 1),
-    titleAsc: (first: Note, second: Note) => byTitle(first, second, 0)
+    titleAsc: (first: Note, second: Note) => byTitle(first, second, 0),
+    dateUpdatedDesc: (first: Note, second: Note) =>
+        byDateUpdated(first, second, 1),
+    dateUpdatedAsc: (first: Note, second: Note) =>
+        byDateUpdated(first, second, 0),
+    dateCreatedDesc: (first: Note, second: Note) =>
+        byDateCreated(first, second, 1),
+    dateCreatedAsc: (first: Note, second: Note) =>
+        byDateCreated(first, second, 0)
 };
 
 const editorSlice = createSlice({
@@ -33,7 +86,7 @@ const editorSlice = createSlice({
         loaders: {},
         // sorts notes by title ascending as default
         sortType: 'titleAsc'
-    } as stateTypes['editor'],
+    },
     reducers: {
         setCurrent: (state, action) => {
             const { current } = action.payload;
@@ -54,16 +107,22 @@ const editorSlice = createSlice({
             const toKeep = prev.filter((pNote) => pNote.isTemp);
             const toKeepDict = {};
             const prevIds = new Set(prev.map((pNote) => pNote._id));
+            let newNoteId: string;
 
             toKeep.forEach((keepNote) => {
                 toKeepDict[keepNote._id] = keepNote;
             });
             let newNotes: Note[] = originalNotes.map((note: Note, index) => {
-                if (!prevIds.has(note._id)) state.current = index;
+                if (!prevIds.has(note._id)) newNoteId = note._id;
                 return note._id in toKeepDict ? toKeepDict[note._id] : note;
             });
             newNotes.sort(sortFuncs[state.sortType]);
             state.notes = newNotes;
+
+            if (newNoteId)
+                state.current = state.notes.findIndex(
+                    (note) => note._id === newNoteId
+                );
 
             if (current >= state.notes.length)
                 state.current = state.notes.length - 1;
@@ -96,7 +155,13 @@ const editorSlice = createSlice({
 
         setSort: (state, action) => {
             const { sortType } = action.payload;
+            console.log(sortType);
+            const prevCurrId = state.notes[state.current]._id;
             state.sortType = sortType;
+            state.notes.sort(sortFuncs[state.sortType]);
+            state.current = state.notes.findIndex(
+                (note) => note._id === prevCurrId
+            );
         },
 
         setLoader: (state, action) => {
