@@ -17,6 +17,7 @@ import {
     useMutateDeleteNote,
     useMutateModifyNote
 } from '../../hooks/noteMutationHooks';
+import useLoader from '../../hooks/useLoader';
 
 interface TopMenuProps {
     isFavorite: boolean;
@@ -35,6 +36,9 @@ const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
         mutateModifyNote,
         { isLoading: editIsLoading }
     ] = useMutateModifyNote();
+
+    useLoader('delete', deleteIsLoading);
+    useLoader('modify', editIsLoading);
 
     return (
         <div className={classes['top-menu']}>
