@@ -49,7 +49,6 @@ const NotesMenu = () => {
                             button
                             key={note._id}
                             selected={index === current}
-                            // alignItems="flex-start"
                             style={{
                                 display: 'flex',
                                 justifyContent: 'space-between'

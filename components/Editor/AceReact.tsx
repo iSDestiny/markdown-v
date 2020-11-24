@@ -5,20 +5,44 @@ import 'ace-builds/src-noconflict/keybinding-vscode';
 import 'ace-builds/src-noconflict/mode-markdown';
 import { Vim } from 'ace-builds/src-noconflict/keybinding-vim';
 import { IAceEditor } from 'react-ace/lib/types';
+import { useMutateModifyNote } from '../../hooks/noteMutationHooks';
+import { useDispatch } from 'react-redux';
+import { setNoteToSaved, toggleEdit } from '../../store/slices/editorSlice';
+import useLoader from '../../hooks/useLoader';
 
 interface AceProps {
     theme: string;
     onChange: (val: string) => void;
-    value: string;
+    note: Note;
     width: string | number;
 }
 
-const AceReact = ({ theme, onChange, value, width }: AceProps) => {
+const AceReact = ({ theme, onChange, note, width }: AceProps) => {
+    const [
+        mutateModifyNote,
+        { isLoading: editIsLoading }
+    ] = useMutateModifyNote();
+    const dispatch = useDispatch();
+    useLoader('modify', editIsLoading);
+
     Vim.map('jj', '<Esc>', 'insert');
     Vim.map('jk', '<Esc>', 'insert');
     Vim.map('kj', '<Esc>', 'insert');
-    Vim.defineEx('write', 'w', (editor: IAceEditor) => {
-        console.log('saved!');
+    Vim.defineEx('write', 'w', async (editor: IAceEditor) => {
+        if (note) {
+            await mutateModifyNote(note);
+            dispatch(setNoteToSaved());
+        }
+    });
+    Vim.defineEx('quit', 'q', (editor: IAceEditor) => {
+        dispatch(toggleEdit());
+    });
+    Vim.defineEx('wquit', 'wq', async (editor: IAceEditor) => {
+        if (note) {
+            await mutateModifyNote(note);
+            dispatch(toggleEdit());
+            dispatch(setNoteToSaved());
+        }
     });
 
     return (
@@ -33,7 +57,7 @@ const AceReact = ({ theme, onChange, value, width }: AceProps) => {
             showPrintMargin={false}
             wrapEnabled={true}
             fontSize={16}
-            value={value}
+            value={note.content ? note.content : ''}
             keyboardHandler="vim"
             height="100%"
             width={'' + width}

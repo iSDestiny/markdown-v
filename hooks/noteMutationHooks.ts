@@ -1,5 +1,7 @@
 import { useMutation, useQueryCache } from 'react-query';
 import { addNote, deleteNote, modifyNote } from '../utility/noteMutations';
+import { useDispatch } from 'react-redux';
+import { setNoteToSaved } from '../store/slices/editorSlice';
 
 export const useMutateAddNote = () => {
     const queryCache = useQueryCache();

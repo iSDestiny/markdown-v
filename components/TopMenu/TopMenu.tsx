@@ -82,9 +82,10 @@ const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
                             color: '#d6d7d9',
                             border: '1px solid rgba(0, 0, 0, 0.12)'
                         }}
-                        onClick={() => {
+                        onClick={async () => {
+                            notes[current] &&
+                                (await mutateModifyNote(notes[current]));
                             dispatch(setNoteToSaved());
-                            notes[current] && mutateModifyNote(notes[current]);
                         }}
                     >
                         <SaveIcon fontSize="small" />
