@@ -57,7 +57,7 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
             showPrintMargin={false}
             wrapEnabled={true}
             fontSize={16}
-            value={note.content ? note.content : ''}
+            value={note ? note.content : ''}
             keyboardHandler="vim"
             height="100%"
             width={'' + width}

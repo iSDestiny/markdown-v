@@ -81,7 +81,7 @@ const NotesMenu = () => {
                 ) : (
                     <ListItemText
                         primary={'No notes available'}
-                        style={{ textAlign: 'center' }}
+                        style={{ textAlign: 'center', marginTop: '1rem' }}
                     />
                 )}
             </List>
