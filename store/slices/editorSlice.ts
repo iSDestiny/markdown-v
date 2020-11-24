@@ -24,20 +24,20 @@ const byTitle = (first: Note, second: Note, sortType: 0 | 1) => {
     return 0;
 };
 
-const byDateLogic = (
-    dateType: string,
-    first: Note,
-    second: Note,
-    sortType: 0 | 1
-) => {
-    const base = sortType ? -1 : 1;
-    const firstDate = new Date(first[dateType]);
-    const secondDate = new Date(second[dateType]);
-    console.log(firstDate.getTime() < secondDate.getTime());
-    if (firstDate.getTime() < secondDate.getTime()) return -base;
-    if (firstDate.getTime() > secondDate.getTime()) return base;
-    return 0;
-};
+// const byDateLogic = (
+//     dateType: string,
+//     first: Note,
+//     second: Note,
+//     sortType: 0 | 1
+// ) => {
+//     const base = sortType ? -1 : 1;
+//     const firstDate = new Date(first[dateType]);
+//     const secondDate = new Date(second[dateType]);
+//     console.log(firstDate.getTime() < secondDate.getTime());
+//     if (firstDate.getTime() < secondDate.getTime()) return -base;
+//     if (firstDate.getTime() > secondDate.getTime()) return base;
+//     return 0;
+// };
 
 const byDateUpdated = (first: Note, second: Note, sortType: 0 | 1) => {
     const base = sortType ? -1 : 1;
@@ -107,6 +107,7 @@ const editorSlice = createSlice({
             const toKeep = prev.filter((pNote) => pNote.isTemp);
             const toKeepDict = {};
             const prevIds = new Set(prev.map((pNote) => pNote._id));
+            const prevCurrId = prev[current] ? prev[current]._id : null;
             let newNoteId: string;
 
             toKeep.forEach((keepNote) => {
@@ -118,6 +119,11 @@ const editorSlice = createSlice({
             });
             newNotes.sort(sortFuncs[state.sortType]);
             state.notes = newNotes;
+
+            if (prevCurrId)
+                state.current = state.notes.findIndex(
+                    (note) => note._id === prevCurrId
+                );
 
             if (newNoteId)
                 state.current = state.notes.findIndex(
