@@ -3,6 +3,7 @@ import { createMuiTheme } from '@material-ui/core';
 // Material UI overrides
 const theme = createMuiTheme({
     palette: {
+        type: 'dark',
         primary: {
             main: '#7cbfaf'
         }

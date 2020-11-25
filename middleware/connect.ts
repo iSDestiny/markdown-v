@@ -1,17 +1,19 @@
 import mongoose from 'mongoose';
 import { NextApiRequest, NextApiResponse } from 'next';
 import NoteSchema, { INote } from '../models/Note';
+import UserSchema, { IUser } from '../models/User';
 
-const connect = async () => {
+export const connect = async () => {
     const connection = await mongoose.createConnection(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
     const Note = connection.model<INote>('Note', NoteSchema);
-    return { connection, models: { Note } };
+    const User = connection.model<IUser>('User', UserSchema);
+    return { connection, models: { Note, User } };
 };
 
-type handlerType = (
+export type handlerType = (
     req: NextApiRequest,
     res: NextApiResponse,
     connection: mongoose.Connection,

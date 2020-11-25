@@ -1,27 +1,23 @@
-import { INote } from './../models/Note';
+import { INote } from '../models/Note';
 import { NextApiRequest, NextApiResponse } from 'next';
 import mongoose from 'mongoose';
 import CustomStatusError from '../utility/CustomStatusError';
 
-export const getNotes = async (
+type noteParamTypes = (
     req: NextApiRequest,
     res: NextApiResponse,
     models: {
         Note: mongoose.Model<INote, {}>;
     }
-) => {
+) => Promise<void>;
+
+export const getNotes: noteParamTypes = async (req, res, models) => {
     const { Note } = models;
     const notes = await Note.find();
     return res.json(notes);
 };
 
-export const postNotes = async (
-    req: NextApiRequest,
-    res: NextApiResponse,
-    models: {
-        Note: mongoose.Model<INote, {}>;
-    }
-) => {
+export const postNotes: noteParamTypes = async (req, res, models) => {
     const { Note } = models;
     const note = new Note({});
     await note.save();
@@ -30,13 +26,7 @@ export const postNotes = async (
         .json({ message: 'Added note successfully', note: note });
 };
 
-export const deleteNote = async (
-    req: NextApiRequest,
-    res: NextApiResponse,
-    models: {
-        Note: mongoose.Model<INote, {}>;
-    }
-) => {
+export const deleteNote: noteParamTypes = async (req, res, models) => {
     const { id } = req.query;
     const { Note } = models;
     const deleted = await Note.findOneAndDelete({ _id: id });
@@ -52,13 +42,7 @@ export const deleteNote = async (
     });
 };
 
-export const modifyNote = async (
-    req: NextApiRequest,
-    res: NextApiResponse,
-    models: {
-        Note: mongoose.Model<INote, {}>;
-    }
-) => {
+export const modifyNote: noteParamTypes = async (req, res, models) => {
     const { _id: id, content, title } = req.body;
     const { Note } = models;
     const note = await Note.findById(id);

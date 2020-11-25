@@ -18,7 +18,7 @@ import { ReactQueryDevtools } from 'react-query-devtools';
 import NotesMenu from '../components/NotesMenu';
 import useLoader from '../hooks/useLoader';
 
-export default function Home() {
+export default function Notes() {
     const { data: originalNotes, isLoading: isNotesLoading } = useQuery(
         'notes',
         fetchNotes
