@@ -29,6 +29,7 @@ function Copyright() {
 interface AuthFormProps<T> {
     type: String;
     onSubmit: SubmitHandler<T>;
+    serverError: string;
 }
 
 interface FormInputs {
@@ -44,7 +45,11 @@ const schema = yup.object().shape({
         .required()
 });
 
-export default function AuthForm<T>({ type, onSubmit }: AuthFormProps<T>) {
+export default function AuthForm<T>({
+    type,
+    onSubmit,
+    serverError
+}: AuthFormProps<T>) {
     const { register, handleSubmit, errors } = useForm<FormInputs>({
         resolver: yupResolver(schema)
     });
@@ -58,6 +63,18 @@ export default function AuthForm<T>({ type, onSubmit }: AuthFormProps<T>) {
                 <Typography component="h1" variant="h5">
                     {type === 'login' ? 'Sign In' : 'Sign Up'}
                 </Typography>
+                {serverError && (
+                    <Typography
+                        variant="body1"
+                        style={{
+                            color: '#F44336',
+                            marginBottom: '-1rem',
+                            marginTop: '0.5rem'
+                        }}
+                    >
+                        {serverError}
+                    </Typography>
+                )}
                 <form
                     className="auth-form"
                     noValidate

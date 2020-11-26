@@ -1,27 +1,28 @@
 import React from 'react';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import {
-    Typography,
-    Avatar,
-    Container,
-    Box,
-    Button,
-    Grid,
-    Link,
-    TextField
-} from '@material-ui/core';
 import AuthForm from '../components/AuthForm';
+import { SubmitHandler } from 'react-hook-form';
+import axios from 'axios';
 
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © MarkdownV '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+type SignUpFormValues = {
+    email: string;
+    password: string;
+};
 
 export default function SignUp() {
-    return <AuthForm type="signup" />;
+    const signup: SubmitHandler<SignUpFormValues> = async (
+        { email, password },
+        event
+    ) => {
+        event.preventDefault();
+        try {
+            await axios.post(
+                `${process.env.NEXT_PUBLIC_SERVER_ORIGIN}/api/auth/signup`,
+                { email, password }
+            );
+            console.log('success signup');
+        } catch (err) {
+            console.log(err.res);
+        }
+    };
+    return <AuthForm type="signup" onSubmit={signup} />;
 }
