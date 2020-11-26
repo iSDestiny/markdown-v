@@ -8,7 +8,6 @@ import {
     Tooltip
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import SortIcon from '@material-ui/icons/Sort';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutateAddNote } from '../../hooks/noteMutationHooks';
 import useLoader from '../../hooks/useLoader';

@@ -11,12 +11,11 @@ import {
     selectEditor,
     setNotesFromOriginal
 } from '../store/slices/editorSlice';
-import { GetServerSideProps } from 'next';
-import { QueryCache, useQuery } from 'react-query';
-import { dehydrate } from 'react-query/hydration';
+import { useQuery } from 'react-query';
 import { ReactQueryDevtools } from 'react-query-devtools';
 import NotesMenu from '../components/NotesMenu';
 import useLoader from '../hooks/useLoader';
+import LoadingScreen from '../components/LoadingScreen';
 
 export default function Notes() {
     const { data: originalNotes, isLoading: isNotesLoading } = useQuery(
@@ -26,12 +25,14 @@ export default function Notes() {
     );
     const { canEdit, canPreview, notes } = useSelector(selectEditor);
     const dispatch = useDispatch();
-    const isLoading = useLoader('notes', isNotesLoading);
+    const isLoading = useLoader('notes', false);
     const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {
         dispatch(setNotesFromOriginal({ originalNotes }));
     }, [originalNotes]);
+
+    if (isNotesLoading) return <LoadingScreen />;
 
     return (
         <>
@@ -65,8 +66,8 @@ export default function Notes() {
     );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-    const queryCache = new QueryCache();
-    await queryCache.prefetchQuery('notes', fetchNotes);
-    return { props: { dehydratedState: dehydrate(queryCache) } };
-};
+// export const getServerSideProps: GetServerSideProps = async () => {
+//     const queryCache = new QueryCache();
+//     await queryCache.prefetchQuery('notes', fetchNotes);
+//     return { props: { dehydratedState: dehydrate(queryCache) } };
+// };

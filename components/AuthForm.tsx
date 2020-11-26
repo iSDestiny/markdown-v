@@ -10,7 +10,8 @@ import {
     Box,
     Button,
     Grid,
-    TextField
+    TextField,
+    Paper
 } from '@material-ui/core';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -57,85 +58,91 @@ export default function AuthForm<T>({
     return (
         <Container component="main" maxWidth="xs">
             <div className="auth-container">
-                <Avatar>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    {type === 'login' ? 'Sign In' : 'Sign Up'}
-                </Typography>
-                {serverError && (
-                    <Typography
-                        variant="body1"
-                        style={{
-                            color: '#F44336',
-                            marginBottom: '-1rem',
-                            marginTop: '0.5rem'
-                        }}
-                    >
-                        {serverError}
-                    </Typography>
-                )}
-                <form
-                    className="auth-form"
-                    noValidate
-                    onSubmit={handleSubmit(onSubmit)}
-                >
-                    <TextField
-                        inputRef={register}
-                        variant="outlined"
-                        margin="normal"
-                        helperText={errors.email?.message}
-                        error={Boolean(errors.email)}
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                    />
-                    <TextField
-                        inputRef={register}
-                        variant="outlined"
-                        margin="normal"
-                        helperText={errors.password?.message}
-                        error={Boolean(errors.password)}
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                    />
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        style={{ margin: '1rem 0' }}
-                    >
+                <Paper className="auth-container paper">
+                    <Avatar>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
                         {type === 'login' ? 'Sign In' : 'Sign Up'}
-                    </Button>
-                    <Grid container>
-                        <Grid
-                            item
-                            xs
-                            className={classNames({ signup: type !== 'login' })}
+                    </Typography>
+                    {serverError && (
+                        <Typography
+                            variant="body1"
+                            style={{
+                                color: '#F44336',
+                                marginBottom: '-1rem',
+                                marginTop: '0.5rem'
+                            }}
                         >
-                            <Link href="/signup">Forgot password?</Link>
-                        </Grid>
-                        <Grid item>
-                            <Link
-                                href={type === 'login' ? '/signup' : '/login'}
+                            {serverError}
+                        </Typography>
+                    )}
+                    <form
+                        className="auth-form"
+                        noValidate
+                        onSubmit={handleSubmit(onSubmit)}
+                    >
+                        <TextField
+                            inputRef={register}
+                            variant="outlined"
+                            margin="normal"
+                            helperText={errors.email?.message}
+                            error={Boolean(errors.email)}
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            autoFocus
+                        />
+                        <TextField
+                            inputRef={register}
+                            variant="outlined"
+                            margin="normal"
+                            helperText={errors.password?.message}
+                            error={Boolean(errors.password)}
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            style={{ margin: '1rem 0' }}
+                        >
+                            {type === 'login' ? 'Sign In' : 'Sign Up'}
+                        </Button>
+                        <Grid container>
+                            <Grid
+                                item
+                                xs
+                                className={classNames({
+                                    signup: type !== 'login'
+                                })}
                             >
-                                {type !== 'login'
-                                    ? `Already have an account? Sign In`
-                                    : `Don't have an account? Sign Up`}
-                            </Link>
+                                <Link href="/signup">Forgot password?</Link>
+                            </Grid>
+                            <Grid item>
+                                <Link
+                                    href={
+                                        type === 'login' ? '/signup' : '/login'
+                                    }
+                                >
+                                    {type !== 'login'
+                                        ? `Already have an account? Sign In`
+                                        : `Don't have an account? Sign Up`}
+                                </Link>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </form>
+                    </form>
+                </Paper>
             </div>
             <Box mt={8}>
                 <Copyright />

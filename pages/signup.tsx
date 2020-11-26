@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AuthForm from '../components/AuthForm';
 import { SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
@@ -9,6 +9,7 @@ type SignUpFormValues = {
 };
 
 export default function SignUp() {
+    const [serverError, setServerError] = useState('');
     const signup: SubmitHandler<SignUpFormValues> = async (
         { email, password },
         event
@@ -20,9 +21,16 @@ export default function SignUp() {
                 { email, password }
             );
             console.log('success signup');
-        } catch (err) {
-            console.log(err.res);
+        } catch ({
+            response: {
+                data: { message }
+            }
+        }) {
+            console.log(message);
+            setServerError(message);
         }
     };
-    return <AuthForm type="signup" onSubmit={signup} />;
+    return (
+        <AuthForm type="signup" onSubmit={signup} serverError={serverError} />
+    );
 }
