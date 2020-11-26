@@ -19,6 +19,7 @@ export type handlerType = (
     connection: mongoose.Connection,
     models: {
         Note: mongoose.Model<INote, {}>;
+        User: mongoose.Model<IUser, {}>;
     }
 ) => void;
 

@@ -21,7 +21,8 @@ import useLoader from '../hooks/useLoader';
 export default function Notes() {
     const { data: originalNotes, isLoading: isNotesLoading } = useQuery(
         'notes',
-        fetchNotes
+        fetchNotes,
+        { staleTime: Infinity }
     );
     const { canEdit, canPreview, notes } = useSelector(selectEditor);
     const dispatch = useDispatch();

@@ -1,15 +1,17 @@
-import { getNotes, modifyNote, postNotes } from '../../../controllers/notes';
+import { postSignup } from '../../../controllers/auth';
 import connect from '../../../middleware/connect';
 import { handlerType } from '../../../middleware/connect';
 import CustomStatusError from '../../../utility/CustomStatusError';
 
 const signup: handlerType = async (req, res, connection, models) => {
     const { method } = req;
+    console.log(method);
 
     try {
         switch (method) {
             case 'POST':
-                return await postNotes(req, res, models);
+                console.log('in post signup');
+                return await postSignup(req, res, models);
             default:
                 throw new CustomStatusError('Invalid http method', 405);
         }

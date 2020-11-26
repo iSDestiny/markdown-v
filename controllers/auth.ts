@@ -17,6 +17,7 @@ type noteParamTypes = (
 
 export const postSignup: noteParamTypes = async (req, res, models) => {
     const { User } = models;
+    console.log(req.body);
     const { email, password }: { email: string; password: string } = req.body;
     const user = await User.findOne({ email: email.toLowerCase() });
     if (user) throw new CustomStatusError('Email already exists!', 409);

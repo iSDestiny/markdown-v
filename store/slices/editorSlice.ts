@@ -110,6 +110,8 @@ const editorSlice = createSlice({
             const prevCurrId = prev[current] ? prev[current]._id : null;
             let newNoteId: string;
 
+            if (!originalNotes) return;
+
             toKeep.forEach((keepNote) => {
                 toKeepDict[keepNote._id] = keepNote;
             });
