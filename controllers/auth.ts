@@ -5,6 +5,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import CustomStatusError from '../utility/CustomStatusError';
+import { IRefresh } from '../models/Refresh';
 
 type noteParamTypes = (
     req: NextApiRequest,
@@ -12,6 +13,7 @@ type noteParamTypes = (
     models: {
         Note: mongoose.Model<INote, {}>;
         User: mongoose.Model<IUser, {}>;
+        Refresh: mongoose.Model<IRefresh, {}>;
     }
 ) => Promise<void>;
 
@@ -28,11 +30,11 @@ export const postSignup: noteParamTypes = async (req, res, models) => {
         notes: []
     });
     await newUser.save();
-    return res.status(200).send('ok');
+    return res.status(201).send('success');
 };
 
 export const postLogin: noteParamTypes = async (req, res, models) => {
-    const { User } = models;
+    const { User, Refresh } = models;
     const { email, password }: { email: string; password: string } = req.body;
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) throw new CustomStatusError('Invalid email or password', 403);
@@ -41,7 +43,32 @@ export const postLogin: noteParamTypes = async (req, res, models) => {
         throw new CustomStatusError('Invalid email or password', 403);
     const token = jwt.sign(
         { email: user.email, userId: user._id },
-        process.env.JWT_SECRET
+        process.env.JWT_SECRET,
+        { expiresIn: '20s' }
     );
-    return res.status(200).json({ token, userId: user._id });
+    const refresh = jwt.sign(
+        { email: user.email, userId: user._id },
+        process.env.REFRESH,
+        { expiresIn: '7d' }
+    );
+    const newRefresh = new Refresh({ token: refresh });
+    await newRefresh.save();
+    return res.status(201).json({ token, refresh });
+};
+
+export const postRefresh: noteParamTypes = async (req, res, models) => {
+    const { Refresh } = models;
+    const { token } = req.body;
+    const check = await Refresh.findOne({ token: token });
+    if (!check) throw new CustomStatusError('refresh token not found');
+
+    let decoded: any;
+    decoded = jwt.verify(token, process.env.REFRESH);
+
+    if (!decoded) throw new CustomStatusError('Not authenticated!', 401);
+    const { email, userId } = decoded;
+    const accessToken = jwt.sign({ email, userId }, process.env.JWT_SECRET, {
+        expiresIn: '20s'
+    });
+    return res.status(201).json({ token: accessToken });
 };
