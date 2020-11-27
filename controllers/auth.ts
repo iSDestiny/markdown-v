@@ -1,3 +1,4 @@
+import Cookies from 'cookies';
 import { INote } from './../models/Note';
 import { IUser } from './../models/User';
 import mongoose from 'mongoose';
@@ -53,22 +54,34 @@ export const postLogin: noteParamTypes = async (req, res, models) => {
     );
     const newRefresh = new Refresh({ token: refresh });
     await newRefresh.save();
-    return res.status(201).json({ token, refresh });
+    const cookies = new Cookies(req, res);
+    cookies.set('ACCESS_TOKEN', token);
+    cookies.set('REFRESH_TOKEN', refresh);
+    return res.status(201).json({ message: 'login successful' });
 };
 
 export const postRefresh: noteParamTypes = async (req, res, models) => {
     const { Refresh } = models;
-    const { token } = req.body;
+    // const { token } = req.body;
+    const cookies = new Cookies(req, res);
+    const token = cookies.get('REFRESH_TOKEN');
+    // console.log(token);
     const check = await Refresh.findOne({ token: token });
     if (!check) throw new CustomStatusError('refresh token not found');
 
     let decoded: any;
-    decoded = jwt.verify(token, process.env.REFRESH);
-
+    try {
+        decoded = jwt.verify(token, process.env.REFRESH);
+    } catch (err) {
+        if (err.name === 'TokenExpiredError')
+            await Refresh.deleteOne({ token: token });
+        throw new CustomStatusError(err.message, 401);
+    }
     if (!decoded) throw new CustomStatusError('Not authenticated!', 401);
     const { email, userId } = decoded;
     const accessToken = jwt.sign({ email, userId }, process.env.JWT_SECRET, {
         expiresIn: '20s'
     });
+    // return res.status(201).json({ token: accessToken });
     return res.status(201).json({ token: accessToken });
 };

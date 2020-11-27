@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Cookies from 'cookies';
 import jwt from 'jsonwebtoken';
 import { useDispatch, useSelector } from 'react-redux';
 import fetchNotes from '../utility/fetchNotes';
@@ -20,6 +21,8 @@ import LoadingScreen from '../components/LoadingScreen';
 import { GetServerSideProps } from 'next';
 import { dehydrate } from 'react-query/hydration';
 import cookies from 'next-cookies';
+import fetchRefresh from '../utility/fetchRefresh';
+import isAuthenticated from '../utility/isAuthenticated';
 
 export default function Notes() {
     const { data: originalNotes, isLoading: isNotesLoading } = useQuery(
@@ -73,23 +76,7 @@ export default function Notes() {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const queryCache = new QueryCache();
     // await queryCache.prefetchQuery('notes', fetchNotes);
-    const token = cookies(ctx).ACCESS_TOKEN || '';
-    let isAuth: any;
-    console.log(token);
-    try {
-        isAuth = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
-        ctx.res.writeHead(302, { Location: '/login' });
-        ctx.res.end();
-        return { props: {} };
-    }
-
-    if (!isAuth) {
-        ctx.res.writeHead(302, { Location: '/login' });
-        ctx.res.end();
-        return { props: {} };
-    }
-
-    queryCache.setQueryData('accessToken', { token });
+    await isAuthenticated(ctx);
+    // queryCache.setQueryData('tokens', { token, refresh });
     return { props: { dehydratedState: dehydrate(queryCache) } };
 };

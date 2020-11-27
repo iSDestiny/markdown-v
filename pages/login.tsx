@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Cookies from 'universal-cookie';
 import AuthForm from '../components/AuthForm';
 import { useQueryCache } from 'react-query';
 import { SubmitHandler } from 'react-hook-form';
@@ -24,6 +25,10 @@ export default function Login() {
                 fetchLogin
             );
             console.log(data);
+            // const cookies = new Cookies();
+            // cookies.set('ACCESS_TOKEN', token);
+            // cookies.set('REFRESH_TOKEN', refresh);
+            // console.log(token, refresh);
         } catch ({
             response: {
                 data: { message }
