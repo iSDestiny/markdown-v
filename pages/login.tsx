@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import Cookies from 'universal-cookie';
 import AuthForm from '../components/AuthForm';
 import { useQueryCache } from 'react-query';
 import { SubmitHandler } from 'react-hook-form';
 import { fetchLogin } from '../utility/fetchAuth';
+import { GetServerSideProps } from 'next';
+import isUnauthenticated from '../utility/isUnauthenticated';
 
 type LoginFormValues = {
     email: string;
@@ -25,10 +26,6 @@ export default function Login() {
                 fetchLogin
             );
             console.log(data);
-            // const cookies = new Cookies();
-            // cookies.set('ACCESS_TOKEN', token);
-            // cookies.set('REFRESH_TOKEN', refresh);
-            // console.log(token, refresh);
         } catch ({
             response: {
                 data: { message }
@@ -41,3 +38,12 @@ export default function Login() {
 
     return <AuthForm type="login" onSubmit={login} serverError={serverError} />;
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    try {
+        await isUnauthenticated(ctx);
+    } catch (err) {
+        console.log(err);
+    }
+    return { props: {} };
+};

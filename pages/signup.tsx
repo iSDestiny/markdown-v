@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import AuthForm from '../components/AuthForm';
 import { SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
+import isUnauthenticated from '../utility/isUnauthenticated';
+import { GetServerSideProps } from 'next';
 
 type SignUpFormValues = {
     email: string;
@@ -34,3 +36,12 @@ export default function SignUp() {
         <AuthForm type="signup" onSubmit={signup} serverError={serverError} />
     );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    try {
+        await isUnauthenticated(ctx);
+    } catch (err) {
+        console.log(err);
+    }
+    return { props: {} };
+};

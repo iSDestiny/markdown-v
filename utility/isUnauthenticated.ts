@@ -5,7 +5,7 @@ import Cookies from 'cookies';
 import jwt from 'jsonwebtoken';
 import fetchRefresh from '../utility/fetchRefresh';
 
-export default async function isAuthenticated(
+export default async function isUnauthenticated(
     ctx: GetServerSidePropsContext<ParsedUrlQuery>
 ) {
     let token = cookies(ctx).ACCESS_TOKEN || '';
@@ -19,12 +19,13 @@ export default async function isAuthenticated(
                 data: { token: accessToken }
             } = await fetchRefresh(refresh);
             token = accessToken;
-            return newCookies.set('ACCESS_TOKEN', token);
+            newCookies.set('ACCESS_TOKEN', token);
         } else {
             const isAuth = jwt.verify(token, process.env.JWT_SECRET);
             if (!isAuth) throw new Error('jwt invalid');
-            return isAuth;
         }
+        ctx.res.writeHead(302, { Location: '/' });
+        return ctx.res.end();
     } catch (err) {
         if (err?.name === 'TokenExpiredError') {
             try {
@@ -33,13 +34,11 @@ export default async function isAuthenticated(
                 } = await fetchRefresh(refresh);
                 token = accessToken;
                 newCookies.set('ACCESS_TOKEN', token);
-            } catch (err) {
-                ctx.res.writeHead(302, { Location: '/login' });
+                ctx.res.writeHead(302, { Location: '/' });
                 return ctx.res.end();
+            } catch (err) {
+                return;
             }
-        } else {
-            ctx.res.writeHead(302, { Location: '/login' });
-            return ctx.res.end();
         }
     }
 }
