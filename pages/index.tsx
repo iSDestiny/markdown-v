@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Router from 'next/router';
 import Cookies from 'cookies';
 import jwt from 'jsonwebtoken';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,7 +14,7 @@ import {
     selectEditor,
     setNotesFromOriginal
 } from '../store/slices/editorSlice';
-import { QueryCache, useQuery } from 'react-query';
+import { queryCache, useQuery } from 'react-query';
 import { ReactQueryDevtools } from 'react-query-devtools';
 import NotesMenu from '../components/NotesMenu';
 import useLoader from '../hooks/useLoader';
@@ -21,15 +22,24 @@ import LoadingScreen from '../components/LoadingScreen';
 import { GetServerSideProps } from 'next';
 import { dehydrate } from 'react-query/hydration';
 import cookies from 'next-cookies';
-import fetchRefresh from '../utility/fetchRefresh';
+// import fetchRefresh from '../utility/fetchRefresh';
 import isAuthenticated from '../utility/isAuthenticated';
+import { fetchRefreshQuery } from '../utility/fetchRefresh';
 
 export default function Notes() {
-    const { data: originalNotes, isLoading: isNotesLoading } = useQuery(
-        'notes',
-        fetchNotes,
-        { staleTime: Infinity }
-    );
+    // const [isLoadingInitial, setIsLoadingInitial] = useState(true);
+    const redirectOnFailedFetch = (err: any) => {
+        Router.push('/login');
+    };
+    const {
+        data: originalNotes,
+        isLoading: isNotesLoading,
+        isSuccess
+    } = useQuery('notes', fetchNotes, {
+        staleTime: Infinity,
+        onError: redirectOnFailedFetch,
+        retry: false
+    });
     const { canEdit, canPreview, notes } = useSelector(selectEditor);
     const dispatch = useDispatch();
     const isLoading = useLoader('notes', false);
@@ -39,7 +49,9 @@ export default function Notes() {
         dispatch(setNotesFromOriginal({ originalNotes }));
     }, [originalNotes]);
 
-    if (isNotesLoading) return <LoadingScreen />;
+    if (isNotesLoading || !isSuccess) {
+        return <LoadingScreen />;
+    }
 
     return (
         <>
@@ -73,10 +85,10 @@ export default function Notes() {
     );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-    const queryCache = new QueryCache();
-    // await queryCache.prefetchQuery('notes', fetchNotes);
-    await isAuthenticated(ctx);
-    // queryCache.setQueryData('tokens', { token, refresh });
-    return { props: { dehydratedState: dehydrate(queryCache) } };
-};
+// export const getServerSideProps: GetServerSideProps = async (ctx) => {
+//     const queryCache = new QueryCache();
+//     // await queryCache.prefetchQuery('notes', fetchNotes);
+//     await isAuthenticated(ctx);
+//     // queryCache.setQueryData('tokens', { token, refresh });
+//     return { props: { dehydratedState: dehydrate(queryCache) } };
+// };

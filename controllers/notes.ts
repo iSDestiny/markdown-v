@@ -1,3 +1,5 @@
+import Cookies from 'cookies';
+import jwt from 'jsonwebtoken';
 import { INote } from '../models/Note';
 import { NextApiRequest, NextApiResponse } from 'next';
 import mongoose from 'mongoose';
@@ -13,6 +15,16 @@ type noteParamTypes = (
 
 export const getNotes: noteParamTypes = async (req, res, models) => {
     const { Note } = models;
+    const cookies = new Cookies(req, res);
+    const token = cookies.get('ACCESS_TOKEN');
+    let decoded: any;
+    try {
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+        if (err.name === 'TokenExpiredError')
+            throw new CustomStatusError(err.message, 401);
+        throw err;
+    }
     const notes = await Note.find();
     return res.json(notes);
 };

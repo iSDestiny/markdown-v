@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Router from 'next/router';
 import AuthForm from '../components/AuthForm';
-import { useQueryCache } from 'react-query';
+import { useQueryCache, useQuery } from 'react-query';
 import { SubmitHandler } from 'react-hook-form';
 import { fetchLogin } from '../utility/fetchAuth';
 import { GetServerSideProps } from 'next';
 import isUnauthenticated from '../utility/isUnauthenticated';
+// import { GetServerSideProps } from 'next';
+// import isUnauthenticated from '../utility/isUnauthenticated';
 
 type LoginFormValues = {
     email: string;
@@ -14,6 +17,10 @@ type LoginFormValues = {
 export default function Login() {
     const queryCache = useQueryCache();
     const [serverError, setServerError] = useState('');
+
+    // const { isSuccess } = useQuery('isAuthenticated', fetchRefresh, {
+    //     staleTime: Infinity
+    // });
 
     const login: SubmitHandler<LoginFormValues> = async (
         { email, password },
@@ -40,10 +47,5 @@ export default function Login() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-    try {
-        await isUnauthenticated(ctx);
-    } catch (err) {
-        console.log(err);
-    }
-    return { props: {} };
+    return isUnauthenticated(ctx);
 };

@@ -35,7 +35,7 @@ export const postSignup: noteParamTypes = async (req, res, models) => {
 };
 
 export const postLogin: noteParamTypes = async (req, res, models) => {
-    const { User, Refresh } = models;
+    const { User } = models;
     const { email, password }: { email: string; password: string } = req.body;
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) throw new CustomStatusError('Invalid email or password', 403);
@@ -45,43 +45,44 @@ export const postLogin: noteParamTypes = async (req, res, models) => {
     const token = jwt.sign(
         { email: user.email, userId: user._id },
         process.env.JWT_SECRET,
-        { expiresIn: '20s' }
+        { expiresIn: '1d' }
     );
-    const refresh = jwt.sign(
-        { email: user.email, userId: user._id },
-        process.env.REFRESH,
-        { expiresIn: '7d' }
-    );
-    const newRefresh = new Refresh({ token: refresh });
-    await newRefresh.save();
+    // const refresh = jwt.sign(
+    //     { email: user.email, userId: user._id },
+    //     process.env.REFRESH,
+    //     { expiresIn: '7d' }
+    // );
+    // const newRefresh = new Refresh({ token: refresh });
+    // await newRefresh.save();
     const cookies = new Cookies(req, res);
     cookies.set('ACCESS_TOKEN', token);
-    cookies.set('REFRESH_TOKEN', refresh);
+    // cookies.set('REFRESH_TOKEN', refresh);
     return res.status(201).json({ message: 'login successful' });
 };
 
-export const postRefresh: noteParamTypes = async (req, res, models) => {
-    const { Refresh } = models;
-    // const { token } = req.body;
-    const cookies = new Cookies(req, res);
-    const token = cookies.get('REFRESH_TOKEN');
-    // console.log(token);
-    const check = await Refresh.findOne({ token: token });
-    if (!check) throw new CustomStatusError('refresh token not found');
+// export const postRefresh: noteParamTypes = async (req, res, models) => {
+//     const { Refresh } = models;
+//     const cookies = new Cookies(req, res);
+//     const token = cookies.get('REFRESH_TOKEN');
+//     const check = await Refresh.findOne({ token: token });
+//     if (!check) throw new CustomStatusError('refresh token not found');
 
-    let decoded: any;
-    try {
-        decoded = jwt.verify(token, process.env.REFRESH);
-    } catch (err) {
-        if (err.name === 'TokenExpiredError')
-            await Refresh.deleteOne({ token: token });
-        throw new CustomStatusError(err.message, 401);
-    }
-    if (!decoded) throw new CustomStatusError('Not authenticated!', 401);
-    const { email, userId } = decoded;
-    const accessToken = jwt.sign({ email, userId }, process.env.JWT_SECRET, {
-        expiresIn: '20s'
-    });
-    // return res.status(201).json({ token: accessToken });
-    return res.status(201).json({ token: accessToken });
-};
+//     let decoded: any;
+//     try {
+//         decoded = jwt.verify(token, process.env.REFRESH);
+//     } catch (err) {
+//         if (err.name === 'TokenExpiredError')
+//             await Refresh.deleteOne({ token: token });
+//         throw new CustomStatusError(err.message, 401);
+//     }
+//     if (!decoded) throw new CustomStatusError('Not authenticated!', 401);
+
+//     const oldAccessToken = check.accessToken;
+//     const { email, userId } = decoded;
+//     const accessToken = jwt.sign({ email, userId }, process.env.JWT_SECRET, {
+//         expiresIn: '20s'
+//     });
+//     // return res.status(201).json({ token: accessToken });
+//     cookies.set('ACCESS_TOKEN', accessToken);
+//     return res.status(201).json({ token: accessToken });
+// };

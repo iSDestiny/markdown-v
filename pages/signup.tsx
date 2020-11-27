@@ -38,10 +38,5 @@ export default function SignUp() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-    try {
-        await isUnauthenticated(ctx);
-    } catch (err) {
-        console.log(err);
-    }
-    return { props: {} };
+    return isUnauthenticated(ctx);
 };
