@@ -1,38 +1,38 @@
+import { IUser } from './../models/User';
 import Cookies from 'cookies';
 import jwt from 'jsonwebtoken';
 import { INote } from '../models/Note';
 import { NextApiRequest, NextApiResponse } from 'next';
 import mongoose from 'mongoose';
 import CustomStatusError from '../utility/CustomStatusError';
+import authenticate from '../middleware/authenticate';
 
 type noteParamTypes = (
     req: NextApiRequest,
     res: NextApiResponse,
     models: {
         Note: mongoose.Model<INote, {}>;
+        User: mongoose.Model<IUser, {}>;
     }
 ) => Promise<void>;
 
 export const getNotes: noteParamTypes = async (req, res, models) => {
-    const { Note } = models;
-    const cookies = new Cookies(req, res);
-    const token = cookies.get('ACCESS_TOKEN');
-    let decoded: any;
-    try {
-        decoded = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
-        if (err.name === 'TokenExpiredError')
-            throw new CustomStatusError(err.message, 401);
-        throw err;
-    }
-    const notes = await Note.find();
-    return res.json(notes);
+    const { User } = models;
+    const userId = authenticate(req, res);
+    // const notes = await Note.find();
+    const user = await User.findById(userId);
+    const userNotes = await user.getNotes();
+    console.log(userNotes);
+    return res.json(userNotes);
 };
 
 export const postNotes: noteParamTypes = async (req, res, models) => {
-    const { Note } = models;
+    const { Note, User } = models;
+    const userId = authenticate(req, res);
     const note = new Note({});
     await note.save();
+    const user = await User.findById(userId);
+    await user.addNote(note);
     return res
         .status(201)
         .json({ message: 'Added note successfully', note: note });

@@ -1,11 +1,14 @@
+import { INote } from './Note';
 import mongoose from 'mongoose';
 
 export interface IUser extends mongoose.Document {
     email: string;
     password: string;
+    addNote: (note: INote) => any;
+    getNotes: () => any;
     notes?: [
         {
-            noteId: mongoose.Schema.Types.ObjectId;
+            _id: mongoose.Schema.Types.ObjectId;
             tags: [
                 {
                     tag: string;
@@ -27,7 +30,7 @@ const userSchema = new mongoose.Schema({
     },
     notes: [
         {
-            noteId: {
+            _id: {
                 type: mongoose.Schema.Types.ObjectId,
                 required: true,
                 ref: 'Note'
@@ -48,5 +51,19 @@ const userSchema = new mongoose.Schema({
         }
     ]
 });
+
+userSchema.methods.addNote = function (note: INote) {
+    this.notes.push({ _id: note, tags: [], favorite: false });
+    return this.save();
+};
+
+userSchema.methods.getNotes = async function () {
+    const user = await this.populate('notes._id').execPopulate();
+    const notes = user.notes.map(({ _id: note, favorite, tags }) => {
+        const { _id, title, content, createdAt, updatedAt } = note;
+        return { _id, title, content, createdAt, updatedAt, favorite, tags };
+    });
+    return notes;
+};
 
 export default userSchema;
