@@ -20,7 +20,7 @@ export default function Login() {
         event.preventDefault();
         try {
             const data = await queryCache.fetchQuery(
-                ['jwtToken', { email, password }],
+                ['tokens', { email, password }],
                 fetchLogin
             );
             console.log(data);

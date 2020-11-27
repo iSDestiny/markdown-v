@@ -22,6 +22,7 @@
     "mongodb": "^3.6.3",
     "mongoose": "^5.10.15",
     "next": "10.0.2",
+    "next-cookies": "^2.0.3",
     "next-transpile-modules": "^4.1.0",
     "react": "17.0.1",
     "react-ace": "^9.2.0",
