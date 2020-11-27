@@ -1,23 +1,27 @@
-import { INote } from './Note';
 import mongoose from 'mongoose';
+import CustomStatusError from '../utility/CustomStatusError';
+export interface INote extends mongoose.Document {
+    _id: mongoose.Schema.Types.ObjectId;
+    title: string;
+    content: string;
+    tags: [
+        {
+            tag: string;
+        }
+    ];
+    favorite: Boolean;
+    createdAt: Date;
+    updatedAt: Date;
+}
 
 export interface IUser extends mongoose.Document {
     email: string;
     password: string;
-    addNote: (note: INote) => any;
+    addNote: () => any;
     getNotes: () => any;
     deleteNote: (id: any) => any;
-    notes?: [
-        {
-            _id: mongoose.Schema.Types.ObjectId;
-            tags: [
-                {
-                    tag: string;
-                }
-            ];
-            favorite: Boolean;
-        }
-    ];
+    modifyNote: (id: string, content: string, title: string) => any;
+    notes?: INote[];
 }
 
 const userSchema = new mongoose.Schema({
@@ -31,47 +35,75 @@ const userSchema = new mongoose.Schema({
     },
     notes: [
         {
-            _id: {
-                type: mongoose.Schema.Types.ObjectId,
-                required: true,
-                ref: 'Note'
-            },
-            tags: [
+            type: new mongoose.Schema(
                 {
-                    tag: {
+                    title: {
                         type: String,
+                        required: true,
+                        default: 'Untitled'
+                    },
+                    content: {
+                        type: String,
+                        required: true,
+                        default: '# Untitled'
+                    },
+                    tags: [
+                        {
+                            tag: {
+                                type: String,
+                                required: true
+                            }
+                        }
+                    ],
+                    favorite: {
+                        type: Boolean,
+                        default: false,
                         required: true
                     }
-                }
-            ],
-            favorite: {
-                type: Boolean,
-                default: false,
-                required: true
-            }
+                },
+                { timestamps: true }
+            )
         }
     ]
 });
 
-userSchema.methods.addNote = function (note: INote) {
-    this.notes.push({ _id: note, tags: [], favorite: false });
-    return this.save();
+userSchema.methods.addNote = async function () {
+    this.notes.push({ tags: [] });
+    await this.save();
+    return this.notes[this.notes.length - 1];
 };
 
 userSchema.methods.getNotes = async function () {
-    const user = await this.populate('notes._id').execPopulate();
-    const notes = user.notes.map(({ _id: note, favorite, tags }) => {
-        const { _id, title, content, createdAt, updatedAt } = note;
-        return { _id, title, content, createdAt, updatedAt, favorite, tags };
-    });
-    return notes;
+    // const user = await this.populate('notes._id').execPopulate();
+    // const notes = user.notes.map(({ _id: note, favorite, tags }) => {
+    //     const { _id, title, content, createdAt, updatedAt } = note;
+    //     return { _id, title, content, createdAt, updatedAt, favorite, tags };
+    // });
+    return this.notes;
 };
 
-userSchema.methods.deleteNote = function (id: any) {
+userSchema.methods.modifyNote = async function (
+    id: string,
+    content: string,
+    title: string
+) {
+    const index = this.notes.findIndex(
+        (note: INote) => note._id.toString() === id.toString()
+    );
+    if (index < 0)
+        throw new CustomStatusError('Tried to modify a nonexistent note', 404);
+    this.notes[index].content = content;
+    this.notes[index].title = title;
+    await this.save();
+    return this.notes[index];
+};
+
+userSchema.methods.deleteNote = async function (id: any) {
     this.notes = this.notes.filter(
         (note: IUser['notes'][0]) => note._id.toString() !== id.toString()
     );
-    return this.save();
+    await this.save();
+    return id;
 };
 
 export default userSchema;
