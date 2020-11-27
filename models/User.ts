@@ -6,6 +6,7 @@ export interface IUser extends mongoose.Document {
     password: string;
     addNote: (note: INote) => any;
     getNotes: () => any;
+    deleteNote: (id: any) => any;
     notes?: [
         {
             _id: mongoose.Schema.Types.ObjectId;
@@ -64,6 +65,13 @@ userSchema.methods.getNotes = async function () {
         return { _id, title, content, createdAt, updatedAt, favorite, tags };
     });
     return notes;
+};
+
+userSchema.methods.deleteNote = function (id: any) {
+    this.notes = this.notes.filter(
+        (note: IUser['notes'][0]) => note._id.toString() !== id.toString()
+    );
+    return this.save();
 };
 
 export default userSchema;

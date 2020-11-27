@@ -29,7 +29,7 @@ export const getNotes: noteParamTypes = async (req, res, models) => {
 export const postNotes: noteParamTypes = async (req, res, models) => {
     const { Note, User } = models;
     const userId = authenticate(req, res);
-    const note = new Note({});
+    const note = new Note({ userId });
     await note.save();
     const user = await User.findById(userId);
     await user.addNote(note);
@@ -40,8 +40,11 @@ export const postNotes: noteParamTypes = async (req, res, models) => {
 
 export const deleteNote: noteParamTypes = async (req, res, models) => {
     const { id } = req.query;
-    const { Note } = models;
-    const deleted = await Note.findOneAndDelete({ _id: id });
+    const { Note, User } = models;
+    const userId = authenticate(req, res);
+    const user = await User.findById(userId);
+    await user.deleteNote(id);
+    const deleted = await Note.findOneAndDelete({ _id: id, userId });
     if (!deleted)
         throw new CustomStatusError(
             'Tried to delete something that does not exist',
@@ -49,8 +52,8 @@ export const deleteNote: noteParamTypes = async (req, res, models) => {
         );
 
     return res.status(200).json({
-        message: `Deleted note with id ${deleted._id} successfully`,
-        id: deleted._id
+        message: `Deleted note with id ${id} successfully`,
+        id: id
     });
 };
 
