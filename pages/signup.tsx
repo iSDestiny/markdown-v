@@ -41,6 +41,7 @@ export default function SignUp() {
             onSubmit={signup}
             serverError={serverError}
             signupSuccess={signupSuccess}
+            setSignupSuccess={setSignupSuccess}
         />
     );
 }

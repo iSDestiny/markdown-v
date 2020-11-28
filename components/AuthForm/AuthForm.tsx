@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Link from 'next/link';
-// import classes from '../styles/Authentication.module.scss';
 import classNames from 'classnames';
 import {
     Typography,
@@ -13,18 +12,20 @@ import {
     TextField,
     Paper,
     InputLabel,
-    Input,
     InputAdornment,
     IconButton,
     FormControl,
     OutlinedInput,
-    FormHelperText
+    FormHelperText,
+    Modal,
+    Fade,
+    Backdrop
 } from '@material-ui/core';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { TreeItem } from '@material-ui/lab';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
+import classes from './AuthForm.module.scss';
 
 const Copyright = () => {
     return (
@@ -40,6 +41,7 @@ interface AuthFormProps<T> {
     onSubmit: SubmitHandler<T>;
     serverError: string;
     signupSuccess?: boolean;
+    setSignupSuccess?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface FormInputs {
@@ -59,7 +61,8 @@ export default function AuthForm<T>({
     type,
     onSubmit,
     serverError,
-    signupSuccess = false
+    signupSuccess = false,
+    setSignupSuccess
 }: AuthFormProps<T>) {
     const { register, handleSubmit, errors } = useForm<FormInputs>({
         resolver: yupResolver(schema)
@@ -89,19 +92,34 @@ export default function AuthForm<T>({
                             {serverError}
                         </Typography>
                     )}
-                    {signupSuccess && (
-                        <Typography
-                            variant="body1"
-                            style={{
-                                color: '#6BBC65',
-                                marginBottom: '-1rem',
-                                marginTop: '0.5rem'
-                            }}
-                        >
-                            You have successfully been registered, please log in
-                            in order to get started with MarkdownV!
-                        </Typography>
-                    )}
+                    <Modal
+                        aria-labelledby="transition-modal-title"
+                        aria-describedby="transition-modal-description"
+                        className={classes.modal}
+                        open={signupSuccess}
+                        onClose={() => setSignupSuccess(false)}
+                        closeAfterTransition
+                        BackdropComponent={Backdrop}
+                        BackdropProps={{
+                            timeout: 500
+                        }}
+                    >
+                        <Fade in={signupSuccess}>
+                            <div className={classes['modal-content']}>
+                                <h2
+                                    id="transition-modal-title"
+                                    className={classes.success}
+                                >
+                                    Thanks! You have been successfully
+                                    registered.
+                                </h2>
+                                <p id="transition-modal-description">
+                                    You can now login with the information you
+                                    provided in order to start using MarkdownV.
+                                </p>
+                            </div>
+                        </Fade>
+                    </Modal>
                     <form
                         className="auth-form"
                         noValidate
