@@ -12,6 +12,7 @@ type SignUpFormValues = {
 
 export default function SignUp() {
     const [serverError, setServerError] = useState('');
+    const [signupSuccess, setSignupSuccess] = useState(false);
     const signup: SubmitHandler<SignUpFormValues> = async (
         { email, password },
         event
@@ -22,18 +23,25 @@ export default function SignUp() {
                 `${process.env.NEXT_PUBLIC_SERVER_ORIGIN}/api/auth/signup`,
                 { email, password }
             );
-            console.log('success signup');
+            setSignupSuccess(true);
+            setServerError('');
         } catch ({
             response: {
                 data: { message }
             }
         }) {
             console.log(message);
+            setSignupSuccess(false);
             setServerError(message);
         }
     };
     return (
-        <AuthForm type="signup" onSubmit={signup} serverError={serverError} />
+        <AuthForm
+            type="signup"
+            onSubmit={signup}
+            serverError={serverError}
+            signupSuccess={signupSuccess}
+        />
     );
 }
 

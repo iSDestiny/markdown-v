@@ -26,19 +26,20 @@ import * as yup from 'yup';
 import { TreeItem } from '@material-ui/lab';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
-function Copyright() {
+const Copyright = () => {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © MarkdownV '}
             {new Date().getFullYear()}
         </Typography>
     );
-}
+};
 
 interface AuthFormProps<T> {
     type: String;
     onSubmit: SubmitHandler<T>;
     serverError: string;
+    signupSuccess?: boolean;
 }
 
 interface FormInputs {
@@ -57,7 +58,8 @@ const schema = yup.object().shape({
 export default function AuthForm<T>({
     type,
     onSubmit,
-    serverError
+    serverError,
+    signupSuccess = false
 }: AuthFormProps<T>) {
     const { register, handleSubmit, errors } = useForm<FormInputs>({
         resolver: yupResolver(schema)
@@ -85,6 +87,19 @@ export default function AuthForm<T>({
                             }}
                         >
                             {serverError}
+                        </Typography>
+                    )}
+                    {signupSuccess && (
+                        <Typography
+                            variant="body1"
+                            style={{
+                                color: '#6BBC65',
+                                marginBottom: '-1rem',
+                                marginTop: '0.5rem'
+                            }}
+                        >
+                            You have successfully been registered, please log in
+                            in order to get started with MarkdownV!
                         </Typography>
                     )}
                     <form
