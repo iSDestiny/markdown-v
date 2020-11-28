@@ -29,10 +29,11 @@ export default function Login() {
         event.preventDefault();
         try {
             const data = await queryCache.fetchQuery(
-                ['tokens', { email, password }],
+                ['isAuth', { email, password }],
                 fetchLogin
             );
             console.log(data);
+            Router.push('/');
         } catch ({
             response: {
                 data: { message }
@@ -40,6 +41,7 @@ export default function Login() {
         }) {
             console.log(message);
             setServerError(message);
+            queryCache.setQueryData('isAuth', false);
         }
     };
 

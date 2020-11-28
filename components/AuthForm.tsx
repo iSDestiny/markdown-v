@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Link from 'next/link';
 // import classes from '../styles/Authentication.module.scss';
@@ -11,12 +11,20 @@ import {
     Button,
     Grid,
     TextField,
-    Paper
+    Paper,
+    InputLabel,
+    Input,
+    InputAdornment,
+    IconButton,
+    FormControl,
+    OutlinedInput,
+    FormHelperText
 } from '@material-ui/core';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { TreeItem } from '@material-ui/lab';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 function Copyright() {
     return (
@@ -54,6 +62,8 @@ export default function AuthForm<T>({
     const { register, handleSubmit, errors } = useForm<FormInputs>({
         resolver: yupResolver(schema)
     });
+
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
         <Container component="main" maxWidth="xs">
@@ -96,20 +106,46 @@ export default function AuthForm<T>({
                             autoComplete="email"
                             autoFocus
                         />
-                        <TextField
-                            inputRef={register}
-                            variant="outlined"
-                            margin="normal"
-                            helperText={errors.password?.message}
-                            error={Boolean(errors.password)}
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                        />
+                        <FormControl variant="outlined" fullWidth required>
+                            <InputLabel htmlFor="standard-adornment-password">
+                                Password
+                            </InputLabel>
+                            <OutlinedInput
+                                name="password"
+                                inputRef={register}
+                                required
+                                fullWidth
+                                id="password"
+                                autoComplete="current-password"
+                                type={showPassword ? 'text' : 'password'}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={() =>
+                                                setShowPassword((prev) => !prev)
+                                            }
+                                        >
+                                            {showPassword ? (
+                                                <Visibility />
+                                            ) : (
+                                                <VisibilityOff />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                            {errors.password && (
+                                <FormHelperText
+                                    variant="outlined"
+                                    required
+                                    error={Boolean(errors.password)}
+                                    id="password-helper-text"
+                                >
+                                    {errors.password.message}
+                                </FormHelperText>
+                            )}
+                        </FormControl>
                         <Button
                             type="submit"
                             fullWidth

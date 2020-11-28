@@ -15,6 +15,7 @@
     "@reduxjs/toolkit": "^1.4.0",
     "@types/cookies": "^0.7.5",
     "@types/http-proxy": "^1.17.4",
+    "@types/yup": "^0.29.9",
     "ace-builds": "^1.4.12",
     "axios": "^0.21.0",
     "bcrypt": "^5.0.0",
