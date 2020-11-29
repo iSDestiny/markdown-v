@@ -25,6 +25,7 @@ import cookies from 'next-cookies';
 // import fetchRefresh from '../utility/fetchRefresh';
 import isAuthenticated from '../utility/isAuthenticated';
 import { fetchRefreshQuery } from '../utility/fetchRefresh';
+import SideMenu from '../components/SideMenu/SideMenu';
 
 export default function Notes() {
     // const [isLoadingInitial, setIsLoadingInitial] = useState(true);
@@ -65,17 +66,22 @@ export default function Notes() {
                         style={{ position: 'fixed', width: '100%' }}
                     />
                 )}
+                <SideMenu />
                 <NotesMenu />
                 <section className={classes['editor-container']}>
-                    <TopMenu
-                        notes={notes}
-                        isFavorite={isFavorite}
-                        setIsFavorite={setIsFavorite}
-                    />
-                    <div className={classes['editor-main']}>
-                        {canEdit ? <Editor /> : <Preview />}
-                        {canPreview && <Preview isResizable />}
-                    </div>
+                    {notes.length > 0 && (
+                        <>
+                            <TopMenu
+                                notes={notes}
+                                isFavorite={isFavorite}
+                                setIsFavorite={setIsFavorite}
+                            />
+                            <div className={classes['editor-main']}>
+                                {canEdit ? <Editor /> : <Preview />}
+                                {canPreview && <Preview isResizable />}
+                            </div>
+                        </>
+                    )}
                 </section>
             </main>
             {process.env.NODE_ENV === 'development' && (

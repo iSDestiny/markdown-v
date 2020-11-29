@@ -47,11 +47,6 @@ const NotesMenu = () => {
                 </div>
                 <div className={classes.row2}>
                     <p>{notes.length} notes</p>
-                    {/* <Tooltip title="Sort Options">
-                        <IconButton color="inherit" size="small" edge="end">
-                            <SortIcon fontSize="inherit" />
-                        </IconButton>
-                    </Tooltip> */}
                     <SortOptions />
                 </div>
             </header>
@@ -63,12 +58,14 @@ const NotesMenu = () => {
                             key={note._id}
                             selected={index === current}
                             style={{
-                                display: 'flex',
-                                justifyContent: 'space-between'
+                                display: 'flex'
                             }}
                             onClick={() => noteSelectionHandler(index)}
                         >
-                            <ListItemText primary={note.title} />
+                            <ListItemText
+                                primary={note.title}
+                                classes={{ primary: classes['menu-item-text'] }}
+                            />
                             {note.isTemp && (
                                 <Chip
                                     label="unsaved"

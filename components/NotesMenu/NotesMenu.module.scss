@@ -20,9 +20,12 @@
     }
 }
 
-// .invisible {
-//     visibility: hidden;
-// }
+.menu-item-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-right: 1.4rem;
+}
 
 .sort-option-type {
     .not-selected {

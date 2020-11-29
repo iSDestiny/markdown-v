@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@material-ui/core';
+import { StylesProvider, ThemeProvider } from '@material-ui/core';
 import { Provider } from 'react-redux';
 import { ReactQueryCacheProvider, QueryCache } from 'react-query';
 import { Hydrate } from 'react-query/hydration';
@@ -22,9 +22,11 @@ function MyApp({ Component, pageProps }: AppProps) {
             <Provider store={store}>
                 <ReactQueryCacheProvider queryCache={queryCache}>
                     <Hydrate state={pageProps.dehydratedState}>
-                        <ThemeProvider theme={theme}>
-                            <Component {...pageProps} />
-                        </ThemeProvider>
+                        <StylesProvider injectFirst>
+                            <ThemeProvider theme={theme}>
+                                <Component {...pageProps} />
+                            </ThemeProvider>
+                        </StylesProvider>
                     </Hydrate>
                 </ReactQueryCacheProvider>
             </Provider>
