@@ -1,6 +1,4 @@
 import { IUser } from './../models/User';
-import Cookies from 'cookies';
-import jwt from 'jsonwebtoken';
 import { INote } from '../models/Note';
 import { NextApiRequest, NextApiResponse } from 'next';
 import mongoose from 'mongoose';
@@ -19,7 +17,6 @@ type noteParamTypes = (
 export const getNotes: noteParamTypes = async (req, res, models) => {
     const { User } = models;
     const userId = authenticate(req, res);
-    // const notes = await Note.find();
     const user = await User.findById(userId);
     const userNotes = await user.getNotes();
     console.log(userNotes);
@@ -27,10 +24,8 @@ export const getNotes: noteParamTypes = async (req, res, models) => {
 };
 
 export const postNotes: noteParamTypes = async (req, res, models) => {
-    const { Note, User } = models;
+    const { User } = models;
     const userId = authenticate(req, res);
-    // const note = new Note({ userId });
-    // await note.save();
     const user = await User.findById(userId);
     const note = await user.addNote();
     return res
@@ -40,11 +35,10 @@ export const postNotes: noteParamTypes = async (req, res, models) => {
 
 export const deleteNote: noteParamTypes = async (req, res, models) => {
     const { id } = req.query;
-    const { Note, User } = models;
+    const { User } = models;
     const userId = authenticate(req, res);
     const user = await User.findById(userId);
     const deleted = await user.deleteNote(id);
-    // const deleted = await Note.findOneAndDelete({ _id: id, userId });
     if (!deleted)
         throw new CustomStatusError(
             'Tried to delete something that does not exist',
@@ -59,19 +53,10 @@ export const deleteNote: noteParamTypes = async (req, res, models) => {
 
 export const modifyNote: noteParamTypes = async (req, res, models) => {
     const { _id: id, content, title } = req.body;
-    const { Note, User } = models;
-    // const note = await Note.findById(id);
+    const { User } = models;
     const userId = authenticate(req, res);
     const user = await User.findById(userId);
-    // const note = user.getNote(id);
     const note = await user.modifyNote(id, content, title);
-
-    // if (!note)
-    //     throw new CustomStatusError('Tried to modify a nonexistent note', 404);
-
-    // note.content = content;
-    // note.title = title;
-    // await note.save();
 
     console.log('modified');
     return res.status(200).json({

@@ -1,36 +1,28 @@
+import { LinearProgress } from '@material-ui/core';
 import Head from 'next/head';
 import Router from 'next/router';
-import Cookies from 'cookies';
-import jwt from 'jsonwebtoken';
+import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import { ReactQueryDevtools } from 'react-query-devtools';
 import { useDispatch, useSelector } from 'react-redux';
-import fetchNotes from '../utility/fetchNotes';
-import React, { useEffect, useState } from 'react';
-import classes from '../styles/Home.module.scss';
-import TopMenu from '../components/TopMenu';
-import Preview from '../components/Preview';
 import Editor from '../components/Editor';
-import { LinearProgress } from '@material-ui/core';
+import LoadingScreen from '../components/LoadingScreen';
+import NotesMenu from '../components/NotesMenu';
+import Preview from '../components/Preview';
+import SideMenu from '../components/SideMenu';
+import TopMenu from '../components/TopMenu';
+import useLoader from '../hooks/useLoader';
 import {
     selectEditor,
     setNotesFromOriginal
 } from '../store/slices/editorSlice';
-import { queryCache, useQuery } from 'react-query';
-import { ReactQueryDevtools } from 'react-query-devtools';
-import NotesMenu from '../components/NotesMenu';
-import useLoader from '../hooks/useLoader';
-import LoadingScreen from '../components/LoadingScreen';
-import { GetServerSideProps } from 'next';
-import { dehydrate } from 'react-query/hydration';
-import cookies from 'next-cookies';
-// import fetchRefresh from '../utility/fetchRefresh';
-import isAuthenticated from '../utility/isAuthenticated';
-import { fetchRefreshQuery } from '../utility/fetchRefresh';
-import SideMenu from '../components/SideMenu/SideMenu';
+import classes from '../styles/Home.module.scss';
+import fetchNotes from '../utility/fetchNotes';
 
 export default function Notes() {
-    // const [isLoadingInitial, setIsLoadingInitial] = useState(true);
     const redirectOnFailedFetch = (err: any) => {
-        Router.push('/login');
+        if (err.response.status === 401) Router.push('/login');
+        else Router.push('/500');
     };
     const {
         data: originalNotes,

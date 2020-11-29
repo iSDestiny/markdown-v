@@ -10,9 +10,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     try {
         decoded = jwt.verify(token, process.env.JWT_SECRET);
     } catch (err) {
-        if (err.name === 'TokenExpiredError')
-            throw new CustomStatusError(err.message, 401);
-        throw err;
+        throw new CustomStatusError(err.message, 401);
     }
     return decoded.userId;
 };
