@@ -51,9 +51,10 @@ const SortOptions = () => {
                 open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
             >
-                <ListItemText style={{ paddingLeft: '1rem' }}>
-                    Sort By
-                </ListItemText>
+                <ListItemText
+                    primary="Sort By"
+                    style={{ paddingLeft: '1rem' }}
+                />
                 <MenuItem
                     selected={sortType.includes('title')}
                     onClick={() => sortHandler('title')}

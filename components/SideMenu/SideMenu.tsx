@@ -9,15 +9,20 @@ import {
     Star
 } from '@material-ui/icons';
 import { useState } from 'react';
+import AccountOptions from './AccountOptions';
 import classes from './SideMenu.module.scss';
 
 const SideMenu = () => {
     const [tagOpen, setTagOpen] = useState(false);
+    const [anchorEl, setAnchorEl] = useState<Element>(null);
 
     return (
         <div className={classes.root}>
             <header className={classes.header}>
-                <button className={classes.user}>
+                <button
+                    className={classes.user}
+                    onClick={(event) => setAnchorEl(event.currentTarget)}
+                >
                     <div>
                         <AccountCircle
                             fontSize="large"
@@ -27,6 +32,7 @@ const SideMenu = () => {
                     </div>
                     <ExpandMore style={{ margin: 'auto 0' }} />
                 </button>
+                <AccountOptions anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
             </header>
             <List>
                 <ListItem button>
