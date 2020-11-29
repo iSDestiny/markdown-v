@@ -53,3 +53,67 @@
     text-overflow: ellipsis;
     padding-left: 9px;
 }
+
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $text-1;
+    padding: 2rem;
+    outline: none;
+}
+
+.accpunt-modal-title {
+    font-size: 1.5rem;
+}
+
+.account-modal-content {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    padding: 2rem;
+    background-color: $bg-dark-1;
+    color: $text-1;
+    outline: none;
+    border-radius: 5px;
+}
+
+.account-modal-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.account-info-item {
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
+    margin-bottom: 0.5rem;
+    .account-info-item-heading {
+        display: inline-block;
+        font-size: 1rem;
+    }
+    .account-info-item-body {
+        display: inline-block;
+        flex-direction: column;
+        padding: auto;
+        text-align: start;
+        width: 260px;
+        line-height: 0.2rem;
+    }
+    p {
+        line-height: 1rem;
+    }
+    .disabled-change {
+        color: currentColor;
+        cursor: not-allowed;
+        opacity: 0.5;
+        text-decoration: none;
+    }
+    a {
+        margin: auto 0;
+        display: block;
+        height: 1.3rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+}

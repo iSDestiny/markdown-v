@@ -2,6 +2,8 @@ import axios from 'axios';
 import Router from 'next/router';
 import { ListItemText, Menu, MenuItem } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
+import { useState } from 'react';
+import AccountInfoModal from './AccountInfoModal';
 
 interface AccountOptionsProps {
     anchorEl: Element;
@@ -9,6 +11,8 @@ interface AccountOptionsProps {
 }
 
 const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
+    const [accountInfoOpen, setAccountInfoOpen] = useState(false);
+
     const logout = async () => {
         try {
             await axios.post(
@@ -31,7 +35,7 @@ const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
             onClose={() => setAnchorEl(null)}
         >
             <ListItemText primary="Account" style={{ paddingLeft: '1rem' }} />
-            <MenuItem>
+            <MenuItem onClick={() => setAccountInfoOpen(true)}>
                 <AccountCircle fontSize="large" style={{ margin: 'auto 0' }} />
                 <ListItemText
                     primary="Jason Bugallon"
@@ -39,6 +43,10 @@ const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
                     style={{ paddingLeft: 9 }}
                 />
             </MenuItem>
+            <AccountInfoModal
+                accountInfoOpen={accountInfoOpen}
+                setAccountInfoOpen={setAccountInfoOpen}
+            />
             <MenuItem onClick={() => logout()}>
                 <ListItemText primary="Logout" />
             </MenuItem>
