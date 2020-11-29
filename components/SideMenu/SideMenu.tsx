@@ -1,30 +1,87 @@
-import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import { Description, LocalOffer, Star } from '@material-ui/icons';
+import { Collapse, List, ListItem, ListItemText } from '@material-ui/core';
+import {
+    AccountCircle,
+    Description,
+    ExpandLess,
+    ExpandMore,
+    LocalOffer,
+    LocalOfferOutlined,
+    Star
+} from '@material-ui/icons';
+import { useState } from 'react';
 import classes from './SideMenu.module.scss';
 
-const SideMenuListItemText = ({ primary }: { primary: string }) => {
-    return <ListItemText primary={primary} style={{ marginLeft: 9 }} />;
-};
-
 const SideMenu = () => {
+    const [tagOpen, setTagOpen] = useState(false);
+
     return (
         <div className={classes.root}>
             <header className={classes.header}>
-                <h1>Jason Bugallon</h1>
+                <button className={classes.user}>
+                    <div>
+                        <AccountCircle
+                            fontSize="large"
+                            style={{ margin: 'auto 0' }}
+                        />
+                        <h1>Jason Bugallon</h1>
+                    </div>
+                    <ExpandMore style={{ margin: 'auto 0' }} />
+                </button>
             </header>
             <List>
-                <ListItem>
+                <ListItem button>
                     <Description fontSize="small" />
-                    <SideMenuListItemText primary="All Notes" />
+                    <ListItemText
+                        primary="All Notes"
+                        classes={{ primary: classes['item-text'] }}
+                    />
                 </ListItem>
-                <ListItem>
+                <ListItem button>
                     <Star fontSize="small" />
-                    <SideMenuListItemText primary="Favorites" />
+                    <ListItemText
+                        primary="Favorites"
+                        classes={{ primary: classes['item-text'] }}
+                    />
                 </ListItem>
-                <ListItem>
+                <ListItem button onClick={() => setTagOpen((prev) => !prev)}>
                     <LocalOffer fontSize="small" />
-                    <SideMenuListItemText primary="Tags" />
+                    <ListItemText
+                        primary="Tags"
+                        classes={{ primary: classes['item-text'] }}
+                    />
+                    {tagOpen ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
+                <Collapse in={tagOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        <ListItem button style={{ paddingLeft: '2.5rem' }}>
+                            <LocalOfferOutlined fontSize="small" />
+                            <ListItemText
+                                primary="Tag 1"
+                                classes={{ primary: classes['item-text'] }}
+                            />
+                        </ListItem>
+                        <ListItem
+                            button
+                            style={{
+                                paddingLeft: '2.5rem',
+                                paddingRight: '2rem'
+                            }}
+                        >
+                            <LocalOfferOutlined fontSize="small" />
+                            <ListItemText
+                                primary="asdfasff"
+                                classes={{ primary: classes['item-text'] }}
+                            />
+                        </ListItem>
+                        <ListItem button style={{ paddingLeft: '2.5rem' }}>
+                            <LocalOfferOutlined fontSize="small" />
+                            <ListItemText
+                                primary="Tag 1"
+                                classes={{ primary: classes['item-text'] }}
+                            />
+                        </ListItem>
+                    </List>
+                </Collapse>
             </List>
         </div>
     );

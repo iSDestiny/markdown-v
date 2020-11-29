@@ -6,15 +6,49 @@
     background-color: $bg-dark-4;
     color: $text-1;
     height: 100%;
-    width: 200px;
+    width: 230px;
+    max-width: 200px;
 }
 
 .header {
-    padding: 0 1rem;
-    h1 {
-        font-size: 1.2rem;
+    padding: 1rem 1rem 0rem 1rem;
+}
+
+.user {
+    width: 100%;
+    display: flex;
+    outline: none;
+    background: transparent;
+    justify-content: space-between;
+    align-items: center;
+    color: inherit;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+
+    &:hover {
+        color: $primary;
+    }
+
+    div {
+        display: flex;
+        padding-right: 1rem;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        h1 {
+            font-size: 1rem;
+            padding-left: 9px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
     }
+}
+
+.item-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-left: 9px;
 }
