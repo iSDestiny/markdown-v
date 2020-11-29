@@ -1,4 +1,6 @@
-import { ListItem, ListItemText, Menu, MenuItem } from '@material-ui/core';
+import axios from 'axios';
+import Router from 'next/router';
+import { ListItemText, Menu, MenuItem } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 
 interface AccountOptionsProps {
@@ -7,6 +9,18 @@ interface AccountOptionsProps {
 }
 
 const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
+    const logout = async () => {
+        try {
+            await axios.post(
+                `${process.env.NEXT_PUBLIC_SERVER_ORIGIN}/api/auth/logout`,
+                {}
+            );
+            Router.push('/login');
+        } catch (err) {
+            Router.push('/500');
+        }
+    };
+
     return (
         <Menu
             color="secondary"
@@ -25,7 +39,7 @@ const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
                     style={{ paddingLeft: 9 }}
                 />
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={() => logout()}>
                 <ListItemText primary="Logout" />
             </MenuItem>
         </Menu>

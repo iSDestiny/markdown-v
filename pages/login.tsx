@@ -18,10 +18,6 @@ export default function Login() {
     const queryCache = useQueryCache();
     const [serverError, setServerError] = useState('');
 
-    // const { isSuccess } = useQuery('isAuthenticated', fetchRefresh, {
-    //     staleTime: Infinity
-    // });
-
     const login: SubmitHandler<LoginFormValues> = async (
         { email, password },
         event

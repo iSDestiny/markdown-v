@@ -6,7 +6,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import CustomStatusError from '../utility/CustomStatusError';
-import { IRefresh } from '../models/Refresh';
 
 type noteParamTypes = (
     req: NextApiRequest,
@@ -14,7 +13,6 @@ type noteParamTypes = (
     models: {
         Note: mongoose.Model<INote, {}>;
         User: mongoose.Model<IUser, {}>;
-        Refresh: mongoose.Model<IRefresh, {}>;
     }
 ) => Promise<void>;
 
@@ -47,42 +45,16 @@ export const postLogin: noteParamTypes = async (req, res, models) => {
         process.env.JWT_SECRET,
         { expiresIn: '1d' }
     );
-    // const refresh = jwt.sign(
-    //     { email: user.email, userId: user._id },
-    //     process.env.REFRESH,
-    //     { expiresIn: '7d' }
-    // );
-    // const newRefresh = new Refresh({ token: refresh });
-    // await newRefresh.save();
     const cookies = new Cookies(req, res);
     cookies.set('ACCESS_TOKEN', token);
-    // cookies.set('REFRESH_TOKEN', refresh);
-    return res.status(201).json({ message: 'login successful' });
+    // return res.status(201).json({ message: 'login successful' });
+    res.writeHead(302, { Location: '/' });
+    return res.end();
 };
 
-// export const postRefresh: noteParamTypes = async (req, res, models) => {
-//     const { Refresh } = models;
-//     const cookies = new Cookies(req, res);
-//     const token = cookies.get('REFRESH_TOKEN');
-//     const check = await Refresh.findOne({ token: token });
-//     if (!check) throw new CustomStatusError('refresh token not found');
-
-//     let decoded: any;
-//     try {
-//         decoded = jwt.verify(token, process.env.REFRESH);
-//     } catch (err) {
-//         if (err.name === 'TokenExpiredError')
-//             await Refresh.deleteOne({ token: token });
-//         throw new CustomStatusError(err.message, 401);
-//     }
-//     if (!decoded) throw new CustomStatusError('Not authenticated!', 401);
-
-//     const oldAccessToken = check.accessToken;
-//     const { email, userId } = decoded;
-//     const accessToken = jwt.sign({ email, userId }, process.env.JWT_SECRET, {
-//         expiresIn: '20s'
-//     });
-//     // return res.status(201).json({ token: accessToken });
-//     cookies.set('ACCESS_TOKEN', accessToken);
-//     return res.status(201).json({ token: accessToken });
-// };
+export const postLogout = async (req: NextApiRequest, res: NextApiResponse) => {
+    const cookies = new Cookies(req, res);
+    cookies.set('ACCESS_TOKEN');
+    res.writeHead(302, { Location: '/login' });
+    return res.end();
+};
