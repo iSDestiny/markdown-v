@@ -130,3 +130,23 @@
         margin-bottom: 1rem;
     }
 }
+
+.success-modal-content {
+    display: flex;
+    flex-direction: column;
+    outline: none;
+    border-radius: 5px;
+    padding: 1rem 24px;
+    max-width: 500px;
+    background-color: $bg-dark-1;
+    color: $text-1;
+    .success {
+        font-size: 1.3rem;
+        margin: 0;
+        color: #fff;
+    }
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+    }
+}

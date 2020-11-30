@@ -18,6 +18,8 @@ interface PasswordFieldProps {
     setShowPassword: Dispatch<SetStateAction<boolean>>;
     errors: DeepMap<any, FieldError>;
     labelWidth: number;
+    tabIndex: number;
+    autoFocus?: boolean;
 }
 
 const PasswordField = ({
@@ -27,7 +29,9 @@ const PasswordField = ({
     showPassword,
     setShowPassword,
     errors,
-    labelWidth
+    labelWidth,
+    autoFocus,
+    tabIndex
 }: PasswordFieldProps) => {
     return (
         <FormControl variant="outlined" fullWidth required>
@@ -37,8 +41,10 @@ const PasswordField = ({
             <OutlinedInput
                 name={name}
                 inputRef={register}
+                autoFocus={autoFocus}
                 required
                 fullWidth
+                inputProps={{ tabIndex }}
                 id={`outlined-adornment-${name}`}
                 autoComplete="current-password"
                 type={showPassword ? 'text' : 'password'}
@@ -47,6 +53,7 @@ const PasswordField = ({
                         <IconButton
                             aria-label="toggle password visibility"
                             onClick={() => setShowPassword((prev) => !prev)}
+                            tabIndex={-1}
                         >
                             {showPassword ? <Visibility /> : <VisibilityOff />}
                         </IconButton>

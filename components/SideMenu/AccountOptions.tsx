@@ -32,31 +32,40 @@ const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
     };
 
     return (
-        <Menu
-            color="secondary"
-            id="account-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={() => setAnchorEl(null)}
-        >
-            <ListItemText primary="Account" style={{ paddingLeft: '1rem' }} />
-            <MenuItem onClick={accountInfoHandler}>
-                <AccountCircle fontSize="large" style={{ margin: 'auto 0' }} />
+        <>
+            <Menu
+                color="secondary"
+                id="account-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                autoFocus={false}
+                open={Boolean(anchorEl)}
+                onClose={() => setAnchorEl(null)}
+            >
                 <ListItemText
-                    primary="Jason Bugallon"
-                    secondary="Jasonbugallon@gmail.com"
-                    style={{ paddingLeft: 9 }}
+                    primary="Account"
+                    style={{ paddingLeft: '1rem' }}
                 />
-            </MenuItem>
+                <MenuItem onClick={accountInfoHandler}>
+                    <AccountCircle
+                        fontSize="large"
+                        style={{ margin: 'auto 0' }}
+                    />
+                    <ListItemText
+                        primary="Jason Bugallon"
+                        secondary="Jasonbugallon@gmail.com"
+                        style={{ paddingLeft: 9 }}
+                    />
+                </MenuItem>
+                <MenuItem onClick={() => logout()}>
+                    <ListItemText primary="Logout" />
+                </MenuItem>
+            </Menu>
             <AccountInfoModal
                 isOpen={accountInfoOpen}
                 setIsOpen={setAccountInfoOpen}
             />
-            <MenuItem onClick={() => logout()}>
-                <ListItemText primary="Logout" />
-            </MenuItem>
-        </Menu>
+        </>
     );
 };
 

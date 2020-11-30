@@ -7,7 +7,6 @@
     padding: 2rem;
     .modal-content {
         display: flex;
-        outline: none;
         border-radius: 5px;
         padding: 2rem;
         max-width: 500px;
@@ -18,7 +17,7 @@
         background-color: $bg-dark-1;
         color: $text-1;
         .success {
-            color: $success;
+            color: #fff;
         }
     }
 }

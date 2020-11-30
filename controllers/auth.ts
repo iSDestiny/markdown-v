@@ -66,11 +66,9 @@ export const postLogout = async (req: NextApiRequest, res: NextApiResponse) => {
 export const putChangePassword: noteParamTypes = async (req, res, models) => {
     const { User } = models;
     const {
-        newPassword
+        'new-password': newPassword
     }: {
-        currentPassword: string;
-        newPassword: string;
-        confirmPassword: string;
+        'new-password': string;
     } = req.body;
     const userId = authenticate(req, res);
     const user = await User.findById(userId);
@@ -79,24 +77,25 @@ export const putChangePassword: noteParamTypes = async (req, res, models) => {
     const validateBody = runMiddleware(
         validateMiddleware(
             [
-                body('currentPassword', 'Invalid Password').custom(
+                body('current-password', 'Invalid Password').custom(
                     (value, { req }) => {
                         const userPassword = user.password;
-                        if (userPassword !== value)
+                        const didMatch = bcrypt.compare(value, userPassword);
+                        if (!didMatch)
                             throw new Error('Provided password is incorrect');
                         return true;
                     }
                 ),
-                body('confirmPassword').custom((value, { req }) => {
-                    if (value !== req.body.newPassword)
+                body('confirm-password').custom((value, { req }) => {
+                    if (value !== req.body['new-password'])
                         throw new Error('Passwords did not match!');
                     return true;
                 }),
-                body('newPassword')
+                body('new-password')
                     .isLength({ min: 5 })
                     .withMessage('Password must be at least 5 characters long')
                     .custom((value, { req }) => {
-                        if (value === req.body.currentPassword)
+                        if (value === req.body['current-password'])
                             throw new Error(
                                 'New password cannot be the same as the current password!'
                             );
@@ -112,7 +111,8 @@ export const putChangePassword: noteParamTypes = async (req, res, models) => {
     if (!errors.isEmpty())
         return res.status(422).json({ errors: errors.array() });
 
-    await user.changePassword(newPassword);
+    const encryptedPassword = await bcrypt.hash(newPassword, 12);
+    await user.changePassword(encryptedPassword);
 
     return res.status(204).send('success');
 };

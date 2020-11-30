@@ -8,10 +8,11 @@ import {
     DialogTitle
 } from '@material-ui/core';
 import { useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { ErrorOption, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import PasswordField from '../PasswordField';
 import classes from './SideMenu.module.scss';
+import SuccessModal from './SuccessModal';
 
 interface FormInputs {
     ['current-password']: string;
@@ -31,13 +32,30 @@ const schema = yup.object().shape({
         .min(5, 'password must be at least 5 characters')
 });
 
+interface ValidationErrorI {
+    location: string;
+    msg: string;
+    param: string;
+    value: string;
+}
+
 const ChangePasswordModal = ({ isOpen, setIsOpen }) => {
-    const { register, handleSubmit, errors } = useForm({
+    const [openSuccess, setOpenSuccess] = useState(false);
+    const { register, handleSubmit, errors, setError, clearErrors } = useForm({
         resolver: yupResolver(schema)
     });
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    const addServerErrors = (
+        errors: ValidationErrorI[],
+        setError: (fieldName: string, error: ErrorOption) => void
+    ) => {
+        errors.forEach(({ param, msg }) => {
+            setError(param, { type: 'manual', message: msg });
+        });
+    };
 
     const onSubmit: SubmitHandler<FormInputs> = async (
         {
@@ -48,81 +66,99 @@ const ChangePasswordModal = ({ isOpen, setIsOpen }) => {
         event
     ) => {
         event.preventDefault();
-        setIsOpen(false);
         console.log(currentPassword, newPassword, confirmPassword);
         try {
             await axios.put(
                 `${process.env.NEXT_PUBLIC_SERVER_ORIGIN}/api/auth/change-password`,
-                { currentPassword, newPassword, confirmPassword }
+                {
+                    ['current-password']: currentPassword,
+                    ['new-password']: newPassword,
+                    ['confirm-password']: confirmPassword
+                }
             );
+            clearErrors();
+            setIsOpen(false);
+            setOpenSuccess(true);
         } catch ({ response }) {
-            const { status, data } = response;
-            if (status === 422) {
-                console.log(data);
+            clearErrors();
+            const {
+                status,
+                data: { errors }
+            } = response;
+            if (status === 422 && errors) {
+                console.log(errors);
+                addServerErrors(errors, setError);
             }
         }
     };
 
     return (
-        <Dialog
-            open={isOpen}
-            onClose={() => setIsOpen(false)}
-            aria-labelledby="form-dialog-title"
-            classes={{ paper: classes['password-modal-paper'] }}
-        >
-            <DialogTitle id="form-dialog-title">Change Password</DialogTitle>
-            <DialogContent>
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className={classes['password-modal-form']}
-                    noValidate
-                >
-                    <PasswordField
-                        name="current-password"
-                        label="Current Password"
-                        register={register}
-                        errors={errors}
-                        labelWidth={140}
-                        showPassword={showCurrentPassword}
-                        setShowPassword={setShowCurrentPassword}
-                    />
-                    <PasswordField
-                        name="new-password"
-                        label="New Password"
-                        register={register}
-                        errors={errors}
-                        labelWidth={120}
-                        showPassword={showNewPassword}
-                        setShowPassword={setShowNewPassword}
-                    />
-                    <PasswordField
-                        name="confirm-password"
-                        label="Confirm New Password"
-                        register={register}
-                        errors={errors}
-                        labelWidth={180}
-                        showPassword={showConfirmPassword}
-                        setShowPassword={setShowConfirmPassword}
-                    />
-                    <DialogActions>
-                        <Button
-                            onClick={() => setIsOpen(false)}
-                            color="primary"
-                            variant="outlined"
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            type="submit"
-                            color="primary"
-                            variant="contained"
-                        >
-                            Update
-                        </Button>
-                    </DialogActions>
-                </form>
-            </DialogContent>
-        </Dialog>
+        <>
+            <Dialog
+                open={isOpen}
+                onClose={() => setIsOpen(false)}
+                aria-labelledby="form-dialog-title"
+                aria-labeledby="form-dialog-content"
+                classes={{ paper: classes['password-modal-paper'] }}
+            >
+                <DialogTitle id="form-dialog-title">
+                    Change Password
+                </DialogTitle>
+                <DialogContent id="form-dialog-content">
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className={classes['password-modal-form']}
+                        noValidate
+                    >
+                        <PasswordField
+                            name="current-password"
+                            label="Current Password"
+                            autoFocus
+                            register={register}
+                            errors={errors}
+                            labelWidth={140}
+                            showPassword={showCurrentPassword}
+                            setShowPassword={setShowCurrentPassword}
+                        />
+                        <PasswordField
+                            name="new-password"
+                            label="New Password"
+                            register={register}
+                            errors={errors}
+                            labelWidth={120}
+                            showPassword={showNewPassword}
+                            setShowPassword={setShowNewPassword}
+                        />
+                        <PasswordField
+                            name="confirm-password"
+                            label="Confirm New Password"
+                            register={register}
+                            errors={errors}
+                            labelWidth={180}
+                            showPassword={showConfirmPassword}
+                            setShowPassword={setShowConfirmPassword}
+                        />
+                        <DialogActions>
+                            <Button
+                                onClick={() => setIsOpen(false)}
+                                color="primary"
+                                variant="outlined"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                type="submit"
+                                color="primary"
+                                variant="contained"
+                            >
+                                Update
+                            </Button>
+                        </DialogActions>
+                    </form>
+                </DialogContent>
+            </Dialog>
+            <SuccessModal isOpen={openSuccess} setIsOpen={setOpenSuccess} />
+        </>
     );
 };
 
