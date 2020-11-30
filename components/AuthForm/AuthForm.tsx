@@ -26,6 +26,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import classes from './AuthForm.module.scss';
+import PasswordField from '../PasswordField';
 
 const Copyright = () => {
     return (
@@ -139,46 +140,15 @@ export default function AuthForm<T>({
                             autoComplete="email"
                             autoFocus
                         />
-                        <FormControl variant="outlined" fullWidth required>
-                            <InputLabel htmlFor="standard-adornment-password">
-                                Password
-                            </InputLabel>
-                            <OutlinedInput
-                                name="password"
-                                inputRef={register}
-                                required
-                                fullWidth
-                                id="password"
-                                autoComplete="current-password"
-                                type={showPassword ? 'text' : 'password'}
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={() =>
-                                                setShowPassword((prev) => !prev)
-                                            }
-                                        >
-                                            {showPassword ? (
-                                                <Visibility />
-                                            ) : (
-                                                <VisibilityOff />
-                                            )}
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
-                            />
-                            {errors.password && (
-                                <FormHelperText
-                                    variant="outlined"
-                                    required
-                                    error={Boolean(errors.password)}
-                                    id="password-helper-text"
-                                >
-                                    {errors.password.message}
-                                </FormHelperText>
-                            )}
-                        </FormControl>
+                        <PasswordField
+                            label="Password"
+                            name="password"
+                            errors={errors}
+                            register={register}
+                            showPassword={showPassword}
+                            setShowPassword={setShowPassword}
+                            labelWidth={85}
+                        />
                         <Button
                             type="submit"
                             fullWidth

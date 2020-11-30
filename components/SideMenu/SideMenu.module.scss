@@ -63,15 +63,18 @@
     outline: none;
 }
 
-.accpunt-modal-title {
-    font-size: 1.5rem;
+.account-modal-title {
+    font-size: 1.3rem;
+    margin: 0;
+    margin-bottom: 1rem;
+    color: #fff;
 }
 
 .account-modal-content {
     display: flex;
     flex-direction: column;
     width: 500px;
-    padding: 2rem;
+    padding: 1rem 24px;
     background-color: $bg-dark-1;
     color: $text-1;
     outline: none;
@@ -115,5 +118,15 @@
         height: 1.3rem;
         text-decoration: none;
         cursor: pointer;
+    }
+}
+
+.password-modal-paper {
+    background-color: $bg-dark-1;
+}
+
+.password-modal-form {
+    > * {
+        margin-bottom: 1rem;
     }
 }

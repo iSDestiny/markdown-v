@@ -13,7 +13,13 @@ interface AccountOptionsProps {
 const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
     const [accountInfoOpen, setAccountInfoOpen] = useState(false);
 
+    const accountInfoHandler = () => {
+        setAnchorEl(null);
+        setAccountInfoOpen(true);
+    };
+
     const logout = async () => {
+        setAnchorEl(null);
         try {
             await axios.post(
                 `${process.env.NEXT_PUBLIC_SERVER_ORIGIN}/api/auth/logout`,
@@ -35,7 +41,7 @@ const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
             onClose={() => setAnchorEl(null)}
         >
             <ListItemText primary="Account" style={{ paddingLeft: '1rem' }} />
-            <MenuItem onClick={() => setAccountInfoOpen(true)}>
+            <MenuItem onClick={accountInfoHandler}>
                 <AccountCircle fontSize="large" style={{ margin: 'auto 0' }} />
                 <ListItemText
                     primary="Jason Bugallon"
@@ -44,8 +50,8 @@ const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
                 />
             </MenuItem>
             <AccountInfoModal
-                accountInfoOpen={accountInfoOpen}
-                setAccountInfoOpen={setAccountInfoOpen}
+                isOpen={accountInfoOpen}
+                setIsOpen={setAccountInfoOpen}
             />
             <MenuItem onClick={() => logout()}>
                 <ListItemText primary="Logout" />

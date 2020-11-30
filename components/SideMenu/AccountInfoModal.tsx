@@ -1,29 +1,29 @@
 import { Backdrop, Fade, Modal, Tooltip } from '@material-ui/core';
+import { useState } from 'react';
+import ChangePasswordModal from './ChangePasswordModal';
 import classes from './SideMenu.module.scss';
 
 interface AccountInfoProps {
-    accountInfoOpen: boolean;
-    setAccountInfoOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    isOpen: boolean;
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AccountInfoModal = ({
-    accountInfoOpen,
-    setAccountInfoOpen
-}: AccountInfoProps) => {
+const AccountInfoModal = ({ isOpen, setIsOpen }: AccountInfoProps) => {
+    const [changePasswordOpen, setChangePasswordOpen] = useState(false);
     return (
         <Modal
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"
             className={classes.modal}
-            open={accountInfoOpen}
-            onClose={() => setAccountInfoOpen(false)}
+            open={isOpen}
+            onClose={() => setIsOpen(false)}
             closeAfterTransition
             BackdropComponent={Backdrop}
             BackdropProps={{
                 timeout: 500
             }}
         >
-            <Fade in={accountInfoOpen}>
+            <Fade in={isOpen}>
                 <div className={classes['account-modal-content']}>
                     <h1
                         id="transition-modal-title"
@@ -58,8 +58,14 @@ const AccountInfoModal = ({
                             </h2>
                             <div className={classes['account-info-item-body']}>
                                 <p>Hidden for security purposes</p>
-                                <a>Change Password</a>
+                                <a onClick={() => setChangePasswordOpen(true)}>
+                                    Change Password
+                                </a>
                             </div>
+                            <ChangePasswordModal
+                                isOpen={changePasswordOpen}
+                                setIsOpen={setChangePasswordOpen}
+                            />
                         </div>
                     </div>
                 </div>
