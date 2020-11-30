@@ -21,6 +21,7 @@ export interface IUser extends mongoose.Document {
     getNotes: () => any;
     deleteNote: (id: any) => any;
     modifyNote: (id: string, content: string, title: string) => any;
+    changePassword: (newPassword: string) => any;
     notes?: INote[];
 }
 
@@ -104,6 +105,11 @@ userSchema.methods.deleteNote = async function (id: any) {
     );
     await this.save();
     return id;
+};
+
+userSchema.methods.changePassword = async function (newPassword: string) {
+    this.password = newPassword;
+    return this.save();
 };
 
 export default userSchema;

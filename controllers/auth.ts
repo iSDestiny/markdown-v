@@ -6,6 +6,10 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import CustomStatusError from '../utility/CustomStatusError';
+import authenticate from '../middleware/authenticate';
+import { body, validationResult } from 'express-validator';
+import runMiddleware from '../middleware/runMiddleware';
+import validateMiddleware from '../middleware/validateMiddleware';
 
 type noteParamTypes = (
     req: NextApiRequest,
@@ -57,4 +61,58 @@ export const postLogout = async (req: NextApiRequest, res: NextApiResponse) => {
     cookies.set('ACCESS_TOKEN');
     res.writeHead(302, { Location: '/login' });
     return res.end();
+};
+
+export const putChangePassword: noteParamTypes = async (req, res, models) => {
+    const { User } = models;
+    const {
+        newPassword
+    }: {
+        currentPassword: string;
+        newPassword: string;
+        confirmPassword: string;
+    } = req.body;
+    const userId = authenticate(req, res);
+    const user = await User.findById(userId);
+    if (!user) throw new CustomStatusError('User not found', 404);
+
+    const validateBody = runMiddleware(
+        validateMiddleware(
+            [
+                body('currentPassword', 'Invalid Password').custom(
+                    (value, { req }) => {
+                        const userPassword = user.password;
+                        if (userPassword !== value)
+                            throw new Error('Provided password is incorrect');
+                        return true;
+                    }
+                ),
+                body('confirmPassword').custom((value, { req }) => {
+                    if (value !== req.body.newPassword)
+                        throw new Error('Passwords did not match!');
+                    return true;
+                }),
+                body('newPassword')
+                    .isLength({ min: 5 })
+                    .withMessage('Password must be at least 5 characters long')
+                    .custom((value, { req }) => {
+                        if (value === req.body.currentPassword)
+                            throw new Error(
+                                'New password cannot be the same as the current password!'
+                            );
+                        return true;
+                    })
+            ],
+            validationResult
+        )
+    );
+
+    await validateBody(req, res);
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+        return res.status(422).json({ errors: errors.array() });
+
+    await user.changePassword(newPassword);
+
+    return res.status(204).send('success');
 };

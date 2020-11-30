@@ -1,20 +1,17 @@
-import { useState } from 'react';
+import axios from 'axios';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
-    Backdrop,
     Button,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Fade,
-    Modal
+    DialogTitle
 } from '@material-ui/core';
-import classes from './SideMenu.module.scss';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
 import PasswordField from '../PasswordField';
+import classes from './SideMenu.module.scss';
 
 interface FormInputs {
     ['current-password']: string;
@@ -23,11 +20,15 @@ interface FormInputs {
 }
 
 const schema = yup.object().shape({
-    email: yup.string().email('must be an email address').required(),
-    password: yup
+    ['current-password']: yup
+        .string()
+        .required('current password is a required field'),
+    ['new-password']: yup
+        .string()
+        .min(5, 'password must be at least 5 characters'),
+    ['confirm-password']: yup
         .string()
         .min(5, 'password must be at least 5 characters')
-        .required()
 });
 
 const ChangePasswordModal = ({ isOpen, setIsOpen }) => {
@@ -38,7 +39,7 @@ const ChangePasswordModal = ({ isOpen, setIsOpen }) => {
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const onSubmit: SubmitHandler<FormInputs> = (
+    const onSubmit: SubmitHandler<FormInputs> = async (
         {
             'current-password': currentPassword,
             'new-password': newPassword,
@@ -49,6 +50,17 @@ const ChangePasswordModal = ({ isOpen, setIsOpen }) => {
         event.preventDefault();
         setIsOpen(false);
         console.log(currentPassword, newPassword, confirmPassword);
+        try {
+            await axios.put(
+                `${process.env.NEXT_PUBLIC_SERVER_ORIGIN}/api/auth/change-password`,
+                { currentPassword, newPassword, confirmPassword }
+            );
+        } catch ({ response }) {
+            const { status, data } = response;
+            if (status === 422) {
+                console.log(data);
+            }
+        }
     };
 
     return (
@@ -63,6 +75,7 @@ const ChangePasswordModal = ({ isOpen, setIsOpen }) => {
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                     className={classes['password-modal-form']}
+                    noValidate
                 >
                     <PasswordField
                         name="current-password"
