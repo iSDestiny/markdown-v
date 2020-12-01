@@ -6,13 +6,21 @@ import addServerErrors from '../utility/addServerErrors';
 import classes from '../styles/ForgotPassword.module.scss';
 import Link from 'next/link';
 import Copyright from '../components/Copyright';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 interface FormInputs {
     email: string;
 }
 
+const schema = yup.object().shape({
+    email: yup.string().email('must be an email address').required()
+});
+
 const forgotPassword = () => {
-    const { setError, clearErrors, handleSubmit, errors, register } = useForm();
+    const { setError, clearErrors, handleSubmit, errors, register } = useForm({
+        resolver: yupResolver(schema)
+    });
 
     const onSubmit: SubmitHandler<FormInputs> = async (data, event) => {
         try {
