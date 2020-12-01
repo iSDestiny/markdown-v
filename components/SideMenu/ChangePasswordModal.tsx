@@ -70,10 +70,7 @@ const ChangePasswordModal = ({ isOpen, setIsOpen }) => {
                 status,
                 data: { errors }
             } = response;
-            if (status === 422 && errors) {
-                console.log(errors);
-                addServerErrors(errors, setError);
-            }
+            if (status === 422 && errors) addServerErrors(errors, setError);
         }
     };
 

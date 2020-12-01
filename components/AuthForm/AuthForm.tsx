@@ -13,6 +13,7 @@ import {
     Typography
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Copyright from '../Copyright';
 import classNames from 'classnames';
 import Link from 'next/link';
 import React, { useState } from 'react';
@@ -20,15 +21,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import PasswordField from '../PasswordField';
 import classes from './AuthForm.module.scss';
-
-const Copyright = () => {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © MarkdownV '}
-            {new Date().getFullYear()}
-        </Typography>
-    );
-};
 
 interface AuthFormProps<T> {
     type: String;
@@ -133,7 +125,9 @@ export default function AuthForm<T>({
                                         signup: type !== 'login'
                                     })}
                                 >
-                                    <Link href="/signup">Forgot password?</Link>
+                                    <Link href="/forgot-password">
+                                        Forgot password?
+                                    </Link>
                                 </Grid>
                                 <Grid item>
                                     <Link
