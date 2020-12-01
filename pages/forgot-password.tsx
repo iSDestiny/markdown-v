@@ -8,12 +8,13 @@ import {
     Container
 } from '@material-ui/core';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import addServerErrors from '../utility/addServerErrors';
 import classes from '../styles/ForgotPassword.module.scss';
 import Link from 'next/link';
 import Copyright from '../components/Copyright';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useState } from 'react';
+import InfoModal from '../components/InfoModal';
 
 interface FormInputs {
     email: string;
@@ -24,9 +25,15 @@ const schema = yup.object().shape({
 });
 
 const forgotPassword = () => {
+    const [isSuccessOpen, setIsSuccessOpen] = useState(false);
     const { setError, clearErrors, handleSubmit, errors, register } = useForm({
         resolver: yupResolver(schema)
     });
+
+    const modalHeading = 'Successfully sent password reset to provided email!';
+    const modalDescription = `Please check your email and follow the instructions
+    in order to reset your password. Be aware that the reset
+    will only be valid for 30 mins`;
 
     const onSubmit: SubmitHandler<FormInputs> = async ({ email }, event) => {
         try {
@@ -36,6 +43,7 @@ const forgotPassword = () => {
                 { email: email.toLowerCase() }
             );
             clearErrors();
+            setIsSuccessOpen(true);
         } catch ({ response }) {
             const {
                 data: { message },
@@ -96,6 +104,12 @@ const forgotPassword = () => {
                     <Copyright />
                 </Box>
             </Container>
+            <InfoModal
+                heading={modalHeading}
+                description={modalDescription}
+                isOpen={isSuccessOpen}
+                setIsOpen={setIsSuccessOpen}
+            />
         </>
     );
 };
