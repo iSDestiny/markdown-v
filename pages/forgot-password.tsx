@@ -1,6 +1,12 @@
 import axios from 'axios';
-import { Box, Button, Paper, TextField, Typography } from '@material-ui/core';
-import { Container } from 'next/app';
+import {
+    Box,
+    Button,
+    Paper,
+    TextField,
+    Typography,
+    Container
+} from '@material-ui/core';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import addServerErrors from '../utility/addServerErrors';
 import classes from '../styles/ForgotPassword.module.scss';
@@ -22,22 +28,22 @@ const forgotPassword = () => {
         resolver: yupResolver(schema)
     });
 
-    const onSubmit: SubmitHandler<FormInputs> = async (data, event) => {
+    const onSubmit: SubmitHandler<FormInputs> = async ({ email }, event) => {
         try {
             event.preventDefault();
             await axios.post(
-                `${process.env.NEXT_PUBLIC_SERVER_ORIGIN}/auth/reset`
+                `${process.env.NEXT_PUBLIC_SERVER_ORIGIN}/api/auth/reset-password`,
+                { email: email.toLowerCase() }
             );
             clearErrors();
         } catch ({ response }) {
             const {
-                data: { errors },
+                data: { message },
                 status
             } = response;
             clearErrors();
-            if (status === 422 && errors) {
-                console.log(errors);
-                addServerErrors(errors, setError);
+            if (status === 404) {
+                setError('email', { type: 'manual', message });
             }
         }
     };

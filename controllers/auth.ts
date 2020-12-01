@@ -127,7 +127,7 @@ export const postResetPassword: noteParamTypes = async (req, res, models) => {
     const { User } = models;
     const { email } = req.body;
     const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) throw new CustomStatusError('Email does not exist!', 403);
+    if (!user) throw new CustomStatusError('Email does not exist!', 404);
     const token = jwt.sign(
         { email, userId: user._id },
         process.env.RESET_SECRET,
@@ -136,10 +136,10 @@ export const postResetPassword: noteParamTypes = async (req, res, models) => {
 
     transport.sendMail({
         to: email,
-        from: 'noreply@markdownv.com',
+        from: 'jbugallon@gmail.com',
         subject: 'Password Reset',
         html: `
-            <h1>Password Reset</h1>
+            <h1>MarkdownV Password Reset</h1>
             <p>Greetings from MarkdownV! According to our records you have requested for a password reset.
             Please click this <a href="${process.env.CLIENT_ORIGIN}/reset/${token}">link</a> to set up a
             new password. This link is only valid for <strong>30 minutes</strong>, please reset your password
@@ -197,5 +197,6 @@ export const postNewPassword: noteParamTypes = async (req, res, models) => {
     const encryptedPassword = await bcrypt.hash(password, 12);
     await user.changePassword(encryptedPassword);
 
-    return res.status(204).send('successfully changed password');
+    res.status(204).send('successfully changed password');
+    return res.end();
 };

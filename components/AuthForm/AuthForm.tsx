@@ -37,10 +37,7 @@ interface FormInputs {
 
 const schema = yup.object().shape({
     email: yup.string().email('must be an email address').required(),
-    password: yup
-        .string()
-        .min(5, 'password must be at least 5 characters')
-        .required()
+    password: yup.string().min(5, 'password must be at least 5 characters')
 });
 
 export default function AuthForm<T>({
@@ -79,7 +76,6 @@ export default function AuthForm<T>({
                                 {serverError}
                             </Typography>
                         )}
-
                         <form
                             className="auth-form"
                             noValidate

@@ -2,7 +2,7 @@ import connect, { handlerType } from '../../../middleware/connect';
 import CustomStatusError from '../../../utility/CustomStatusError';
 import { postNewPassword } from './../../../controllers/auth';
 
-const changePassword: handlerType = async (req, res, connection, models) => {
+const newPassword: handlerType = async (req, res, connection, models) => {
     const { method } = req;
 
     try {
@@ -16,13 +16,14 @@ const changePassword: handlerType = async (req, res, connection, models) => {
     } catch (error) {
         console.log(error);
         if (!error.status) error.status = 500;
+        console.log(error.message);
         res.status(error.status).json({ message: error.message });
     } finally {
         connection.close();
     }
 };
 
-export default connect(changePassword);
+export default connect(newPassword);
 
 export const config = {
     api: {

@@ -6,6 +6,7 @@ import {
     InputLabel,
     OutlinedInput
 } from '@material-ui/core';
+import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { Dispatch, SetStateAction } from 'react';
 import { DeepMap, FieldError } from 'react-hook-form';
@@ -19,6 +20,7 @@ interface PasswordFieldProps {
     errors: DeepMap<any, FieldError>;
     labelWidth: number;
     autoFocus?: boolean;
+    style?: CSSProperties;
 }
 
 const PasswordField = ({
@@ -29,10 +31,11 @@ const PasswordField = ({
     setShowPassword,
     errors,
     labelWidth,
-    autoFocus
+    autoFocus,
+    style
 }: PasswordFieldProps) => {
     return (
-        <FormControl variant="outlined" fullWidth required>
+        <FormControl variant="outlined" fullWidth required style={style}>
             <InputLabel htmlFor={`outlined-adornment-${name}`}>
                 {label}
             </InputLabel>
