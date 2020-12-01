@@ -1,5 +1,6 @@
 import { Backdrop, Fade, Modal, TextField, Tooltip } from '@material-ui/core';
 import { useState } from 'react';
+import { useQueryCache } from 'react-query';
 import ChangePasswordModal from './ChangePasswordModal';
 import classes from './SideMenu.module.scss';
 
@@ -10,6 +11,9 @@ interface AccountInfoProps {
 
 const AccountInfoModal = ({ isOpen, setIsOpen }: AccountInfoProps) => {
     const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+    const queryCache = useQueryCache();
+    const { email } = queryCache.getQueryData<{ email: string }>('authInfo');
+
     return (
         <>
             <Modal
@@ -49,7 +53,7 @@ const AccountInfoModal = ({ isOpen, setIsOpen }: AccountInfoProps) => {
                                         classes['account-info-item-body']
                                     }
                                 >
-                                    <p>jbugallon@gmail.com</p>
+                                    <p>{email}</p>
                                     <Tooltip title="Not implemented">
                                         <a
                                             className={

@@ -9,12 +9,14 @@ import {
     Star
 } from '@material-ui/icons';
 import { useState } from 'react';
+import { useQueryCache } from 'react-query';
 import AccountOptions from './AccountOptions';
 import classes from './SideMenu.module.scss';
 
 const SideMenu = () => {
     const [tagOpen, setTagOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<Element>(null);
+    const queryCache = useQueryCache();
 
     return (
         <>
@@ -29,7 +31,13 @@ const SideMenu = () => {
                                 fontSize="large"
                                 style={{ margin: 'auto 0' }}
                             />
-                            <h1>Jason Bugallon</h1>
+                            <h1>
+                                {
+                                    queryCache.getQueryData<{ email: string }>(
+                                        'authInfo'
+                                    )?.email
+                                }
+                            </h1>
                         </div>
                         <ExpandMore style={{ margin: 'auto 0' }} />
                     </button>

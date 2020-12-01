@@ -21,3 +21,10 @@ export const fetchSignup = async (
     );
     return true;
 };
+
+export const fetchAuthInfo = async () => {
+    const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER_ORIGIN}/api/auth`
+    );
+    return data;
+};

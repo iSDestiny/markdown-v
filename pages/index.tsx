@@ -17,6 +17,7 @@ import {
     setNotesFromOriginal
 } from '../store/slices/editorSlice';
 import classes from '../styles/Home.module.scss';
+import { fetchAuthInfo } from '../utility/fetchAuth';
 import fetchNotes from '../utility/fetchNotes';
 
 export default function Notes() {
@@ -33,6 +34,10 @@ export default function Notes() {
         onError: redirectOnFailedFetch,
         retry: false
     });
+    const { isLoading: isAuthLoading } = useQuery('authInfo', fetchAuthInfo, {
+        staleTime: Infinity,
+        retry: false
+    });
     const { canEdit, canPreview, notes } = useSelector(selectEditor);
     const dispatch = useDispatch();
     const isLoading = useLoader('notes', false);
@@ -42,7 +47,7 @@ export default function Notes() {
         dispatch(setNotesFromOriginal({ originalNotes }));
     }, [originalNotes]);
 
-    if (isNotesLoading || !isSuccess) {
+    if (isNotesLoading || !isSuccess || isAuthLoading) {
         return <LoadingScreen />;
     }
 

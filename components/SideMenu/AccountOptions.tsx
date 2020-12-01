@@ -4,6 +4,7 @@ import { ListItemText, Menu, MenuItem } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 import { useState } from 'react';
 import AccountInfoModal from './AccountInfoModal';
+import { useQueryCache } from 'react-query';
 
 interface AccountOptionsProps {
     anchorEl: Element;
@@ -12,6 +13,8 @@ interface AccountOptionsProps {
 
 const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
     const [accountInfoOpen, setAccountInfoOpen] = useState(false);
+    const queryCache = useQueryCache();
+    const { email } = queryCache.getQueryData<{ email: string }>('authInfo');
 
     const accountInfoHandler = () => {
         setAnchorEl(null);
@@ -52,8 +55,8 @@ const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
                         style={{ margin: 'auto 0' }}
                     />
                     <ListItemText
-                        primary="Jason Bugallon"
-                        secondary="Jasonbugallon@gmail.com"
+                        // primary="Jason Bugallon"
+                        secondary={email}
                         style={{ paddingLeft: 9 }}
                     />
                 </MenuItem>
