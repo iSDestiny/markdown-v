@@ -13,6 +13,7 @@ import * as yup from 'yup';
 import PasswordField from '../PasswordField';
 import classes from './SideMenu.module.scss';
 import SuccessModal from './SuccessModal';
+import addServerErrors from '../../utility/addServerErrors';
 
 interface FormInputs {
     ['current-password']: string;
@@ -32,13 +33,6 @@ const schema = yup.object().shape({
         .min(5, 'password must be at least 5 characters')
 });
 
-interface ValidationErrorI {
-    location: string;
-    msg: string;
-    param: string;
-    value: string;
-}
-
 const ChangePasswordModal = ({ isOpen, setIsOpen }) => {
     const [openSuccess, setOpenSuccess] = useState(false);
     const { register, handleSubmit, errors, setError, clearErrors } = useForm({
@@ -47,15 +41,6 @@ const ChangePasswordModal = ({ isOpen, setIsOpen }) => {
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-    const addServerErrors = (
-        errors: ValidationErrorI[],
-        setError: (fieldName: string, error: ErrorOption) => void
-    ) => {
-        errors.forEach(({ param, msg }) => {
-            setError(param, { type: 'manual', message: msg });
-        });
-    };
 
     const onSubmit: SubmitHandler<FormInputs> = async (
         {

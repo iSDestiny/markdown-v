@@ -18,7 +18,6 @@ interface PasswordFieldProps {
     setShowPassword: Dispatch<SetStateAction<boolean>>;
     errors: DeepMap<any, FieldError>;
     labelWidth: number;
-    tabIndex: number;
     autoFocus?: boolean;
 }
 
@@ -30,8 +29,7 @@ const PasswordField = ({
     setShowPassword,
     errors,
     labelWidth,
-    autoFocus,
-    tabIndex
+    autoFocus
 }: PasswordFieldProps) => {
     return (
         <FormControl variant="outlined" fullWidth required>
@@ -44,7 +42,6 @@ const PasswordField = ({
                 autoFocus={autoFocus}
                 required
                 fullWidth
-                inputProps={{ tabIndex }}
                 id={`outlined-adornment-${name}`}
                 autoComplete="current-password"
                 type={showPassword ? 'text' : 'password'}

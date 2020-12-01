@@ -1,32 +1,25 @@
-import React, { useState } from 'react';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Link from 'next/link';
-import classNames from 'classnames';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
-    Typography,
     Avatar,
-    Container,
+    Backdrop,
     Box,
     Button,
-    Grid,
-    TextField,
-    Paper,
-    InputLabel,
-    InputAdornment,
-    IconButton,
-    FormControl,
-    OutlinedInput,
-    FormHelperText,
-    Modal,
+    Container,
     Fade,
-    Backdrop
+    Grid,
+    Modal,
+    Paper,
+    TextField,
+    Typography
 } from '@material-ui/core';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import classNames from 'classnames';
+import Link from 'next/link';
+import React, { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
-import classes from './AuthForm.module.scss';
 import PasswordField from '../PasswordField';
+import classes from './AuthForm.module.scss';
 
 const Copyright = () => {
     return (
@@ -72,120 +65,124 @@ export default function AuthForm<T>({
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <Container component="main" maxWidth="xs">
-            <div className="auth-container">
-                <Paper className="auth-container paper">
-                    <Avatar>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        {type === 'login' ? 'Sign In' : 'Sign Up'}
-                    </Typography>
-                    {serverError && (
-                        <Typography
-                            variant="body1"
-                            style={{
-                                color: '#F44336',
-                                marginBottom: '-1rem',
-                                marginTop: '0.5rem'
-                            }}
-                        >
-                            {serverError}
-                        </Typography>
-                    )}
-                    <Modal
-                        aria-labelledby="transition-modal-title"
-                        aria-describedby="transition-modal-description"
-                        className={classes.modal}
-                        open={signupSuccess}
-                        onClose={() => setSignupSuccess(false)}
-                        closeAfterTransition
-                        BackdropComponent={Backdrop}
-                        BackdropProps={{
-                            timeout: 500
-                        }}
-                    >
-                        <Fade in={signupSuccess}>
-                            <div className={classes['modal-content']}>
-                                <h2
-                                    id="transition-modal-title"
-                                    className={classes.success}
-                                >
-                                    Thanks! You have been successfully
-                                    registered.
-                                </h2>
-                                <p id="transition-modal-description">
-                                    You can now login with the information you
-                                    provided in order to start using MarkdownV.
-                                </p>
-                            </div>
-                        </Fade>
-                    </Modal>
-                    <form
-                        className="auth-form"
-                        noValidate
-                        onSubmit={handleSubmit(onSubmit)}
-                    >
-                        <TextField
-                            inputRef={register}
-                            variant="outlined"
-                            margin="normal"
-                            helperText={errors.email?.message}
-                            error={Boolean(errors.email)}
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                        />
-                        <PasswordField
-                            label="Password"
-                            name="password"
-                            errors={errors}
-                            register={register}
-                            showPassword={showPassword}
-                            setShowPassword={setShowPassword}
-                            labelWidth={85}
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            style={{ margin: '1rem 0' }}
-                        >
+        <>
+            <Container component="main" maxWidth="xs">
+                <div className="auth-container">
+                    <Paper className="auth-container paper">
+                        <Avatar>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
                             {type === 'login' ? 'Sign In' : 'Sign Up'}
-                        </Button>
-                        <Grid container>
-                            <Grid
-                                item
-                                xs
-                                className={classNames({
-                                    signup: type !== 'login'
-                                })}
+                        </Typography>
+                        {serverError && (
+                            <Typography
+                                variant="body1"
+                                style={{
+                                    color: '#F44336',
+                                    marginBottom: '-1rem',
+                                    marginTop: '0.5rem'
+                                }}
                             >
-                                <Link href="/signup">Forgot password?</Link>
-                            </Grid>
-                            <Grid item>
-                                <Link
-                                    href={
-                                        type === 'login' ? '/signup' : '/login'
-                                    }
+                                {serverError}
+                            </Typography>
+                        )}
+
+                        <form
+                            className="auth-form"
+                            noValidate
+                            onSubmit={handleSubmit(onSubmit)}
+                        >
+                            <TextField
+                                inputRef={register}
+                                variant="outlined"
+                                margin="normal"
+                                helperText={errors.email?.message}
+                                error={Boolean(errors.email)}
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                                autoFocus
+                            />
+                            <PasswordField
+                                label="Password"
+                                name="password"
+                                errors={errors}
+                                register={register}
+                                showPassword={showPassword}
+                                setShowPassword={setShowPassword}
+                                labelWidth={85}
+                            />
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                style={{ margin: '1rem 0' }}
+                            >
+                                {type === 'login' ? 'Sign In' : 'Sign Up'}
+                            </Button>
+                            <Grid container>
+                                <Grid
+                                    item
+                                    xs
+                                    className={classNames({
+                                        signup: type !== 'login'
+                                    })}
                                 >
-                                    {type !== 'login'
-                                        ? `Already have an account? Sign In`
-                                        : `Don't have an account? Sign Up`}
-                                </Link>
+                                    <Link href="/signup">Forgot password?</Link>
+                                </Grid>
+                                <Grid item>
+                                    <Link
+                                        href={
+                                            type === 'login'
+                                                ? '/signup'
+                                                : '/login'
+                                        }
+                                    >
+                                        {type !== 'login'
+                                            ? `Already have an account? Sign In`
+                                            : `Don't have an account? Sign Up`}
+                                    </Link>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </form>
-                </Paper>
-            </div>
-            <Box mt={8}>
-                <Copyright />
-            </Box>
-        </Container>
+                        </form>
+                    </Paper>
+                </div>
+                <Box mt={8}>
+                    <Copyright />
+                </Box>
+            </Container>
+            <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={signupSuccess}
+                onClose={() => setSignupSuccess(false)}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                    timeout: 500
+                }}
+            >
+                <Fade in={signupSuccess}>
+                    <div className={classes['modal-content']}>
+                        <h2
+                            id="transition-modal-title"
+                            className={classes.success}
+                        >
+                            Thanks! You have been successfully registered.
+                        </h2>
+                        <p id="transition-modal-description">
+                            You can now login with the information you provided
+                            in order to start using MarkdownV.
+                        </p>
+                    </div>
+                </Fade>
+            </Modal>
+        </>
     );
 }
