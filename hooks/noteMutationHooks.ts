@@ -1,5 +1,10 @@
 import { useMutation, useQueryCache } from 'react-query';
-import { addNote, deleteNote, modifyNote } from '../utility/noteMutations';
+import {
+    addNote,
+    deleteNote,
+    modifyNote,
+    toggleFavorite
+} from '../utility/noteMutations';
 import { NextRouter, useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { setNoteToSaved } from '../store/slices/editorSlice';
@@ -38,6 +43,22 @@ export const useMutateModifyNote = () => {
     const router = useRouter();
     const queryCache = useQueryCache();
     return useMutation(modifyNote, {
+        onSuccess: ({ data: { note } }) =>
+            queryCache.setQueryData('notes', (prev: Note[]) =>
+                prev.map((pNote) => (pNote._id === note._id ? note : pNote))
+            ),
+        onError: ({ response }) => {
+            const { status } = response;
+            if (status === 401) router.push('/login');
+            else router.push('/500');
+        }
+    });
+};
+
+export const useMutateToggleFavorite = () => {
+    const router = useRouter();
+    const queryCache = useQueryCache();
+    return useMutation(toggleFavorite, {
         onSuccess: ({ data: { note } }) =>
             queryCache.setQueryData('notes', (prev: Note[]) =>
                 prev.map((pNote) => (pNote._id === note._id ? note : pNote))

@@ -74,11 +74,11 @@ export const modifyNote: noteParamTypes = async (req, res, models) => {
 };
 
 export const toggleFavorite: noteParamTypes = async (req, res, models) => {
-    const { _id: id }: NoteRequestBodyI = req.body;
+    const { id }: { id: string } = req.body;
     const { User } = models;
     const userId = authenticate(req, res);
     const user = await User.findById(userId);
-    const toggled = user.toggleFavorite(id);
+    const note = await user.toggleFavorite(id);
     console.log('toggled favorite!');
-    return res.status(200).json({ id: toggled });
+    return res.status(200).json({ note });
 };

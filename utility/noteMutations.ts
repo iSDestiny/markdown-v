@@ -11,3 +11,7 @@ export const deleteNote = (id: string) => {
 export const modifyNote = (note: Note) => {
     return axios.put('/api/notes', { ...note });
 };
+
+export const toggleFavorite = (id: string) => {
+    return axios.post('/api/notes/toggle-favorite', { id });
+};

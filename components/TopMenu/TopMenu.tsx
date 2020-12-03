@@ -17,7 +17,8 @@ import {
 } from '../../store/slices/editorSlice';
 import {
     useMutateDeleteNote,
-    useMutateModifyNote
+    useMutateModifyNote,
+    useMutateToggleFavorite
 } from '../../hooks/noteMutationHooks';
 import useLoader from '../../hooks/useLoader';
 
@@ -39,8 +40,14 @@ const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
         { isLoading: editIsLoading }
     ] = useMutateModifyNote();
 
+    const [
+        mutateToggleFavorite,
+        { isLoading: favoriteIsLoading }
+    ] = useMutateToggleFavorite();
+
     useLoader('delete', deleteIsLoading);
     useLoader('modify', editIsLoading);
+    useLoader('favorite', favoriteIsLoading);
 
     return (
         <div className={classes['top-menu']}>
@@ -64,10 +71,9 @@ const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
             </ToggleIconButton>
             <ToggleIconButton
                 toggle={notes[current].favorite}
-                setToggle={async () => {
-                    await dispatch(toggleFavorite());
-                    notes[current] && mutateModifyNote(notes[current]);
-                }}
+                setToggle={async () =>
+                    notes[current] && mutateToggleFavorite(notes[current]._id)
+                }
                 value="favorite"
                 selectedTitle="Favorite"
                 deselectedTitle="Unfavorite"

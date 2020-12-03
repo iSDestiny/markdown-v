@@ -116,7 +116,7 @@ userSchema.methods.toggleFavorite = async function (id: string) {
         throw new CustomStatusError('Tried to modify a nonexistent note', 404);
     this.notes[index].favorite = !this.notes[index].favorite;
     await this.save();
-    return id;
+    return this.notes[index];
 };
 
 userSchema.methods.changePassword = async function (newPassword: string) {
