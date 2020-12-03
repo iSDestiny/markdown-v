@@ -68,8 +68,9 @@ const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
             <ToggleIconButton
                 toggle={notes.find((note) => note._id === current).favorite}
                 setToggle={async () => {
+                    const note = notes.find((note) => note._id === current);
                     dispatch(toggleFavorite());
-                    notes[current] && mutateToggleFavorite(notes[current]._id);
+                    note && mutateToggleFavorite(note._id);
                 }}
                 value="favorite"
                 selectedTitle="Favorite"
@@ -90,8 +91,10 @@ const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
                             border: '1px solid rgba(0, 0, 0, 0.12)'
                         }}
                         onClick={async () => {
-                            notes[current] &&
-                                (await mutateModifyNote(notes[current]));
+                            const note = notes.find(
+                                (note) => note._id === current
+                            );
+                            note && (await mutateModifyNote(note));
                             dispatch(setNoteToSaved());
                         }}
                     >
@@ -108,10 +111,12 @@ const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
                             color: '#d6d7d9',
                             border: '1px solid rgba(0, 0, 0, 0.12)'
                         }}
-                        onClick={() =>
-                            notes[current] &&
-                            mutateDeleteNote(notes[current]._id)
-                        }
+                        onClick={() => {
+                            const note = notes.find(
+                                (note) => note._id === current
+                            );
+                            note && mutateDeleteNote(note._id);
+                        }}
                     >
                         <DeleteIcon fontSize="small" />
                     </Button>
