@@ -146,9 +146,11 @@ const editorSlice = createSlice({
                             .length > 0
                 );
 
-            if (state.notes.length > 0 && !current)
+            if (
+                state.notes.length > 0 &&
+                !state.notes.find((note) => note._id === current)
+            )
                 state.current = state.notes[0]._id;
-            console.log(state.current);
         },
 
         setNotesFromEdit: (state, action) => {
