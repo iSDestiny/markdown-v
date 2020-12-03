@@ -12,7 +12,8 @@ import {
     selectEditor,
     toggleEdit,
     togglePreview,
-    setNoteToSaved
+    setNoteToSaved,
+    toggleFavorite
 } from '../../store/slices/editorSlice';
 import {
     useMutateDeleteNote,
@@ -61,15 +62,18 @@ const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
             >
                 <VerticalSplitIcon fontSize="small" />
             </ToggleIconButton>
-            {/* <ToggleIconButton
-                toggle={isFavorite}
-                setToggle={setIsFavorite}
+            <ToggleIconButton
+                toggle={notes[current].favorite}
+                setToggle={async () => {
+                    await dispatch(toggleFavorite());
+                    notes[current] && mutateModifyNote(notes[current]);
+                }}
                 value="favorite"
                 selectedTitle="Favorite"
                 deselectedTitle="Unfavorite"
             >
                 <StarIcon fontSize="small" />
-            </ToggleIconButton> */}
+            </ToggleIconButton>
             <ButtonGroup>
                 <Tooltip title="Save">
                     <Button

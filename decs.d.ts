@@ -6,5 +6,7 @@ interface Note {
     title: string;
     createdAt: string;
     updatedAt: string;
+    favorite: boolean;
+    tags: [{ _id: string; tag: string }];
     isTemp?: boolean;
 }

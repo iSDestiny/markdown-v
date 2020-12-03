@@ -14,6 +14,14 @@ type noteParamTypes = (
     }
 ) => Promise<void>;
 
+interface NoteRequestBodyI {
+    _id: string;
+    title: string;
+    content: string;
+    favorite: boolean;
+    tags: any[];
+}
+
 export const getNotes: noteParamTypes = async (req, res, models) => {
     const { User } = models;
     const userId = authenticate(req, res);
@@ -47,12 +55,12 @@ export const deleteNote: noteParamTypes = async (req, res, models) => {
 
     return res.status(200).json({
         message: `Deleted note with id ${id} successfully`,
-        id: id
+        id
     });
 };
 
 export const modifyNote: noteParamTypes = async (req, res, models) => {
-    const { _id: id, content, title } = req.body;
+    const { _id: id, content, title }: NoteRequestBodyI = req.body;
     const { User } = models;
     const userId = authenticate(req, res);
     const user = await User.findById(userId);
@@ -63,4 +71,14 @@ export const modifyNote: noteParamTypes = async (req, res, models) => {
         message: `Modified note with id ${note._id} successfully`,
         note
     });
+};
+
+export const toggleFavorite: noteParamTypes = async (req, res, models) => {
+    const { _id: id }: NoteRequestBodyI = req.body;
+    const { User } = models;
+    const userId = authenticate(req, res);
+    const user = await User.findById(userId);
+    const toggled = user.toggleFavorite(id);
+    console.log('toggled favorite!');
+    return res.status(200).json({ id: toggled });
 };

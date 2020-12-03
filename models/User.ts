@@ -21,6 +21,7 @@ export interface IUser extends mongoose.Document {
     getNotes: () => any;
     deleteNote: (id: any) => any;
     modifyNote: (id: string, content: string, title: string) => any;
+    toggleFavorite: (id: string) => any;
     changePassword: (newPassword: string) => any;
     notes?: INote[];
 }
@@ -103,6 +104,17 @@ userSchema.methods.deleteNote = async function (id: any) {
     this.notes = this.notes.filter(
         (note: IUser['notes'][0]) => note._id.toString() !== id.toString()
     );
+    await this.save();
+    return id;
+};
+
+userSchema.methods.toggleFavorite = async function (id: string) {
+    const index = this.notes.findIndex(
+        (note: INote) => note._id.toString() === id.toString()
+    );
+    if (index < 0)
+        throw new CustomStatusError('Tried to modify a nonexistent note', 404);
+    this.notes[index].favorite = !this.notes[index].favorite;
     await this.save();
     return id;
 };

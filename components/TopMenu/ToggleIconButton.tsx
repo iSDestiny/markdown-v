@@ -8,7 +8,7 @@ interface toggleProps {
     children: JSX.Element;
     value: string;
     toggle: boolean;
-    setToggle: () => { payload: undefined; type: string };
+    setToggle: () => { payload: undefined; type: string } | void;
     disabled?: boolean;
     selectedTitle?: string;
     deselectedTitle?: string;

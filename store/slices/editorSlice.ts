@@ -101,6 +101,12 @@ const editorSlice = createSlice({
             state.canPreview = !state.canPreview;
         },
 
+        toggleFavorite: (state) => {
+            const { current, notes } = state;
+            if (current < notes.length)
+                state.notes[current].favorite = !notes[current].favorite;
+        },
+
         setNotesFromOriginal: (state, action) => {
             const { notes: prev, current } = state;
             const { originalNotes }: { originalNotes: Note[] } = action.payload;
@@ -184,6 +190,7 @@ export const {
     setCurrent,
     toggleEdit,
     togglePreview,
+    toggleFavorite,
     setNotesFromOriginal,
     setNotesFromEdit,
     setLoader,
