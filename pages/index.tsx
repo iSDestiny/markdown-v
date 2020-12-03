@@ -38,7 +38,7 @@ export default function Notes() {
         staleTime: Infinity,
         retry: false
     });
-    const { canEdit, canPreview, notes } = useSelector(selectEditor);
+    const { canEdit, canPreview, notes, current } = useSelector(selectEditor);
     const dispatch = useDispatch();
     const isLoading = useLoader('notes', false);
     const [isFavorite, setIsFavorite] = useState(false);
@@ -66,19 +66,20 @@ export default function Notes() {
                 <SideMenu />
                 <NotesMenu />
                 <section className={classes['editor-container']}>
-                    {notes.length > 0 && (
-                        <>
-                            <TopMenu
-                                notes={notes}
-                                isFavorite={isFavorite}
-                                setIsFavorite={setIsFavorite}
-                            />
-                            <div className={classes['editor-main']}>
-                                {canEdit ? <Editor /> : <Preview />}
-                                {canPreview && <Preview isResizable />}
-                            </div>
-                        </>
-                    )}
+                    {notes.length > 0 &&
+                        notes.find((note) => note._id === current) && (
+                            <>
+                                <TopMenu
+                                    notes={notes}
+                                    isFavorite={isFavorite}
+                                    setIsFavorite={setIsFavorite}
+                                />
+                                <div className={classes['editor-main']}>
+                                    {canEdit ? <Editor /> : <Preview />}
+                                    {canPreview && <Preview isResizable />}
+                                </div>
+                            </>
+                        )}
                 </section>
             </main>
             {process.env.NODE_ENV === 'development' && (

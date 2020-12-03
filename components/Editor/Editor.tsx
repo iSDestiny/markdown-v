@@ -24,7 +24,7 @@ const Editor = () => {
                     ref={targetRef}
                 >
                     <AceReact
-                        note={notes[current]}
+                        note={notes.find((note) => note._id === current)}
                         width={width}
                         theme="palenight"
                         onChange={(newVal) => {

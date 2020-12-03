@@ -40,14 +40,10 @@ const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
         { isLoading: editIsLoading }
     ] = useMutateModifyNote();
 
-    const [
-        mutateToggleFavorite,
-        { isLoading: favoriteIsLoading }
-    ] = useMutateToggleFavorite();
+    const [mutateToggleFavorite] = useMutateToggleFavorite();
 
     useLoader('delete', deleteIsLoading);
     useLoader('modify', editIsLoading);
-    useLoader('favorite', favoriteIsLoading);
 
     return (
         <div className={classes['top-menu']}>
@@ -70,10 +66,11 @@ const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
                 <VerticalSplitIcon fontSize="small" />
             </ToggleIconButton>
             <ToggleIconButton
-                toggle={notes[current].favorite}
-                setToggle={async () =>
-                    notes[current] && mutateToggleFavorite(notes[current]._id)
-                }
+                toggle={notes.find((note) => note._id === current).favorite}
+                setToggle={async () => {
+                    dispatch(toggleFavorite());
+                    notes[current] && mutateToggleFavorite(notes[current]._id);
+                }}
                 value="favorite"
                 selectedTitle="Favorite"
                 deselectedTitle="Unfavorite"

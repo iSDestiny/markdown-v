@@ -17,7 +17,7 @@ import SortOptions from './SortOptions';
 
 const NotesMenu = () => {
     const [mutateAddNote, { isLoading }] = useMutateAddNote();
-    const { current, notes } = useSelector(selectEditor);
+    const { current, notes, filter } = useSelector(selectEditor);
     const dispatch = useDispatch();
     useLoader('add', isLoading);
 
@@ -25,15 +25,19 @@ const NotesMenu = () => {
         mutateAddNote();
     };
 
-    const noteSelectionHandler = (index: number) => {
-        dispatch(setCurrent({ current: index }));
+    const noteSelectionHandler = (id: string) => {
+        dispatch(setCurrent({ current: id }));
     };
 
     return (
         <section className={classes['notes-menu']}>
             <header>
                 <div className={classes.row1}>
-                    <h3>All Notes</h3>
+                    <h3>
+                        {filter.type === 'nonTag'
+                            ? filter.name
+                            : `Tag: ${filter.name}`}
+                    </h3>
                     <Tooltip title="New Note">
                         <IconButton
                             color="primary"
@@ -56,11 +60,11 @@ const NotesMenu = () => {
                         <ListItem
                             button
                             key={note._id}
-                            selected={index === current}
+                            selected={note._id === current}
                             style={{
                                 display: 'flex'
                             }}
-                            onClick={() => noteSelectionHandler(index)}
+                            onClick={() => noteSelectionHandler(note._id)}
                         >
                             <ListItemText
                                 primary={note.title}

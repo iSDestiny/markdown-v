@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import markdownToTxt from 'markdown-to-txt';
 interface stateTypes {
     editor: {
-        current: number;
+        current: string;
         canEdit: boolean;
         canPreview: boolean;
         notes: Note[];
@@ -14,6 +14,10 @@ interface stateTypes {
             | 'dateUpdatedDesc'
             | 'dateCreatedAsc'
             | 'dateCreatedDesc';
+        filter: {
+            name: string;
+            type: 'nonTag' | 'tag';
+        };
     };
 }
 // sort type: 0 is ascending, 1 is descending
@@ -76,16 +80,23 @@ const sortFuncs = {
         byDateCreated(first, second, 0)
 };
 
+const nonTagNoteFilters = {
+    ['All Notes']: () => true,
+    Favorites: (note: Note) => note.favorite
+};
+
 const editorSlice = createSlice({
     name: 'editor',
     initialState: {
-        current: 0,
+        current: '',
         canEdit: true,
         canPreview: false,
+        nonFilteredNotes: [],
         notes: [],
         loaders: {},
         // sorts notes by title ascending as default
-        sortType: 'titleAsc'
+        sortType: 'titleAsc',
+        filter: { name: 'All Notes', type: 'nonTag' }
     },
     reducers: {
         setCurrent: (state, action) => {
@@ -103,43 +114,41 @@ const editorSlice = createSlice({
 
         toggleFavorite: (state) => {
             const { current, notes } = state;
-            if (current < notes.length)
-                state.notes[current].favorite = !notes[current].favorite;
+            const index = state.notes.findIndex((note) => note._id === current);
+            if (index >= 0)
+                state.notes[index].favorite = !notes[index].favorite;
         },
 
         setNotesFromOriginal: (state, action) => {
-            const { notes: prev, current } = state;
+            const { notes: prev, current, filter } = state;
             const { originalNotes }: { originalNotes: Note[] } = action.payload;
             const toKeep = prev.filter((pNote) => pNote.isTemp);
             const toKeepDict = {};
             const prevIds = new Set(prev.map((pNote) => pNote._id));
-            const prevCurrId = prev[current] ? prev[current]._id : null;
-            let newNoteId: string;
 
             if (!originalNotes) return;
 
             toKeep.forEach((keepNote) => {
                 toKeepDict[keepNote._id] = keepNote;
             });
-            let newNotes: Note[] = originalNotes.map((note: Note, index) => {
-                if (!prevIds.has(note._id)) newNoteId = note._id;
+            let newNotes: Note[] = originalNotes.map((note: Note) => {
+                if (!prevIds.has(note._id)) state.current = note._id;
                 return note._id in toKeepDict ? toKeepDict[note._id] : note;
             });
             newNotes.sort(sortFuncs[state.sortType]);
-            state.notes = newNotes;
-
-            if (prevCurrId)
-                state.current = state.notes.findIndex(
-                    (note) => note._id === prevCurrId
+            state.nonFilteredNotes = newNotes;
+            if (filter.type === 'nonTag')
+                state.notes = newNotes.filter(nonTagNoteFilters[filter.name]);
+            else
+                state.notes = newNotes.filter(
+                    (note: Note) =>
+                        note.tags.filter(({ tag }) => tag === filter.name)
+                            .length > 0
                 );
 
-            if (newNoteId)
-                state.current = state.notes.findIndex(
-                    (note) => note._id === newNoteId
-                );
-
-            if (current >= state.notes.length)
-                state.current = state.notes.length - 1;
+            if (state.notes.length > 0 && !current)
+                state.current = state.notes[0]._id;
+            console.log(state.current);
         },
 
         setNotesFromEdit: (state, action) => {
@@ -148,39 +157,52 @@ const editorSlice = createSlice({
             const { content: newContent } = action.payload;
             const firstLine = newContent.trim().split('\n')[0];
             const newTitle = markdownToTxt(firstLine).trim();
-            const prevCurrId = newNotes[current] ? newNotes[current]._id : null;
 
-            newNotes[current].title = newTitle ? newTitle : 'Untitled';
-            newNotes[current].content = newContent;
-            newNotes[current].isTemp = true;
+            const index = newNotes.findIndex((note) => note._id === current);
+            if (index >= 0) {
+                newNotes[index].title = newTitle ? newTitle : 'Untitled';
+                newNotes[index].content = newContent;
+                newNotes[index].isTemp = true;
+            }
             newNotes.sort(sortFuncs[state.sortType]);
-            const newCurr = newNotes.findIndex(
-                (note) => note._id === prevCurrId
-            );
             state.notes = newNotes;
-            state.current = newCurr;
         },
 
         setNoteToSaved: (state) => {
             const { current } = state;
-            if (current < state.notes.length)
-                state.notes[current].isTemp = false;
+            const index = state.notes.findIndex((note) => note._id === current);
+            if (index >= 0) state.notes[index].isTemp = false;
         },
 
         setSort: (state, action) => {
             const { sortType } = action.payload;
             console.log(sortType);
-            const prevCurrId = state.notes[state.current]._id;
             state.sortType = sortType;
             state.notes.sort(sortFuncs[state.sortType]);
-            state.current = state.notes.findIndex(
-                (note) => note._id === prevCurrId
-            );
         },
 
         setLoader: (state, action) => {
             const { name, isLoading } = action.payload;
             state.loaders[name] = isLoading;
+        },
+
+        setFilter: (state, action) => {
+            const { nonFilteredNotes } = state;
+            const { newFilter, type } = action.payload;
+            state.filter.name = newFilter;
+            state.filter.type = type;
+
+            if (type === 'nonTag')
+                state.notes = nonFilteredNotes.filter(
+                    nonTagNoteFilters[newFilter]
+                );
+            else
+                state.notes = nonFilteredNotes.filter(
+                    (note: Note) =>
+                        note.tags.filter(({ tag }) => tag === newFilter)
+                            .length > 0
+                );
+            if (state.notes.length > 0) state.current = state.notes[0]._id;
         }
     }
 });
@@ -195,6 +217,7 @@ export const {
     setNotesFromEdit,
     setLoader,
     setNoteToSaved,
-    setSort
+    setSort,
+    setFilter
 } = editorSlice.actions;
 export default editorSlice.reducer;

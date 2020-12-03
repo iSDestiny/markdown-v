@@ -11,12 +11,16 @@ import {
 import { useState } from 'react';
 import { useQueryCache } from 'react-query';
 import AccountOptions from './AccountOptions';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectEditor, setFilter } from '../../store/slices/editorSlice';
 import classes from './SideMenu.module.scss';
 
 const SideMenu = () => {
     const [tagOpen, setTagOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<Element>(null);
     const queryCache = useQueryCache();
+    const { notes, filter } = useSelector(selectEditor);
+    const dispatch = useDispatch();
 
     return (
         <>
@@ -43,14 +47,36 @@ const SideMenu = () => {
                     </button>
                 </header>
                 <List>
-                    <ListItem button>
+                    <ListItem
+                        button
+                        selected={filter.name === 'All Notes'}
+                        onClick={() =>
+                            dispatch(
+                                setFilter({
+                                    newFilter: 'All Notes',
+                                    type: 'nonTag'
+                                })
+                            )
+                        }
+                    >
                         <Description fontSize="small" />
                         <ListItemText
                             primary="All Notes"
                             classes={{ primary: classes['item-text'] }}
                         />
                     </ListItem>
-                    <ListItem button>
+                    <ListItem
+                        button
+                        selected={filter.name === 'Favorites'}
+                        onClick={() =>
+                            dispatch(
+                                setFilter({
+                                    newFilter: 'Favorites',
+                                    type: 'nonTag'
+                                })
+                            )
+                        }
+                    >
                         <Star fontSize="small" />
                         <ListItemText
                             primary="Favorites"
