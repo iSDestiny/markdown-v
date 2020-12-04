@@ -1,5 +1,16 @@
 declare module 'react-resize-panel';
 
+interface Tag {
+    tag: string;
+}
+
+interface NewNote {
+    content?: string;
+    title?: string;
+    favorite?: boolean;
+    tags?: Array<Tag>;
+}
+
 interface Note {
     _id: string;
     content: string;
@@ -7,6 +18,6 @@ interface Note {
     createdAt: string;
     updatedAt: string;
     favorite: boolean;
-    tags: [{ _id: string; tag: string }];
+    tags: Array<Tag>;
     isTemp?: boolean;
 }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const addNote = (note?: Note) => {
+export const addNote = (note?: NewNote) => {
     return axios.post('/api/notes', { ...note });
 };
 

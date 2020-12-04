@@ -1,15 +1,12 @@
 import mongoose from 'mongoose';
 import CustomStatusError from '../utility/CustomStatusError';
+
 export interface INote extends mongoose.Document {
     _id: mongoose.Schema.Types.ObjectId;
     title: string;
     content: string;
-    tags: [
-        {
-            tag: string;
-        }
-    ];
-    favorite: Boolean;
+    tags: Array<Tag>;
+    favorite: boolean;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -17,7 +14,7 @@ export interface INote extends mongoose.Document {
 export interface IUser extends mongoose.Document {
     email: string;
     password: string;
-    addNote: () => any;
+    addNote: (tags?: INote['tags'], favorite?: INote['favorite']) => any;
     getNotes: () => any;
     deleteNote: (id: any) => any;
     modifyNote: (id: string, content: string, title: string) => any;
@@ -69,8 +66,17 @@ const userSchema = new mongoose.Schema({
     ]
 });
 
-userSchema.methods.addNote = async function () {
-    this.notes.push({ tags: [] });
+userSchema.methods.addNote = async function (
+    tags?: INote['tags'],
+    favorite?: INote['favorite']
+) {
+    let note: { tags?: Array<Tag>; favorite?: boolean } = {
+        tags: [],
+        favorite: false
+    };
+    if (tags) note.tags = tags;
+    if (favorite) note.favorite = favorite;
+    this.notes.push(note);
     await this.save();
     return this.notes[this.notes.length - 1];
 };

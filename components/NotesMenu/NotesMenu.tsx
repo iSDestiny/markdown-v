@@ -22,7 +22,11 @@ const NotesMenu = () => {
     useLoader('add', isLoading);
 
     const addNoteHandler = () => {
-        mutateAddNote();
+        const { type, name } = filter;
+        let note: NewNote = {};
+        if (type === 'nonTag' && name === 'Favorites') note.favorite = true;
+        else if (type === 'tag') note.tags = [{ tag: name }];
+        mutateAddNote(note);
     };
 
     const noteSelectionHandler = (id: string) => {

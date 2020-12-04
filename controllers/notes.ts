@@ -33,9 +33,13 @@ export const getNotes: noteParamTypes = async (req, res, models) => {
 
 export const postNotes: noteParamTypes = async (req, res, models) => {
     const { User } = models;
+    const {
+        favorite,
+        tags
+    }: { favorite: boolean; tags: Array<Tag> } = req.body;
     const userId = authenticate(req, res);
     const user = await User.findById(userId);
-    const note = await user.addNote();
+    const note = await user.addNote(tags, favorite);
     return res
         .status(201)
         .json({ message: 'Added note successfully', note: note });
