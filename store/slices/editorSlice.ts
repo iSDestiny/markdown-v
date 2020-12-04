@@ -127,6 +127,7 @@ const editorSlice = createSlice({
             const toKeep = prev.filter((pNote) => pNote.isTemp);
             const toKeepDict = {};
             const prevIds = new Set(prev.map((pNote) => pNote._id));
+            const prevIndex = prev.findIndex((pNote) => pNote._id === current);
 
             if (!originalNotes) return;
 
@@ -150,11 +151,16 @@ const editorSlice = createSlice({
                             .length > 0
                 );
 
-            if (
+            if (state.notes.length > 0 && !current) {
+                state.current = state.notes[0]._id;
+            } else if (
                 state.notes.length > 0 &&
                 !state.notes.find((note) => note._id === current)
-            )
-                state.current = state.notes[0]._id;
+            ) {
+                if (prevIndex >= 0 && prevIndex < state.notes.length)
+                    state.current = state.notes[prevIndex]._id;
+                else state.current = state.notes[state.notes.length - 1]._id;
+            }
         },
 
         setNotesFromEdit: (state, action) => {
