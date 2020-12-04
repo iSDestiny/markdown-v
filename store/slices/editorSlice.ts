@@ -18,6 +18,7 @@ interface stateTypes {
             name: string;
             type: 'nonTag' | 'tag';
         };
+        tags: Tag[];
     };
 }
 // sort type: 0 is ascending, 1 is descending
@@ -96,7 +97,8 @@ const editorSlice = createSlice({
         loaders: {},
         // sorts notes by title ascending as default
         sortType: 'titleAsc',
-        filter: { name: 'All Notes', type: 'nonTag' }
+        filter: { name: 'All Notes', type: 'nonTag' },
+        tags: []
     },
     reducers: {
         setCurrent: (state, action) => {
@@ -133,6 +135,8 @@ const editorSlice = createSlice({
             });
             let newNotes: Note[] = originalNotes.map((note: Note) => {
                 if (!prevIds.has(note._id)) state.current = note._id;
+                const newTags = new Set([...state.tags, ...note.tags]);
+                state.tags = [...newTags];
                 return note._id in toKeepDict ? toKeepDict[note._id] : note;
             });
             newNotes.sort(sortFuncs[state.sortType]);

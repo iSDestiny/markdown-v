@@ -22,6 +22,15 @@ const SideMenu = () => {
     const { notes, filter } = useSelector(selectEditor);
     const dispatch = useDispatch();
 
+    const getAllUniqueTags = () => {
+        // const allTags = notes.reduce((prev, note) => )
+        let allUniqueTags: Tag[] = [];
+        notes.forEach((note) => {
+            allUniqueTags = [...allUniqueTags, ...new Set([...note.tags])];
+        });
+        return allUniqueTags;
+    };
+
     return (
         <>
             <div className={classes.root}>
@@ -83,46 +92,35 @@ const SideMenu = () => {
                             classes={{ primary: classes['item-text'] }}
                         />
                     </ListItem>
-                    <ListItem
-                        button
-                        onClick={() => setTagOpen((prev) => !prev)}
-                    >
-                        <LocalOffer fontSize="small" />
-                        <ListItemText
-                            primary="Tags"
-                            classes={{ primary: classes['item-text'] }}
-                        />
-                        {tagOpen ? <ExpandLess /> : <ExpandMore />}
-                    </ListItem>
+                    {getAllUniqueTags().length > 0 && (
+                        <ListItem
+                            button
+                            onClick={() => setTagOpen((prev) => !prev)}
+                        >
+                            <LocalOffer fontSize="small" />
+                            <ListItemText
+                                primary="Tags"
+                                classes={{ primary: classes['item-text'] }}
+                            />
+                            {tagOpen ? <ExpandLess /> : <ExpandMore />}
+                        </ListItem>
+                    )}
                     <Collapse in={tagOpen} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
-                            <ListItem button style={{ paddingLeft: '2.5rem' }}>
-                                <LocalOfferOutlined fontSize="small" />
-                                <ListItemText
-                                    primary="Tag 1"
-                                    classes={{ primary: classes['item-text'] }}
-                                />
-                            </ListItem>
-                            <ListItem
-                                button
-                                style={{
-                                    paddingLeft: '2.5rem',
-                                    paddingRight: '2rem'
-                                }}
-                            >
-                                <LocalOfferOutlined fontSize="small" />
-                                <ListItemText
-                                    primary="asdfasff"
-                                    classes={{ primary: classes['item-text'] }}
-                                />
-                            </ListItem>
-                            <ListItem button style={{ paddingLeft: '2.5rem' }}>
-                                <LocalOfferOutlined fontSize="small" />
-                                <ListItemText
-                                    primary="Tag 1"
-                                    classes={{ primary: classes['item-text'] }}
-                                />
-                            </ListItem>
+                            {getAllUniqueTags().map(({ tag }) => (
+                                <ListItem
+                                    button
+                                    style={{ paddingLeft: '2.5rem' }}
+                                >
+                                    <LocalOfferOutlined fontSize="small" />
+                                    <ListItemText
+                                        primary={tag}
+                                        classes={{
+                                            primary: classes['item-text']
+                                        }}
+                                    />
+                                </ListItem>
+                            ))}
                         </List>
                     </Collapse>
                 </List>
