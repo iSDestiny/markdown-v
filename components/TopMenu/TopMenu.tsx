@@ -6,7 +6,7 @@ import StarIcon from '@material-ui/icons/Star';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
-import { Button, ButtonGroup, IconButton, Tooltip } from '@material-ui/core';
+import { Button, ButtonGroup, Tooltip } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     selectEditor,
@@ -23,12 +23,10 @@ import {
 import useLoader from '../../hooks/useLoader';
 
 interface TopMenuProps {
-    isFavorite: boolean;
     notes: Note[];
-    setIsFavorite: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TopMenu = ({ notes, isFavorite, setIsFavorite }: TopMenuProps) => {
+const TopMenu = ({ notes }: TopMenuProps) => {
     const { canPreview, canEdit, current } = useSelector(selectEditor);
     const dispatch = useDispatch();
     const [

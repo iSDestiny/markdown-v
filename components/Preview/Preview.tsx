@@ -23,7 +23,7 @@ const Preview = ({ isResizable }: PreviewProps) => {
                 renderers={{ code: CodeBlock }}
                 linkTarget="_blank"
             >
-                {notes[current] ? notes[current].content : ''}
+                {notes.find((note) => note._id === current)?.content}
             </ReactMarkdown>
         </div>
     );
