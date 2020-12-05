@@ -18,6 +18,17 @@
             flex-direction: row;
             justify-content: space-between;
         }
+
+        .row2 {
+            align-items: center;
+        }
+
+        .row1 {
+            align-items: center;
+            h1 {
+                font-size: 1.2rem;
+            }
+        }
     }
 }
 

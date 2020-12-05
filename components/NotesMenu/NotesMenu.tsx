@@ -37,11 +37,11 @@ const NotesMenu = () => {
         <section className={classes['notes-menu']}>
             <header>
                 <div className={classes.row1}>
-                    <h3>
+                    <h1>
                         {filter.type === 'nonTag'
                             ? filter.name
                             : `Tag: ${filter.name}`}
-                    </h3>
+                    </h1>
                     <Tooltip title="New Note">
                         <IconButton
                             color="primary"

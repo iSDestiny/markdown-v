@@ -82,26 +82,6 @@ const EditTagsMenu = ({ anchorEl, setAnchorEl }: EditTagsMenuProps) => {
                     </IconButton>
                 )}
             </MenuItem>
-            <MenuItem
-                disableRipple={isMouseInsideDelete}
-                onMouseEnter={() => onMouseEnter(1)}
-                onMouseLeave={() => onMouseLeave(1)}
-                onClick={() => onClickTag()}
-            >
-                <ListItemText primary="React" />
-                {isMouseInside[1] && (
-                    <IconButton
-                        style={{ marginLeft: 5, padding: 5 }}
-                        size="small"
-                        type="submit"
-                        onMouseEnter={() => setIsMouseInsideDelete(true)}
-                        onMouseLeave={() => setIsMouseInsideDelete(false)}
-                        onClick={(event) => onDeleteTag(event)}
-                    >
-                        <ClearIcon fontSize="small" />
-                    </IconButton>
-                )}
-            </MenuItem>
             <form
                 className={classes['tags-menu-form']}
                 onSubmit={(event) => addTagHandler(event)}
