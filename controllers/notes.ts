@@ -19,7 +19,7 @@ interface NoteRequestBodyI {
     title: string;
     content: string;
     favorite: boolean;
-    tags: any[];
+    tags: Tag[];
 }
 
 export const getNotes: noteParamTypes = async (req, res, models) => {
@@ -84,5 +84,36 @@ export const toggleFavorite: noteParamTypes = async (req, res, models) => {
     const user = await User.findById(userId);
     const note = await user.toggleFavorite(id);
     console.log('toggled favorite!');
+    return res.status(200).json({ note });
+};
+
+export const setTags: noteParamTypes = async (req, res, models) => {
+    const { _id: id, tags }: NoteRequestBodyI = req.body;
+    console.log(id, tags);
+    const { User } = models;
+    const userId = authenticate(req, res);
+    const user = await User.findById(userId);
+    const note = await user.setTags(id, tags);
+    console.log('set tags!');
+    return res.status(200).json({ note });
+};
+
+export const addTag: noteParamTypes = async (req, res, models) => {
+    const { id, tag }: { id: string; tag: string } = req.body;
+    const { User } = models;
+    const userId = authenticate(req, res);
+    const user = await User.findById(userId);
+    const note = await user.addTag(id, tag);
+    console.log('added tag');
+    return res.status(200).json({ note });
+};
+
+export const deleteTag: noteParamTypes = async (req, res, models) => {
+    const { id, tag }: { id: string; tag: string } = req.body;
+    const { User } = models;
+    const userId = authenticate(req, res);
+    const user = await User.findById(userId);
+    const note = await user.deleteTag(id, tag);
+    console.log('deleted tag');
     return res.status(200).json({ note });
 };

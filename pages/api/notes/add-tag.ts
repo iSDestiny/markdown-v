@@ -1,21 +1,16 @@
-import { toggleFavorite } from '../../../controllers/notes';
+import { addTag } from '../../../controllers/notes';
 import connect from '../../../middleware/connect';
 import { handlerType } from '../../../middleware/connect';
 import CustomStatusError from '../../../utility/CustomStatusError';
 
-const toggleNoteFavorite: handlerType = async (
-    req,
-    res,
-    connection,
-    models
-) => {
+const addNewNoteTag: handlerType = async (req, res, connection, models) => {
     const { method } = req;
 
     try {
         switch (method) {
             case 'POST':
                 console.log('in post toggle favorite');
-                return await toggleFavorite(req, res, models);
+                return await addTag(req, res, models);
             default:
                 throw new CustomStatusError('Invalid http method', 405);
         }
@@ -28,7 +23,7 @@ const toggleNoteFavorite: handlerType = async (
     }
 };
 
-export default connect(toggleNoteFavorite);
+export default connect(addNewNoteTag);
 
 export const config = {
     api: {

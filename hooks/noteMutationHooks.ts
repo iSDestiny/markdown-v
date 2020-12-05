@@ -3,6 +3,9 @@ import {
     addNote,
     deleteNote,
     modifyNote,
+    setTags,
+    addTag,
+    deleteTag,
     toggleFavorite
 } from '../utility/noteMutations';
 import { NextRouter, useRouter } from 'next/router';
@@ -59,6 +62,54 @@ export const useMutateToggleFavorite = () => {
     const router = useRouter();
     const queryCache = useQueryCache();
     return useMutation(toggleFavorite, {
+        onSuccess: ({ data: { note } }) =>
+            queryCache.setQueryData('notes', (prev: Note[]) =>
+                prev.map((pNote) => (pNote._id === note._id ? note : pNote))
+            ),
+        onError: ({ response }) => {
+            const { status } = response;
+            if (status === 401) router.push('/login');
+            else router.push('/500');
+        }
+    });
+};
+
+export const useMutateSetTags = () => {
+    const router = useRouter();
+    const queryCache = useQueryCache();
+    return useMutation(setTags, {
+        onSuccess: ({ data: { note } }) =>
+            queryCache.setQueryData('notes', (prev: Note[]) =>
+                prev.map((pNote) => (pNote._id === note._id ? note : pNote))
+            ),
+        onError: ({ response }) => {
+            const { status } = response;
+            if (status === 401) router.push('/login');
+            else router.push('/500');
+        }
+    });
+};
+
+export const useMutateAddTag = () => {
+    const router = useRouter();
+    const queryCache = useQueryCache();
+    return useMutation(addTag, {
+        onSuccess: ({ data: { note } }) =>
+            queryCache.setQueryData('notes', (prev: Note[]) =>
+                prev.map((pNote) => (pNote._id === note._id ? note : pNote))
+            ),
+        onError: ({ response }) => {
+            const { status } = response;
+            if (status === 401) router.push('/login');
+            else router.push('/500');
+        }
+    });
+};
+
+export const useMutateDeleteTag = () => {
+    const router = useRouter();
+    const queryCache = useQueryCache();
+    return useMutation(deleteTag, {
         onSuccess: ({ data: { note } }) =>
             queryCache.setQueryData('notes', (prev: Note[]) =>
                 prev.map((pNote) => (pNote._id === note._id ? note : pNote))

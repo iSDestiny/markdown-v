@@ -18,7 +18,6 @@ interface stateTypes {
             name: string;
             type: 'nonTag' | 'tag';
         };
-        tags: Tag[];
     };
 }
 // sort type: 0 is ascending, 1 is descending
@@ -97,8 +96,7 @@ const editorSlice = createSlice({
         loaders: {},
         // sorts notes by title ascending as default
         sortType: 'titleAsc',
-        filter: { name: 'All Notes', type: 'nonTag' },
-        tags: []
+        filter: { name: 'All Notes', type: 'nonTag' }
     },
     reducers: {
         setCurrent: (state, action) => {
@@ -121,6 +119,23 @@ const editorSlice = createSlice({
                 state.notes[index].favorite = !notes[index].favorite;
         },
 
+        addTag: (state, action) => {
+            const { current } = state;
+            const { tag } = action.payload;
+            const index = state.notes.findIndex((note) => note._id === current);
+            if (index >= 0) state.notes[index].tags.push({ tag });
+        },
+
+        deleteTag: (state, action) => {
+            const { current, notes } = state;
+            const { tagToDelete } = action.payload;
+            const index = state.notes.findIndex((note) => note._id === current);
+            if (index >= 0)
+                state.notes[index].tags = notes[index].tags.filter(
+                    ({ tag }) => tag !== tagToDelete
+                );
+        },
+
         setNotesFromOriginal: (state, action) => {
             const { notes: prev, current, filter } = state;
             const { originalNotes }: { originalNotes: Note[] } = action.payload;
@@ -136,8 +151,6 @@ const editorSlice = createSlice({
             });
             let newNotes: Note[] = originalNotes.map((note: Note) => {
                 if (!prevIds.has(note._id)) state.current = note._id;
-                const newTags = new Set([...state.tags, ...note.tags]);
-                state.tags = [...newTags];
                 return note._id in toKeepDict ? toKeepDict[note._id] : note;
             });
             newNotes.sort(sortFuncs[state.sortType]);
@@ -230,6 +243,8 @@ export const {
     setLoader,
     setNoteToSaved,
     setSort,
-    setFilter
+    setFilter,
+    addTag,
+    deleteTag
 } = editorSlice.actions;
 export default editorSlice.reducer;

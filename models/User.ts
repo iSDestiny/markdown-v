@@ -20,13 +20,17 @@ export interface IUser extends mongoose.Document {
     modifyNote: (id: string, content: string, title: string) => any;
     toggleFavorite: (id: string) => any;
     changePassword: (newPassword: string) => any;
+    setTags: (id: string, tags: Tag[]) => any;
+    addTag: (id: string, tag: string) => any;
+    deleteTag: (id: string, tagToDelete: string) => any;
     notes?: INote[];
 }
 
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
@@ -50,7 +54,8 @@ const userSchema = new mongoose.Schema({
                         {
                             tag: {
                                 type: String,
-                                required: true
+                                required: true,
+                                unique: true
                             }
                         }
                     ],
@@ -121,6 +126,44 @@ userSchema.methods.toggleFavorite = async function (id: string) {
     if (index < 0)
         throw new CustomStatusError('Tried to modify a nonexistent note', 404);
     this.notes[index].favorite = !this.notes[index].favorite;
+    await this.save();
+    return this.notes[index];
+};
+
+userSchema.methods.setTags = async function (id: string, tags: Tag[]) {
+    const index = this.notes.findIndex(
+        (note: INote) => note._id.toString() === id.toString()
+    );
+    if (index < 0)
+        throw new CustomStatusError('Tried to modify a nonexistent note', 404);
+    this.notes[index].tags = tags;
+    await this.save();
+    return this.notes[index];
+};
+
+userSchema.methods.addTag = async function (id: string, tag: string) {
+    const index = this.notes.findIndex(
+        (note: INote) => note._id.toString() === id.toString()
+    );
+    if (index < 0)
+        throw new CustomStatusError('Tried to modify a nonexistent note', 404);
+    this.notes[index].tags.push({ tag });
+    await this.save();
+    return this.notes[index];
+};
+
+userSchema.methods.deleteTag = async function (
+    id: string,
+    tagToDelete: string
+) {
+    const index = this.notes.findIndex(
+        (note: INote) => note._id.toString() === id.toString()
+    );
+    if (index < 0)
+        throw new CustomStatusError('Tried to modify a nonexistent note', 404);
+    this.notes[index].tags = this.notes[index].tags.filter(
+        ({ tag }) => tag !== tagToDelete
+    );
     await this.save();
     return this.notes[index];
 };
