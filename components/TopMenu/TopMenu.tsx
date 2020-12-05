@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ToggleIconButton from './ToggleIconButton';
 import classes from './TopMenu.module.scss';
 import VerticalSplitIcon from '@material-ui/icons/VerticalSplit';
 import StarIcon from '@material-ui/icons/Star';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import LocalOffer from '@material-ui/icons/LocalOffer';
 import SaveIcon from '@material-ui/icons/Save';
 import { Button, ButtonGroup, Tooltip } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,12 +22,14 @@ import {
     useMutateToggleFavorite
 } from '../../hooks/noteMutationHooks';
 import useLoader from '../../hooks/useLoader';
+import EditTagsMenu from './EditTagsMenu';
 
 interface TopMenuProps {
     notes: Note[];
 }
 
 const TopMenu = ({ notes }: TopMenuProps) => {
+    const [anchorEl, setAnchorEl] = useState<Element>(null);
     const { canPreview, canEdit, current } = useSelector(selectEditor);
     const dispatch = useDispatch();
     const [
@@ -77,7 +80,7 @@ const TopMenu = ({ notes }: TopMenuProps) => {
                 <StarIcon fontSize="small" />
             </ToggleIconButton>
             <ButtonGroup>
-                <Tooltip title="Save">
+                <Tooltip title="Edit Tags">
                     <Button
                         variant="outlined"
                         size="small"
@@ -85,6 +88,21 @@ const TopMenu = ({ notes }: TopMenuProps) => {
                             borderColor: 'rgba(0, 0, 0, 0.12)',
                             minWidth: '44px',
                             marginLeft: '1rem',
+                            color: '#d6d7d9',
+                            border: '1px solid rgba(0, 0, 0, 0.12)'
+                        }}
+                        onClick={(event) => setAnchorEl(event.currentTarget)}
+                    >
+                        <LocalOffer fontSize="small" />
+                    </Button>
+                </Tooltip>
+                <Tooltip title="Save">
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        style={{
+                            borderColor: 'rgba(0, 0, 0, 0.12)',
+                            minWidth: '44px',
                             color: '#d6d7d9',
                             border: '1px solid rgba(0, 0, 0, 0.12)'
                         }}
@@ -120,6 +138,7 @@ const TopMenu = ({ notes }: TopMenuProps) => {
                     </Button>
                 </Tooltip>
             </ButtonGroup>
+            <EditTagsMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
         </div>
     );
 };

@@ -25,24 +25,29 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
     const dispatch = useDispatch();
     useLoader('modify', editIsLoading);
 
-    Vim.map('jj', '<Esc>', 'insert');
-    Vim.map('jk', '<Esc>', 'insert');
-    Vim.map('kj', '<Esc>', 'insert');
-    Vim.defineEx('write', 'w', async (editor: IAceEditor) => {
+    const save = async () => {
         if (note) {
             await mutateModifyNote(note);
             dispatch(setNoteToSaved());
         }
+    };
+
+    const saveQuit = async () => {
+        await save();
+        dispatch(toggleEdit());
+    };
+
+    Vim.map('jj', '<Esc>', 'insert');
+    Vim.map('jk', '<Esc>', 'insert');
+    Vim.map('kj', '<Esc>', 'insert');
+    Vim.defineEx('write', 'w', async (editor: IAceEditor) => {
+        save();
     });
     Vim.defineEx('quit', 'q', (editor: IAceEditor) => {
         dispatch(toggleEdit());
     });
     Vim.defineEx('wquit', 'wq', async (editor: IAceEditor) => {
-        if (note) {
-            await mutateModifyNote(note);
-            dispatch(toggleEdit());
-            dispatch(setNoteToSaved());
-        }
+        saveQuit();
     });
 
     return (
@@ -64,6 +69,13 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
             setOptions={{
                 wrap: true
             }}
+            commands={[
+                {
+                    name: 'save',
+                    bindKey: { win: 'Ctrl-S', mac: 'Command-S' },
+                    exec: () => save()
+                }
+            ]}
         />
     );
 };

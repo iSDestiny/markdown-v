@@ -1,8 +1,10 @@
+@use '../../styles/theming/colors.scss' as *;
+
 .top-menu {
     display: flex;
     flex-shrink: 1;
     padding: 0.3rem 0.6rem;
-    background-color: #363845;
+    background-color: $bg-dark-2;
     border-bottom: 1px solid #202331;
     width: 100%;
     height: 40px;
@@ -24,4 +26,14 @@
     color: rgba(214, 215, 217, 0.12) !important;
     cursor: default;
     pointer-events: none;
+}
+
+.tags-menu-paper {
+    background-color: $bg-dark-2;
+}
+
+.tags-menu-form {
+    display: flex;
+    padding: 6px 16px;
+    padding-right: 0.5rem;
 }

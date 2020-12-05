@@ -40,8 +40,6 @@ const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
                 color="secondary"
                 id="account-menu"
                 anchorEl={anchorEl}
-                keepMounted
-                autoFocus={false}
                 open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
             >
