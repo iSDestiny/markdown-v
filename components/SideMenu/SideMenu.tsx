@@ -19,14 +19,15 @@ const SideMenu = () => {
     const [tagOpen, setTagOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<Element>(null);
     const queryCache = useQueryCache();
-    const { notes, filter } = useSelector(selectEditor);
+    const { filter, nonFilteredNotes } = useSelector(selectEditor);
     const dispatch = useDispatch();
 
     const getAllUniqueTags = () => {
         // const allTags = notes.reduce((prev, note) => )
-        let allUniqueTags: Tag[] = [];
-        notes.forEach((note) => {
-            allUniqueTags = [...allUniqueTags, ...new Set([...note.tags])];
+        let allUniqueTags: string[] = [];
+        nonFilteredNotes.forEach((note) => {
+            const tags = note.tags.map(({ tag }) => tag);
+            allUniqueTags = [...new Set([...allUniqueTags, ...tags])];
         });
         return allUniqueTags;
     };
@@ -107,9 +108,17 @@ const SideMenu = () => {
                     )}
                     <Collapse in={tagOpen} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
-                            {getAllUniqueTags().map(({ tag }) => (
+                            {getAllUniqueTags().map((tag) => (
                                 <ListItem
                                     button
+                                    onClick={() =>
+                                        dispatch(
+                                            setFilter({
+                                                newFilter: tag,
+                                                type: 'tag'
+                                            })
+                                        )
+                                    }
                                     style={{ paddingLeft: '2.5rem' }}
                                 >
                                     <LocalOfferOutlined fontSize="small" />

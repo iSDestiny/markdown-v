@@ -6,6 +6,7 @@ interface stateTypes {
         canEdit: boolean;
         canPreview: boolean;
         notes: Note[];
+        nonFilteredNotes: Note[];
         loaders: {};
         sortType:
             | 'titleAsc'
@@ -150,7 +151,6 @@ const editorSlice = createSlice({
                 toKeepDict[keepNote._id] = keepNote;
             });
             let newNotes: Note[] = originalNotes.map((note: Note) => {
-                if (!prevIds.has(note._id)) state.current = note._id;
                 return note._id in toKeepDict ? toKeepDict[note._id] : note;
             });
             newNotes.sort(sortFuncs[state.sortType]);
@@ -163,6 +163,10 @@ const editorSlice = createSlice({
                         note.tags.filter(({ tag }) => tag === filter.name)
                             .length > 0
                 );
+
+            state.notes.forEach((note) => {
+                if (!prevIds.has(note._id)) state.current = note._id;
+            });
 
             if (state.notes.length > 0 && !current) {
                 state.current = state.notes[0]._id;
