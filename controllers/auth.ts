@@ -92,9 +92,12 @@ export const putChangePassword: noteParamTypes = async (req, res, models) => {
         validateMiddleware(
             [
                 body('current-password', 'Invalid Password').custom(
-                    (value, { req }) => {
+                    async (value, { req }) => {
                         const userPassword = user.password;
-                        const didMatch = bcrypt.compare(value, userPassword);
+                        const didMatch = await bcrypt.compare(
+                            value,
+                            userPassword
+                        );
                         if (!didMatch)
                             throw new Error('Provided password is incorrect');
                         return true;
