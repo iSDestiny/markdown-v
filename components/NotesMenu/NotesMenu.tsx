@@ -2,12 +2,15 @@ import React from 'react';
 import {
     Chip,
     IconButton,
+    InputAdornment,
     List,
     ListItem,
     ListItemText,
+    TextField,
     Tooltip
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import SearchIcon from '@material-ui/icons/Search';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutateAddNote } from '../../hooks/noteMutationHooks';
 import useLoader from '../../hooks/useLoader';
@@ -37,11 +40,29 @@ const NotesMenu = () => {
         <section className={classes['notes-menu']}>
             <header>
                 <div className={classes.row1}>
-                    <h1>
+                    {/* <h1>
                         {filter.type === 'nonTag'
                             ? filter.name
                             : `Tag: ${filter.name}`}
-                    </h1>
+                    </h1> */}
+                    {/* <TextField
+                        id="search-bar"
+                        variant="outlined"
+                        style={{ borderRadius: '50%' }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            )
+                        }}
+                    /> */}
+                    <div className={classes['search-bar']}>
+                        <span className={classes.icon}>
+                            <SearchIcon />
+                        </span>
+                        <input type="text" placeholder="Search" />
+                    </div>
                     <Tooltip title="New Note">
                         <IconButton
                             color="primary"

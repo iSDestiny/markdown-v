@@ -1,3 +1,5 @@
+@use '../../styles/theming/colors.scss' as *;
+
 .notes-menu {
     height: 100%;
     width: 300px;
@@ -50,4 +52,31 @@
 
 .invisible {
     visibility: hidden;
+}
+
+.search-bar {
+    display: inline-flex;
+    width: 100%;
+    padding: 1rem 0;
+    margin-right: 5px;
+    align-items: center;
+    .icon {
+        padding: 0.8rem;
+        position: absolute;
+    }
+
+    input {
+        background-color: $bg-dark-1;
+        color: $text-1;
+        border: 0;
+        width: 100%;
+        padding: 1rem;
+        padding-left: 2.8rem;
+        border-radius: 40px;
+        outline: none;
+        &::placeholder {
+            color: $text-1;
+            opacity: 0.5;
+        }
+    }
 }
