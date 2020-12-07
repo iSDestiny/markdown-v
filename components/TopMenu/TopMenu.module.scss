@@ -2,12 +2,17 @@
 
 .top-menu {
     display: flex;
+    justify-content: space-between;
     flex-shrink: 1;
     padding: 0.3rem 0.6rem;
     background-color: $bg-dark-2;
     border-bottom: 1px solid #202331;
     width: 100%;
     height: 40px;
+    .left,
+    .right {
+        display: flex;
+    }
 }
 
 .toggle-button {
@@ -37,4 +42,24 @@
     align-items: center;
     padding: 6px 16px;
     padding-right: 0.5rem;
+}
+
+.select-root {
+    padding: 0 1.2rem;
+}
+
+.select-paper {
+    background-color: $bg-dark-2;
+}
+
+.select-item-root {
+    color: #fff;
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.16) !important;
+    }
+}
+
+.select-item-selected {
+    // background-color: rgba(255, 255, 255, 0.16) !important;
+    background-color: transparent !important;
 }

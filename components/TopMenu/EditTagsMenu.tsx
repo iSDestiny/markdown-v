@@ -144,6 +144,7 @@ const EditTagsMenu = ({ anchorEl, setAnchorEl }: EditTagsMenuProps) => {
                     onMouseEnter={() => onMouseEnter(index)}
                     onMouseLeave={() => onMouseLeave(index)}
                     onClick={() => onClickTag(tag)}
+                    classes={{ root: classes['select-item-root'] }}
                 >
                     <ListItemText primary={tag} />
                     {isMouseInside[index] && (

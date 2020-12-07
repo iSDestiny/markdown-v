@@ -6,8 +6,12 @@ import 'ace-builds/src-noconflict/mode-markdown';
 import { Vim } from 'ace-builds/src-noconflict/keybinding-vim';
 import { IAceEditor } from 'react-ace/lib/types';
 import { useMutateModifyNote } from '../../hooks/noteMutationHooks';
-import { useDispatch } from 'react-redux';
-import { setNoteToSaved, toggleEdit } from '../../store/slices/editorSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    setNoteToSaved,
+    toggleEdit,
+    selectEditor
+} from '../../store/slices/editorSlice';
 import useLoader from '../../hooks/useLoader';
 
 interface AceProps {
@@ -23,6 +27,7 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
         { isLoading: editIsLoading }
     ] = useMutateModifyNote();
     const dispatch = useDispatch();
+    const { editorType } = useSelector(selectEditor);
     useLoader('modify', editIsLoading);
 
     const save = async () => {
@@ -63,7 +68,7 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
             wrapEnabled={true}
             fontSize={16}
             value={note ? note.content : ''}
-            keyboardHandler="vim"
+            keyboardHandler={editorType}
             height="100%"
             width={'' + width}
             setOptions={{

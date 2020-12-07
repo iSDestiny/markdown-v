@@ -1,4 +1,3 @@
-import React from 'react';
 import dynamic from 'next/dynamic';
 import ReactResizeDetector from 'react-resize-detector';
 import classes from './Editor.module.scss';
