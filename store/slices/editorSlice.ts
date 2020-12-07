@@ -1,4 +1,4 @@
-import Fuse from 'fuse.js';
+import fuzzysort from 'fuzzysort';
 import { createSlice } from '@reduxjs/toolkit';
 import markdownToTxt from 'markdown-to-txt';
 interface stateTypes {
@@ -32,27 +32,6 @@ const byTitle = (first: Note, second: Note, sortType: 0 | 1) => {
     return 0;
 };
 
-const options = {
-    includeScore: true,
-    includeMatches: true,
-    keys: ['title']
-};
-
-// const byDateLogic = (
-//     dateType: string,
-//     first: Note,
-//     second: Note,
-//     sortType: 0 | 1
-// ) => {
-//     const base = sortType ? -1 : 1;
-//     const firstDate = new Date(first[dateType]);
-//     const secondDate = new Date(second[dateType]);
-//     console.log(firstDate.getTime() < secondDate.getTime());
-//     if (firstDate.getTime() < secondDate.getTime()) return -base;
-//     if (firstDate.getTime() > secondDate.getTime()) return base;
-//     return 0;
-// };
-
 const byDateUpdated = (first: Note, second: Note, sortType: 0 | 1) => {
     const base = sortType ? -1 : 1;
     const { updatedAt: firstUpdate } = first;
@@ -62,7 +41,6 @@ const byDateUpdated = (first: Note, second: Note, sortType: 0 | 1) => {
     if (firstUpdateDate.getTime() < secondUpdateDate.getTime()) return -base;
     if (firstUpdateDate.getTime() > secondUpdateDate.getTime()) return base;
     return 0;
-    // byDateLogic('updatedAt', first, second, sortType);
 };
 
 const byDateCreated = (first: Note, second: Note, sortType: 0 | 1) => {
@@ -74,7 +52,6 @@ const byDateCreated = (first: Note, second: Note, sortType: 0 | 1) => {
     if (firstCreatedDate.getTime() < secondCreatedDate.getTime()) return -base;
     if (firstCreatedDate.getTime() > secondCreatedDate.getTime()) return base;
     return 0;
-    // byDateLogic('createdAt', first, second, sortType);
 };
 
 const sortFuncs = {
@@ -178,9 +155,12 @@ const editorSlice = createSlice({
             state.nonSearchedNotes = state.notes;
             console.log(state.nonSearchedNotes);
             if (state.searchQuery) {
-                const fuse = new Fuse<Note>(state.nonSearchedNotes, options);
-                const result = fuse.search(state.searchQuery);
-                state.notes = result.map((res) => res.item);
+                const result = fuzzysort.go(
+                    state.searchQuery,
+                    state.nonSearchedNotes,
+                    { key: 'title' }
+                );
+                state.notes = result.map((res) => res.obj);
             }
 
             state.notes.forEach((note) => {
@@ -253,9 +233,12 @@ const editorSlice = createSlice({
             }
             state.notes = state.nonSearchedNotes;
             if (searchQuery) {
-                const fuse = new Fuse<Note>(state.notes, options);
-                const result = fuse.search(searchQuery);
-                state.notes = result.map((res) => res.item);
+                const result = fuzzysort.go(
+                    searchQuery,
+                    state.nonSearchedNotes,
+                    { key: 'title' }
+                );
+                state.notes = result.map((res) => res.obj);
             }
             if (
                 state.notes.length > 0 &&
@@ -265,20 +248,22 @@ const editorSlice = createSlice({
         },
 
         setSearchQuery: (state, action) => {
-            const { nonSearchedNotes, current } = state;
             const { query } = action.payload;
-            state.searchQuery = query;
-            if (query) {
-                const fuse = new Fuse<Note>(nonSearchedNotes, options);
-                const result = fuse.search(query);
-                state.notes = result.map((res) => res.item);
+            state.searchQuery = query.trim();
+            if (state.searchQuery) {
+                const result = fuzzysort.go(
+                    state.searchQuery,
+                    state.nonSearchedNotes,
+                    { key: 'title' }
+                );
+                state.notes = result.map((res) => res.obj);
                 if (
                     state.notes.length > 0 &&
-                    !state.notes.find((note) => note._id === current)
+                    !state.notes.find((note) => note._id === state.current)
                 )
                     state.current = state.notes[0]._id;
             } else {
-                state.notes = nonSearchedNotes;
+                state.notes = state.nonSearchedNotes;
             }
         }
     }
