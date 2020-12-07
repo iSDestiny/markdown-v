@@ -154,7 +154,7 @@ const editorSlice = createSlice({
 
             state.nonSearchedNotes = state.notes;
             console.log(state.nonSearchedNotes);
-            if (state.searchQuery) {
+            if (state.searchQuery.trim()) {
                 const result = fuzzysort.go(
                     state.searchQuery,
                     state.nonSearchedNotes,
@@ -231,8 +231,9 @@ const editorSlice = createSlice({
                             .length > 0
                 );
             }
+
             state.notes = state.nonSearchedNotes;
-            if (searchQuery) {
+            if (searchQuery.trim()) {
                 const result = fuzzysort.go(
                     searchQuery,
                     state.nonSearchedNotes,
@@ -240,6 +241,7 @@ const editorSlice = createSlice({
                 );
                 state.notes = result.map((res) => res.obj);
             }
+
             if (
                 state.notes.length > 0 &&
                 !state.notes.find((note) => note._id === current)
@@ -249,8 +251,8 @@ const editorSlice = createSlice({
 
         setSearchQuery: (state, action) => {
             const { query } = action.payload;
-            state.searchQuery = query.trim();
-            if (state.searchQuery) {
+            state.searchQuery = query;
+            if (state.searchQuery.trim()) {
                 const result = fuzzysort.go(
                     state.searchQuery,
                     state.nonSearchedNotes,
