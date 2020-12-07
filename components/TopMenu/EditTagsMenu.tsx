@@ -19,7 +19,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
     selectEditor,
     addTag,
-    deleteTag
+    deleteTag,
+    setFilter
 } from '../../store/slices/editorSlice';
 import {
     useMutateAddTag,
@@ -99,8 +100,8 @@ const EditTagsMenu = ({ anchorEl, setAnchorEl }: EditTagsMenuProps) => {
         });
     };
 
-    const onClickTag = () => {
-        console.log('tag');
+    const onClickTag = (tag: string) => {
+        dispatch(setFilter({ newFilter: tag, type: 'tag' }));
     };
 
     const addTagHandler: SubmitHandler<{ tag: string }> = async (
@@ -142,7 +143,7 @@ const EditTagsMenu = ({ anchorEl, setAnchorEl }: EditTagsMenuProps) => {
                     disableRipple={isMouseInsideDelete}
                     onMouseEnter={() => onMouseEnter(index)}
                     onMouseLeave={() => onMouseLeave(index)}
-                    onClick={() => onClickTag()}
+                    onClick={() => onClickTag(tag)}
                 >
                     <ListItemText primary={tag} />
                     {isMouseInside[index] && (

@@ -112,6 +112,7 @@ const SideMenu = () => {
                                 <ListItem
                                     key={tag}
                                     button
+                                    selected={filter.name === tag}
                                     onClick={() =>
                                         dispatch(
                                             setFilter({
