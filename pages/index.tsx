@@ -19,6 +19,7 @@ import {
 import classes from '../styles/Home.module.scss';
 import { fetchAuthInfo } from '../utility/fetchAuth';
 import fetchNotes from '../utility/fetchNotes';
+import classNames from 'classnames';
 
 export default function Notes() {
     const redirectOnFailedFetch = (err: any) => {
@@ -38,7 +39,9 @@ export default function Notes() {
         staleTime: Infinity,
         retry: false
     });
-    const { canEdit, canPreview, notes, current } = useSelector(selectEditor);
+    const { canEdit, canPreview, notes, current, isFullScreen } = useSelector(
+        selectEditor
+    );
     const dispatch = useDispatch();
     const isLoading = useLoader('notes', false);
 
@@ -62,9 +65,17 @@ export default function Notes() {
                         style={{ position: 'fixed', width: '100%' }}
                     />
                 )}
-                <SideMenu />
-                <NotesMenu />
-                <section className={classes['editor-container']}>
+                {!isFullScreen && (
+                    <>
+                        <SideMenu />
+                        <NotesMenu />
+                    </>
+                )}
+                <section
+                    className={classNames(classes['editor-container'], {
+                        [`${classes['full-screen']}`]: isFullScreen
+                    })}
+                >
                     {notes.length > 0 &&
                         notes.find((note) => note._id === current) && (
                             <>

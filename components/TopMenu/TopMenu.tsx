@@ -3,6 +3,8 @@ import ToggleIconButton from './ToggleIconButton';
 import classes from './TopMenu.module.scss';
 import VerticalSplitIcon from '@material-ui/icons/VerticalSplit';
 import StarIcon from '@material-ui/icons/Star';
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
+import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import LocalOffer from '@material-ui/icons/LocalOffer';
@@ -14,7 +16,8 @@ import {
     toggleEdit,
     togglePreview,
     setNoteToSaved,
-    toggleFavorite
+    toggleFavorite,
+    toggleFullScreen
 } from '../../store/slices/editorSlice';
 import {
     useMutateDeleteNote,
@@ -30,7 +33,9 @@ interface TopMenuProps {
 
 const TopMenu = ({ notes }: TopMenuProps) => {
     const [anchorEl, setAnchorEl] = useState<Element>(null);
-    const { canPreview, canEdit, current } = useSelector(selectEditor);
+    const { canPreview, canEdit, current, isFullScreen } = useSelector(
+        selectEditor
+    );
     const dispatch = useDispatch();
     const [
         mutateDeleteNote,
@@ -80,7 +85,7 @@ const TopMenu = ({ notes }: TopMenuProps) => {
                 <StarIcon fontSize="small" />
             </ToggleIconButton>
             <ButtonGroup>
-                <Tooltip title="Edit Tags">
+                <Tooltip title={isFullScreen ? 'Collapse' : 'Expand'}>
                     <Button
                         variant="outlined"
                         size="small"
@@ -88,6 +93,25 @@ const TopMenu = ({ notes }: TopMenuProps) => {
                             borderColor: 'rgba(0, 0, 0, 0.12)',
                             minWidth: '44px',
                             marginLeft: '1rem',
+                            color: '#d6d7d9',
+                            border: '1px solid rgba(0, 0, 0, 0.12)'
+                        }}
+                        onClick={() => dispatch(toggleFullScreen())}
+                    >
+                        {isFullScreen ? (
+                            <FullscreenExitIcon fontSize="small" />
+                        ) : (
+                            <FullscreenIcon fontSize="small" />
+                        )}
+                    </Button>
+                </Tooltip>
+                <Tooltip title="Edit Tags">
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        style={{
+                            borderColor: 'rgba(0, 0, 0, 0.12)',
+                            minWidth: '44px',
                             color: '#d6d7d9',
                             border: '1px solid rgba(0, 0, 0, 0.12)'
                         }}

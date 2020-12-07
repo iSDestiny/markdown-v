@@ -6,6 +6,7 @@ interface stateTypes {
         current: string;
         canEdit: boolean;
         canPreview: boolean;
+        isFullScreen: boolean;
         notes: Note[];
         nonFilteredNotes: Note[];
         nonSearchedNotes: Note[];
@@ -78,6 +79,7 @@ const editorSlice = createSlice({
         current: '',
         canEdit: true,
         canPreview: false,
+        isFullScreen: false,
         nonFilteredNotes: [],
         nonSearchedNotes: [],
         notes: [],
@@ -99,6 +101,10 @@ const editorSlice = createSlice({
 
         togglePreview: (state) => {
             state.canPreview = !state.canPreview;
+        },
+
+        toggleFullScreen: (state) => {
+            state.isFullScreen = !state.isFullScreen;
         },
 
         toggleFavorite: (state) => {
@@ -276,6 +282,7 @@ export const {
     setCurrent,
     toggleEdit,
     togglePreview,
+    toggleFullScreen,
     toggleFavorite,
     setNotesFromOriginal,
     setNotesFromEdit,
