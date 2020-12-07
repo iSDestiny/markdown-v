@@ -5,6 +5,7 @@ import { AccountCircle } from '@material-ui/icons';
 import { useState } from 'react';
 import AccountInfoModal from './AccountInfoModal';
 import { useQueryCache } from 'react-query';
+import classes from './SideMenu.module.scss';
 
 interface AccountOptionsProps {
     anchorEl: Element;
@@ -43,10 +44,11 @@ const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
                 open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
             >
-                <ListItemText
+                {/* <ListItemText
                     primary="Account"
                     style={{ paddingLeft: '1rem' }}
-                />
+                /> */}
+                <h1 className={classes['account-heading']}>Account</h1>
                 <MenuItem onClick={accountInfoHandler}>
                     <AccountCircle
                         fontSize="large"
