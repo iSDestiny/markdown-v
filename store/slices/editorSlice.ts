@@ -1,3 +1,4 @@
+import Fuse from 'fuse.js';
 import { createSlice } from '@reduxjs/toolkit';
 import markdownToTxt from 'markdown-to-txt';
 interface stateTypes {
@@ -7,6 +8,7 @@ interface stateTypes {
         canPreview: boolean;
         notes: Note[];
         nonFilteredNotes: Note[];
+        nonSearchedNotes: Note[];
         loaders: {};
         sortType:
             | 'titleAsc'
@@ -19,6 +21,7 @@ interface stateTypes {
             name: string;
             type: 'nonTag' | 'tag';
         };
+        searchQuery: '';
     };
 }
 // sort type: 0 is ascending, 1 is descending
@@ -27,6 +30,12 @@ const byTitle = (first: Note, second: Note, sortType: 0 | 1) => {
     if (first.title.toLowerCase() < second.title.toLowerCase()) return -base;
     if (first.title.toLowerCase() > second.title.toLowerCase()) return base;
     return 0;
+};
+
+const options = {
+    includeScore: true,
+    includeMatches: true,
+    keys: ['title']
 };
 
 // const byDateLogic = (
@@ -93,11 +102,13 @@ const editorSlice = createSlice({
         canEdit: true,
         canPreview: false,
         nonFilteredNotes: [],
+        nonSearchedNotes: [],
         notes: [],
         loaders: {},
         // sorts notes by title ascending as default
         sortType: 'titleAsc',
-        filter: { name: 'All Notes', type: 'nonTag' }
+        filter: { name: 'All Notes', type: 'nonTag' },
+        searchQuery: ''
     },
     reducers: {
         setCurrent: (state, action) => {
@@ -164,6 +175,14 @@ const editorSlice = createSlice({
                             .length > 0
                 );
 
+            state.nonSearchedNotes = state.notes;
+            console.log(state.nonSearchedNotes);
+            if (state.searchQuery) {
+                const fuse = new Fuse<Note>(state.nonSearchedNotes, options);
+                const result = fuse.search(state.searchQuery);
+                state.notes = result.map((res) => res.item);
+            }
+
             state.notes.forEach((note) => {
                 if (!prevIds.has(note._id)) state.current = note._id;
             });
@@ -216,22 +235,51 @@ const editorSlice = createSlice({
         },
 
         setFilter: (state, action) => {
-            const { nonFilteredNotes } = state;
+            const { nonFilteredNotes, searchQuery, current } = state;
             const { newFilter, type } = action.payload;
             state.filter.name = newFilter;
             state.filter.type = type;
 
-            if (type === 'nonTag')
-                state.notes = nonFilteredNotes.filter(
+            if (type === 'nonTag') {
+                state.nonSearchedNotes = nonFilteredNotes.filter(
                     nonTagNoteFilters[newFilter]
                 );
-            else
-                state.notes = nonFilteredNotes.filter(
+            } else {
+                state.nonSearchedNotes = nonFilteredNotes.filter(
                     (note: Note) =>
                         note.tags.filter(({ tag }) => tag === newFilter)
                             .length > 0
                 );
-            if (state.notes.length > 0) state.current = state.notes[0]._id;
+            }
+            state.notes = state.nonSearchedNotes;
+            if (searchQuery) {
+                const fuse = new Fuse<Note>(state.notes, options);
+                const result = fuse.search(searchQuery);
+                state.notes = result.map((res) => res.item);
+            }
+            if (
+                state.notes.length > 0 &&
+                !state.notes.find((note) => note._id === current)
+            )
+                state.current = state.notes[0]._id;
+        },
+
+        setSearchQuery: (state, action) => {
+            const { nonSearchedNotes, current } = state;
+            const { query } = action.payload;
+            state.searchQuery = query;
+            if (query) {
+                const fuse = new Fuse<Note>(nonSearchedNotes, options);
+                const result = fuse.search(query);
+                state.notes = result.map((res) => res.item);
+                if (
+                    state.notes.length > 0 &&
+                    !state.notes.find((note) => note._id === current)
+                )
+                    state.current = state.notes[0]._id;
+            } else {
+                state.notes = nonSearchedNotes;
+            }
         }
     }
 });
@@ -247,6 +295,7 @@ export const {
     setLoader,
     setNoteToSaved,
     setSort,
+    setSearchQuery,
     setFilter,
     addTag,
     deleteTag

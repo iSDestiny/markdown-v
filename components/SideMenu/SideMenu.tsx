@@ -110,6 +110,7 @@ const SideMenu = () => {
                         <List component="div" disablePadding>
                             {getAllUniqueTags().map((tag) => (
                                 <ListItem
+                                    key={tag}
                                     button
                                     onClick={() =>
                                         dispatch(

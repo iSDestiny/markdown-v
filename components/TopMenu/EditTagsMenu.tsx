@@ -138,6 +138,7 @@ const EditTagsMenu = ({ anchorEl, setAnchorEl }: EditTagsMenuProps) => {
         >
             {getCurrentNote(notes, current)?.tags.map(({ tag }, index) => (
                 <MenuItem
+                    key={tag}
                     disableRipple={isMouseInsideDelete}
                     onMouseEnter={() => onMouseEnter(index)}
                     onMouseLeave={() => onMouseLeave(index)}
