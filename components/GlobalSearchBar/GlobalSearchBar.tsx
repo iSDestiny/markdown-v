@@ -7,6 +7,13 @@ import {
 } from '../../store/slices/editorSlice';
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
+import dynamic from 'next/dynamic';
+const ScrollIntoViewIfNeeded = dynamic(
+    () => import('react-scroll-into-view-if-needed'),
+    {
+        ssr: false
+    }
+);
 
 const GlobalSearchBar = () => {
     const { nonFilteredNotes, isGlobalSearchOpen } = useSelector(selectEditor);
@@ -14,9 +21,10 @@ const GlobalSearchBar = () => {
     const [selected, setSelected] = useState(0);
     const [searchResults, setSearchResults] = useState(nonFilteredNotes);
     const searchRef = useRef<HTMLDivElement>();
+    const selectedRef = useRef<HTMLLIElement>();
 
     const handleClickAway = (event: MouseEvent) => {
-        const current = searchRef.current;
+        const { current } = searchRef;
         if (current && !current.contains(event.target as Node)) {
             dispatch(setIsGlobalSearchOpen({ open: false }));
         }
@@ -29,6 +37,11 @@ const GlobalSearchBar = () => {
     const onClickNote = (id: string) => {
         if (id) dispatch(setCurrent({ current: id }));
         dispatch(setIsGlobalSearchOpen({ open: false }));
+    };
+
+    const scrollSelectedToView = () => {
+        const { current } = selectedRef;
+        if (current) current.scrollIntoView();
     };
 
     const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -52,6 +65,14 @@ const GlobalSearchBar = () => {
         };
     }, []);
 
+    // useEffect(() => {
+    //     const { current } = selectedRef;
+    //     if (current) {
+    //         current.scrollIntoView({ block: 'start' });
+    //         console.log(current.value);
+    //     }
+    // }, [selected]);
+
     if (isGlobalSearchOpen)
         return (
             <div className={classes['search-container']}>
@@ -65,15 +86,22 @@ const GlobalSearchBar = () => {
                     />
                     <ul className={classes.results}>
                         {searchResults.map(({ _id, title }, index) => (
-                            <li
+                            <ScrollIntoViewIfNeeded
                                 key={_id}
-                                onClick={() => onClickNote(_id)}
-                                className={classNames({
-                                    [classes.active]: index === selected
-                                })}
+                                active={index === selected}
                             >
-                                {title}
-                            </li>
+                                <li
+                                    onClick={() => onClickNote(_id)}
+                                    ref={
+                                        index === selected ? selectedRef : null
+                                    }
+                                    className={classNames(classes.item, {
+                                        [classes.active]: index === selected
+                                    })}
+                                >
+                                    {title}
+                                </li>
+                            </ScrollIntoViewIfNeeded>
                         ))}
                     </ul>
                 </div>

@@ -61,10 +61,6 @@ export default function Notes() {
         } else if (event.ctrlKey && event.key === 's') {
             event.preventDefault();
             const note = notes.find((note) => note._id === current);
-            console.log(notes);
-            console.log(current);
-            console.log(note);
-            console.log('save');
             if (note) {
                 await mutateModifyNote(note);
                 dispatch(setNoteToSaved());
@@ -81,7 +77,7 @@ export default function Notes() {
         return () => {
             document.removeEventListener('keydown', onKeyDown);
         };
-    }, [notes]);
+    }, [notes, current]);
 
     if (isNotesLoading || !isSuccess || isAuthLoading) {
         return <LoadingScreen />;
