@@ -46,23 +46,6 @@ const NotesMenu = () => {
         <section className={classes['notes-menu']}>
             <header>
                 <div className={classes.row1}>
-                    {/* <h1>
-                        {filter.type === 'nonTag'
-                            ? filter.name
-                            : `Tag: ${filter.name}`}
-                    </h1> */}
-                    {/* <TextField
-                        id="search-bar"
-                        variant="outlined"
-                        style={{ borderRadius: '50%' }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            )
-                        }}
-                    /> */}
                     <div className={classes['search-bar']}>
                         <span className={classes.icon}>
                             <SearchIcon />
@@ -92,7 +75,13 @@ const NotesMenu = () => {
                     <SortOptions />
                 </div>
             </header>
-            <List style={{ padding: 0 }}>
+            <List
+                style={{
+                    padding: 0,
+                    maxHeight: '87%',
+                    overflow: 'auto'
+                }}
+            >
                 {notes.length > 0 ? (
                     notes.map((note: Note, index: number) => (
                         <ListItem
