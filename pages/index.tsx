@@ -94,11 +94,3 @@ export default function Notes() {
         </>
     );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (ctx) => {
-//     const queryCache = new QueryCache();
-//     // await queryCache.prefetchQuery('notes', fetchNotes);
-//     await isAuthenticated(ctx);
-//     // queryCache.setQueryData('tokens', { token, refresh });
-//     return { props: { dehydratedState: dehydrate(queryCache) } };
-// };

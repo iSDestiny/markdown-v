@@ -187,6 +187,7 @@ const TopMenu = ({ notes }: TopMenuProps) => {
                         labelId="editor-select-label"
                         id="editor-select"
                         variant="outlined"
+                        color="primary"
                         value={editorType}
                         onChange={(event) =>
                             dispatch(
