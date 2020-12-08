@@ -15,13 +15,15 @@ import useLoader from '../hooks/useLoader';
 import {
     selectEditor,
     setIsGlobalSearchOpen,
-    setNotesFromOriginal
+    setNotesFromOriginal,
+    setNoteToSaved
 } from '../store/slices/editorSlice';
 import classes from '../styles/Home.module.scss';
 import { fetchAuthInfo } from '../utility/fetchAuth';
 import fetchNotes from '../utility/fetchNotes';
 import classNames from 'classnames';
 import GlobalSearchBar from '../components/GlobalSearchBar';
+import { useMutateModifyNote } from '../hooks/noteMutationHooks';
 
 export default function Notes() {
     const redirectOnFailedFetch = (err: any) => {
@@ -44,13 +46,26 @@ export default function Notes() {
     const { canEdit, canPreview, notes, current, isFullScreen } = useSelector(
         selectEditor
     );
+    const [
+        mutateModifyNote,
+        { isLoading: saveIsLoading }
+    ] = useMutateModifyNote();
     const dispatch = useDispatch();
+    useLoader('save', saveIsLoading);
     const isLoading = useLoader('notes', false);
 
-    const onKeyDown = (event: KeyboardEvent) => {
+    const onKeyDown = async (event: KeyboardEvent) => {
         if (event.ctrlKey && event.key === 'p') {
             event.preventDefault();
             dispatch(setIsGlobalSearchOpen({ open: true }));
+        } else if (event.ctrlKey && event.key === 's') {
+            event.preventDefault();
+            const note = notes.find((note) => note._id === current);
+            console.log('save');
+            if (note) {
+                await mutateModifyNote(note);
+                dispatch(setNoteToSaved());
+            }
         }
     };
 
