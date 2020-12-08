@@ -29,12 +29,13 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #d6dee1;
-    border-radius: 20px;
+    // background-color: #d6dee1;
+    background-color: rgba(214, 222, 225, 0.3);
+    border-radius: 10px;
     border: 6px solid transparent;
     background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: #a8bbbf;
+    background-color: #d6dee1;
 }

@@ -20,6 +20,7 @@ import classes from '../styles/Home.module.scss';
 import { fetchAuthInfo } from '../utility/fetchAuth';
 import fetchNotes from '../utility/fetchNotes';
 import classNames from 'classnames';
+import GlobalSearchBar from '../components/GlobalSearchBar';
 
 export default function Notes() {
     const redirectOnFailedFetch = (err: any) => {
@@ -55,6 +56,7 @@ export default function Notes() {
 
     return (
         <>
+            <GlobalSearchBar />
             <main className={classes.container}>
                 <Head>
                     <title>Markdown Notes</title>
