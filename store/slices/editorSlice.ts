@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import markdownToTxt from 'markdown-to-txt';
 interface stateTypes {
     editor: {
+        isGlobalSearchOpen: boolean;
         editorType: 'vim' | 'vscode';
         current: string;
         canEdit: boolean;
@@ -77,6 +78,7 @@ const nonTagNoteFilters = {
 const editorSlice = createSlice({
     name: 'editor',
     initialState: {
+        isGlobalSearchOpen: false,
         editorType: 'vim',
         current: '',
         canEdit: true,
@@ -92,6 +94,10 @@ const editorSlice = createSlice({
         searchQuery: ''
     },
     reducers: {
+        setIsGlobalSearchOpen: (state, action) => {
+            const { open } = action.payload;
+            state.isGlobalSearchOpen = open;
+        },
         setEditorType: (state, action) => {
             const { type } = action.payload;
             state.editorType = type;
@@ -285,6 +291,7 @@ const editorSlice = createSlice({
 
 export const selectEditor = (state: stateTypes) => state.editor;
 export const {
+    setIsGlobalSearchOpen,
     setEditorType,
     setCurrent,
     toggleEdit,

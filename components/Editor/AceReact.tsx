@@ -10,7 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     setNoteToSaved,
     toggleEdit,
-    selectEditor
+    selectEditor,
+    setIsGlobalSearchOpen
 } from '../../store/slices/editorSlice';
 import useLoader from '../../hooks/useLoader';
 
@@ -31,6 +32,7 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
     useLoader('modify', editIsLoading);
 
     const save = async () => {
+        console.log(Vim);
         if (note) {
             await mutateModifyNote(note);
             dispatch(setNoteToSaved());
@@ -42,6 +44,11 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
         dispatch(toggleEdit());
     };
 
+    const globalSearch = () => {
+        dispatch(setIsGlobalSearchOpen({ open: true }));
+    };
+
+    Vim.unmap('<C-p>');
     Vim.map('jj', '<Esc>', 'insert');
     Vim.map('jk', '<Esc>', 'insert');
     Vim.map('kj', '<Esc>', 'insert');
@@ -79,6 +86,11 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
                     name: 'save',
                     bindKey: { win: 'Ctrl-S', mac: 'Command-S' },
                     exec: () => save()
+                },
+                {
+                    name: 'search',
+                    bindKey: { win: 'Ctrl-P', mac: 'Command-P' },
+                    exec: () => globalSearch()
                 }
             ]}
         />

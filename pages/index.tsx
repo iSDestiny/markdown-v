@@ -14,6 +14,7 @@ import TopMenu from '../components/TopMenu';
 import useLoader from '../hooks/useLoader';
 import {
     selectEditor,
+    setIsGlobalSearchOpen,
     setNotesFromOriginal
 } from '../store/slices/editorSlice';
 import classes from '../styles/Home.module.scss';
@@ -46,9 +47,23 @@ export default function Notes() {
     const dispatch = useDispatch();
     const isLoading = useLoader('notes', false);
 
+    const onKeyDown = (event: KeyboardEvent) => {
+        if (event.ctrlKey && event.key === 'p') {
+            event.preventDefault();
+            dispatch(setIsGlobalSearchOpen({ open: true }));
+        }
+    };
+
     useEffect(() => {
         dispatch(setNotesFromOriginal({ originalNotes }));
     }, [originalNotes]);
+
+    useEffect(() => {
+        document.addEventListener('keydown', onKeyDown);
+        return () => {
+            document.removeEventListener('keydown', onKeyDown);
+        };
+    }, []);
 
     if (isNotesLoading || !isSuccess || isAuthLoading) {
         return <LoadingScreen />;
