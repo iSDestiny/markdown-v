@@ -75,13 +75,7 @@ const NotesMenu = () => {
                     <SortOptions />
                 </div>
             </header>
-            <List
-                style={{
-                    padding: 0,
-                    maxHeight: '87%',
-                    overflow: 'auto'
-                }}
-            >
+            <List className={classes.list}>
                 {notes.length > 0 ? (
                     notes.map((note: Note, index: number) => (
                         <ListItem

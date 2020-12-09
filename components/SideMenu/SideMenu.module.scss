@@ -157,3 +157,8 @@
     outline: none;
     padding-left: 1rem;
 }
+
+.content {
+    max-height: 100%;
+    overflow: auto;
+}

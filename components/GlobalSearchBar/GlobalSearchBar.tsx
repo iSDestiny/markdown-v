@@ -19,7 +19,9 @@ const GlobalSearchBar = () => {
     const { nonFilteredNotes, isGlobalSearchOpen } = useSelector(selectEditor);
     const dispatch = useDispatch();
     const [selected, setSelected] = useState(0);
-    const [searchResults, setSearchResults] = useState(nonFilteredNotes);
+    const [searchResults, setSearchResults] = useState<Note[]>(
+        nonFilteredNotes
+    );
     const searchRef = useRef<HTMLDivElement>();
     const selectedRef = useRef<HTMLLIElement>();
 

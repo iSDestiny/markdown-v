@@ -2,6 +2,7 @@
 
 .notes-menu {
     height: 100%;
+    max-height: 100%;
     width: 300px;
     min-width: 200px;
     color: #8e94b2;
@@ -11,6 +12,7 @@
     }
     header {
         display: flex;
+        height: 131px;
         flex-direction: column;
         border-bottom: 1px solid #292d3e;
         .row1,
@@ -78,4 +80,11 @@
             opacity: 0.5;
         }
     }
+}
+
+.list {
+    max-height: calc(100% - 131px);
+    margin: 0;
+    padding: 0;
+    overflow: auto;
 }

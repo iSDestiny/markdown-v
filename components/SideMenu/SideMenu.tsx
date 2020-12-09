@@ -56,7 +56,7 @@ const SideMenu = () => {
                         <ExpandMore style={{ margin: 'auto 0' }} />
                     </button>
                 </header>
-                <List>
+                <List className={classes.content}>
                     <ListItem
                         button
                         selected={filter.name === 'All Notes'}
@@ -107,7 +107,11 @@ const SideMenu = () => {
                         </ListItem>
                     )}
                     <Collapse in={tagOpen} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
+                        <List
+                            component="div"
+                            disablePadding
+                            className={classes.tags}
+                        >
                             {getAllUniqueTags().map((tag) => (
                                 <ListItem
                                     key={tag}
