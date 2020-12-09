@@ -10,6 +10,7 @@ import AddIcon from '@material-ui/icons/Add';
 import ClearIcon from '@material-ui/icons/Clear';
 import {
     IconButton,
+    List,
     ListItemText,
     Menu,
     MenuItem,
@@ -137,30 +138,36 @@ const EditTagsMenu = ({ anchorEl, setAnchorEl }: EditTagsMenuProps) => {
             open={Boolean(anchorEl)}
             onClose={() => setAnchorEl(null)}
         >
-            {getCurrentNote(notes, current)?.tags.map(({ tag }, index) => (
-                <MenuItem
-                    key={tag}
-                    disableRipple={isMouseInsideDelete}
-                    onMouseEnter={() => onMouseEnter(index)}
-                    onMouseLeave={() => onMouseLeave(index)}
-                    onClick={() => onClickTag(tag)}
-                    classes={{ root: classes['select-item-root'] }}
-                >
-                    <ListItemText primary={tag} />
-                    {isMouseInside[index] && (
-                        <IconButton
-                            style={{ marginLeft: 5, padding: 5 }}
-                            size="small"
-                            type="submit"
-                            onMouseEnter={() => setIsMouseInsideDelete(true)}
-                            onMouseLeave={() => setIsMouseInsideDelete(false)}
-                            onClick={(event) => onDeleteTag(event, tag)}
-                        >
-                            <ClearIcon fontSize="small" />
-                        </IconButton>
-                    )}
-                </MenuItem>
-            ))}
+            <List className={classes.tags}>
+                {getCurrentNote(notes, current)?.tags.map(({ tag }, index) => (
+                    <MenuItem
+                        key={tag}
+                        disableRipple={isMouseInsideDelete}
+                        onMouseEnter={() => onMouseEnter(index)}
+                        onMouseLeave={() => onMouseLeave(index)}
+                        onClick={() => onClickTag(tag)}
+                        classes={{ root: classes['select-item-root'] }}
+                    >
+                        <ListItemText primary={tag} />
+                        {isMouseInside[index] && (
+                            <IconButton
+                                style={{ marginLeft: 5, padding: 5 }}
+                                size="small"
+                                type="submit"
+                                onMouseEnter={() =>
+                                    setIsMouseInsideDelete(true)
+                                }
+                                onMouseLeave={() =>
+                                    setIsMouseInsideDelete(false)
+                                }
+                                onClick={(event) => onDeleteTag(event, tag)}
+                            >
+                                <ClearIcon fontSize="small" />
+                            </IconButton>
+                        )}
+                    </MenuItem>
+                ))}
+            </List>
             <form
                 className={classes['tags-menu-form']}
                 onSubmit={handleSubmit(addTagHandler)}

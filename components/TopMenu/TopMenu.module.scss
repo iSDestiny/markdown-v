@@ -37,6 +37,14 @@
     background-color: $bg-dark-2;
 }
 
+.tags {
+    max-height: 400px;
+    max-width: 1000px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
 .tags-menu-form {
     display: flex;
     align-items: center;
