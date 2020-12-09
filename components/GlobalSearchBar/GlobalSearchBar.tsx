@@ -39,11 +39,6 @@ const GlobalSearchBar = () => {
         dispatch(setIsGlobalSearchOpen({ open: false }));
     };
 
-    const scrollSelectedToView = () => {
-        const { current } = selectedRef;
-        if (current) current.scrollIntoView();
-    };
-
     const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             const current = searchResults[selected]?._id;
@@ -64,14 +59,6 @@ const GlobalSearchBar = () => {
             document.removeEventListener('click', handleClickAway);
         };
     }, []);
-
-    // useEffect(() => {
-    //     const { current } = selectedRef;
-    //     if (current) {
-    //         current.scrollIntoView({ block: 'start' });
-    //         console.log(current.value);
-    //     }
-    // }, [selected]);
 
     if (isGlobalSearchOpen)
         return (
