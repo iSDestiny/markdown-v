@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     selectEditor,
     setCurrent,
+    setFilter,
     setIsGlobalSearchOpen
 } from '../../store/slices/editorSlice';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
@@ -21,7 +22,9 @@ interface SearchResult extends Note {
 }
 
 const GlobalSearchBar = () => {
-    const { nonFilteredNotes, isGlobalSearchOpen } = useSelector(selectEditor);
+    const { notes, nonFilteredNotes, isGlobalSearchOpen } = useSelector(
+        selectEditor
+    );
     const dispatch = useDispatch();
     const [selected, setSelected] = useState(0);
     const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
@@ -42,6 +45,8 @@ const GlobalSearchBar = () => {
 
     const onClickNote = (id: string) => {
         if (id) dispatch(setCurrent({ current: id }));
+        if (!notes.find((note) => note._id === id))
+            dispatch(setFilter({ type: 'nonTag', newFilter: 'All Notes' }));
         dispatch(setIsGlobalSearchOpen({ open: false }));
     };
 
@@ -49,6 +54,8 @@ const GlobalSearchBar = () => {
         const searchResults = getSearchResults();
         if (event.key === 'Enter') {
             const current = searchResults[selected]?._id;
+            if (!notes.find((note) => note._id === current))
+                dispatch(setFilter({ type: 'nonTag', newFilter: 'All Notes' }));
             if (current) dispatch(setCurrent({ current }));
             dispatch(setIsGlobalSearchOpen({ open: false }));
         } else if (event.key === 'Escape') {
