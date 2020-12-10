@@ -27,11 +27,15 @@ type noteParamTypes = (
 ) => Promise<void>;
 
 export const getAuthInfo: noteParamTypes = async (req, res, models) => {
-    const { User } = models;
-    const userId = authenticate(req, res);
-    const user = await User.findById(userId);
-    if (!user) throw new CustomStatusError('User not found', 404);
-    return res.status(200).json({ email: user.email });
+    const cookies = new Cookies(req, res);
+    const token = cookies.get('ACCESS_TOKEN');
+    let decoded: any;
+    try {
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+        throw new CustomStatusError(err.message, 401);
+    }
+    return res.status(200).json({ email: decoded.email });
 };
 
 export const postSignup: noteParamTypes = async (req, res, models) => {

@@ -64,6 +64,10 @@
     padding: 5px;
     margin-bottom: 10px;
     width: 100%;
+    mark {
+        color: $primary;
+        background-color: transparent;
+    }
 
     &:hover {
         background-color: $bg-dark-3;
