@@ -1,9 +1,12 @@
+@use '../../styles/theming/colors.scss' as *;
+
 .custom-handle {
     cursor: ew-resize;
 }
 
 .preview-container {
-    height: 100%;
+    height: 200%;
+    max-height: 100%;
     padding-top: 1rem;
     min-width: 200px;
     width: 100%;
@@ -12,9 +15,9 @@
     overflow-y: auto;
     padding: 1rem 4rem;
     word-wrap: break-word;
-    color: #8e94b2;
+    color: $text-1;
     a {
-        color: #6ba4a3;
+        color: $primary;
         // text-decoration: underline;
     }
     h1 {
@@ -44,5 +47,30 @@
     h4,
     h5 {
         font-weight: 500;
+    }
+}
+
+.table-root {
+    width: auto;
+    color: $text-1;
+    * {
+        width: auto;
+        color: $text-1;
+        border: 1px solid #343848;
+    }
+}
+
+.table-cell-head {
+    background-color: $bg-dark-4;
+    font-weight: bold;
+}
+
+.table-cell-body {
+    font-size: 14px;
+}
+
+.table-row-root {
+    &:nth-of-type(odd) {
+        background-color: $bg-dark-3;
     }
 }

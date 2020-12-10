@@ -6,6 +6,7 @@ import type { AppProps } from 'next/app';
 import React from 'react';
 import '../styles/globals.scss';
 import '../styles/authentication.scss';
+import 'katex/dist/katex.min.css';
 import theme from '../styles/muiTheme';
 import store from '../store';
 import Head from 'next/head';

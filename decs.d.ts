@@ -1,4 +1,5 @@
 declare module 'react-resize-panel';
+declare module 'react-katex';
 
 interface Tag {
     tag: string;
