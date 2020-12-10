@@ -1,13 +1,4 @@
-import {
-    BaseSyntheticEvent,
-    FormEvent,
-    KeyboardEvent,
-    MouseEvent,
-    useEffect,
-    useState
-} from 'react';
-import AddIcon from '@material-ui/icons/Add';
-import ClearIcon from '@material-ui/icons/Clear';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
     IconButton,
     List,
@@ -16,23 +7,19 @@ import {
     MenuItem,
     TextField
 } from '@material-ui/core';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-    selectEditor,
-    addTag,
-    deleteTag,
-    setFilter
-} from '../../store/slices/editorSlice';
+import AddIcon from '@material-ui/icons/Add';
+import ClearIcon from '@material-ui/icons/Clear';
+import { KeyboardEvent, MouseEvent, useEffect, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import * as yup from 'yup';
 import {
     useMutateAddTag,
-    useMutateDeleteTag,
-    useMutateSetTags
+    useMutateDeleteTag
 } from '../../hooks/noteMutationHooks';
 import useLoader from '../../hooks/useLoader';
+import { selectEditor, setFilter } from '../../store/slices/editorSlice';
 import classes from './TopMenu.module.scss';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
 
 interface EditTagsMenuProps {
     anchorEl: Element;
@@ -174,6 +161,7 @@ const EditTagsMenu = ({ anchorEl, setAnchorEl }: EditTagsMenuProps) => {
             >
                 <TextField
                     inputRef={register}
+                    label="Add Tag"
                     name="tag"
                     helperText={errors.tag?.message}
                     error={Boolean(errors.tag)}

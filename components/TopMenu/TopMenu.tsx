@@ -1,38 +1,39 @@
-import React, { useState } from 'react';
-import ToggleIconButton from './ToggleIconButton';
-import classes from './TopMenu.module.scss';
-import VerticalSplitIcon from '@material-ui/icons/VerticalSplit';
-import StarIcon from '@material-ui/icons/Star';
-import FullscreenIcon from '@material-ui/icons/Fullscreen';
-import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import LocalOffer from '@material-ui/icons/LocalOffer';
-import SaveIcon from '@material-ui/icons/Save';
 import {
     Button,
     ButtonGroup,
+    Chip,
     MenuItem,
     Select,
     Tooltip
 } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
+import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
+import LocalOffer from '@material-ui/icons/LocalOffer';
+import SaveIcon from '@material-ui/icons/Save';
+import StarIcon from '@material-ui/icons/Star';
+import VerticalSplitIcon from '@material-ui/icons/VerticalSplit';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    selectEditor,
-    toggleEdit,
-    togglePreview,
-    setNoteToSaved,
-    toggleFavorite,
-    toggleFullScreen,
-    setEditorType
-} from '../../store/slices/editorSlice';
 import {
     useMutateDeleteNote,
     useMutateModifyNote,
     useMutateToggleFavorite
 } from '../../hooks/noteMutationHooks';
 import useLoader from '../../hooks/useLoader';
+import {
+    selectEditor,
+    setEditorType,
+    setNoteToSaved,
+    toggleEdit,
+    toggleFavorite,
+    toggleFullScreen,
+    togglePreview
+} from '../../store/slices/editorSlice';
 import EditTagsMenu from './EditTagsMenu';
+import ToggleIconButton from './ToggleIconButton';
+import classes from './TopMenu.module.scss';
 
 interface TopMenuProps {
     notes: Note[];
@@ -183,7 +184,17 @@ const TopMenu = ({ notes }: TopMenuProps) => {
                     </ButtonGroup>
                 </div>
                 <div className={classes.right}>
+                    {notes.find((note) => note._id === current)?.isTemp && (
+                        <Chip
+                            style={{ marginRight: '1rem' }}
+                            label="unsaved"
+                            color="primary"
+                            size="small"
+                            variant="outlined"
+                        />
+                    )}
                     <Select
+                        displayEmpty
                         labelId="editor-select-label"
                         id="editor-select"
                         variant="outlined"

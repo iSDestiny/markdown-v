@@ -43,21 +43,19 @@ const GlobalSearchBar = () => {
         return ((n % m) + m) % m;
     };
 
-    const onClickNote = (id: string) => {
+    const onSelectNote = (id: string) => {
         if (id) dispatch(setCurrent({ current: id }));
         if (!notes.find((note) => note._id === id))
             dispatch(setFilter({ type: 'nonTag', newFilter: 'All Notes' }));
         dispatch(setIsGlobalSearchOpen({ open: false }));
+        setSearchQuery('');
     };
 
     const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
         const searchResults = getSearchResults();
         if (event.key === 'Enter') {
             const current = searchResults[selected]?._id;
-            if (!notes.find((note) => note._id === current))
-                dispatch(setFilter({ type: 'nonTag', newFilter: 'All Notes' }));
-            if (current) dispatch(setCurrent({ current }));
-            dispatch(setIsGlobalSearchOpen({ open: false }));
+            onSelectNote(current);
         } else if (event.key === 'Escape') {
             dispatch(setIsGlobalSearchOpen({ open: false }));
         } else if (event.key === 'ArrowDown') {
@@ -74,7 +72,6 @@ const GlobalSearchBar = () => {
     };
 
     const onSearch = (event: ChangeEvent<HTMLInputElement>) => {
-        console.log('on change');
         setSearchQuery(event.target.value);
         const result = fuzzysort.go(event.target.value, nonFilteredNotes, {
             key: 'title'
@@ -129,7 +126,7 @@ const GlobalSearchBar = () => {
                                     active={index === selected}
                                 >
                                     <li
-                                        onClick={() => onClickNote(_id)}
+                                        onClick={() => onSelectNote(_id)}
                                         ref={
                                             index === selected
                                                 ? selectedRef

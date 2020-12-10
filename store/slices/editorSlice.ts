@@ -185,6 +185,10 @@ const editorSlice = createSlice({
                 if (!prevIds.has(note._id)) state.current = note._id;
             });
 
+            if (state.notes.length === 0) {
+                state.isFullScreen = false;
+            }
+
             if (state.notes.length > 0 && !current) {
                 state.current = state.notes[0]._id;
             } else if (
