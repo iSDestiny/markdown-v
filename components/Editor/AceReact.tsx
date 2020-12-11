@@ -31,19 +31,23 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
         { isLoading: editIsLoading }
     ] = useMutateModifyNote();
     const dispatch = useDispatch();
-    const { editorType, current, notes, isGlobalSearchOpen } = useSelector(
-        selectEditor
-    );
+    const {
+        editorType,
+        current,
+        notes,
+        isLocalSearchOpen,
+        isGlobalSearchOpen
+    } = useSelector(selectEditor);
     const editorRef = useRef<AceEditor>();
 
     useLoader('modify', editIsLoading);
 
     useEffect(() => {
         const refCurr = editorRef.current;
-        if (refCurr && !isGlobalSearchOpen) {
+        if (refCurr && !isGlobalSearchOpen && !isLocalSearchOpen) {
             refCurr.editor.focus();
         }
-    }, [current, isGlobalSearchOpen]);
+    }, [current, isGlobalSearchOpen, isLocalSearchOpen]);
 
     useEffect(() => {
         const refCurr = editorRef.current;
@@ -71,7 +75,7 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
 
     const nextTab = () => {
         const index = notes.findIndex((note) => note._id === current);
-        if (index) {
+        if (index > -1) {
             const newIndex = mod(index + 1, notes.length);
             const newCurrent = notes[newIndex]._id;
             dispatch(setCurrent({ current: newCurrent }));
@@ -80,7 +84,7 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
 
     const prevTab = () => {
         const index = notes.findIndex((note) => note._id === current);
-        if (index) {
+        if (index > -1) {
             const newIndex = mod(index - 1, notes.length);
             const newCurrent = notes[newIndex]._id;
             dispatch(setCurrent({ current: newCurrent }));

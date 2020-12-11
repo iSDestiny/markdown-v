@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, KeyboardEvent } from 'react';
 import {
     Chip,
     IconButton,
@@ -15,19 +15,25 @@ import useLoader from '../../hooks/useLoader';
 import {
     selectEditor,
     setCurrent,
-    setSearchQuery
+    setIsLocalSearchOpen,
+    setSearchQuery,
+    toggleEdit
 } from '../../store/slices/editorSlice';
 import classes from './NotesMenu.module.scss';
 import SortOptions from './SortOptions';
+import mod from '../../utility/mod';
 
 const NotesMenu = () => {
     const [mutateAddNote, { isLoading }] = useMutateAddNote();
-    const { current, notes, filter, searchQuery } = useSelector(selectEditor);
+    const { current, canEdit, notes, filter, searchQuery } = useSelector(
+        selectEditor
+    );
     const dispatch = useDispatch();
     useLoader('add', isLoading);
 
     const onSearch = (event: ChangeEvent<HTMLInputElement>) => {
         dispatch(setSearchQuery({ query: event.target.value }));
+        dispatch(setIsLocalSearchOpen({ open: true }));
     };
 
     const addNoteHandler = () => {
@@ -40,6 +46,33 @@ const NotesMenu = () => {
 
     const noteSelectionHandler = (id: string) => {
         dispatch(setCurrent({ current: id }));
+        dispatch(setIsLocalSearchOpen({ open: false }));
+    };
+
+    const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+        const index = notes.findIndex((note) => note._id === current);
+        if (event.key === 'Enter') {
+            if (!canEdit) dispatch(toggleEdit());
+            dispatch(setIsLocalSearchOpen({ open: false }));
+        } else if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            console.log('down');
+            if (index > -1) {
+                const newIndex = mod(index + 1, notes.length);
+                const newCurrent = notes[newIndex]._id;
+                dispatch(setCurrent({ current: newCurrent }));
+                dispatch(setIsLocalSearchOpen({ open: true }));
+            }
+        } else if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            if (index > -1) {
+                console.log('up');
+                const newIndex = mod(index - 1, notes.length);
+                const newCurrent = notes[newIndex]._id;
+                dispatch(setCurrent({ current: newCurrent }));
+                dispatch(setIsLocalSearchOpen({ open: true }));
+            }
+        }
     };
 
     return (
@@ -53,7 +86,9 @@ const NotesMenu = () => {
                         <input
                             type="text"
                             value={searchQuery}
+                            autoComplete="off"
                             onChange={(event) => onSearch(event)}
+                            onKeyDown={onKeyDown}
                             placeholder="Search"
                             name="search"
                             id="search"
@@ -77,7 +112,7 @@ const NotesMenu = () => {
             </header>
             <List className={classes.list}>
                 {notes.length > 0 ? (
-                    notes.map((note: Note, index: number) => (
+                    notes.map((note: Note) => (
                         <ListItem
                             button
                             key={note._id}
