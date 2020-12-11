@@ -21,3 +21,60 @@
         }
     }
 }
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    .subtext {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0;
+        font-weight: 100;
+        margin-top: 0.5rem;
+    }
+}
+
+.alternative {
+    margin-top: 2rem;
+    margin-bottom: 0;
+    color: $text-1;
+    opacity: 0.4;
+}
+
+.oauth {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    button {
+        font-size: 2.5rem;
+        color: $text-1;
+        background: transparent;
+        margin: 0 0.5rem;
+        border: none;
+        opacity: 0.4;
+        outline: none;
+        cursor: pointer;
+    }
+}
+
+.google {
+    &:hover {
+        color: #ea4335;
+        opacity: 1;
+    }
+}
+
+.github {
+    &:hover {
+        color: #000;
+        opacity: 1;
+    }
+}

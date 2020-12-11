@@ -18,6 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <>
             <Head>
                 <title>MarkdownV</title>
+                <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <Provider store={store}>

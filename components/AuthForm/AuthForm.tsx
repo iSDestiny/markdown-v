@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-    Avatar,
     Backdrop,
     Box,
     Button,
@@ -12,7 +11,7 @@ import {
     TextField,
     Typography
 } from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { useRouter } from 'next/router';
 import Copyright from '../Copyright';
 import classNames from 'classnames';
 import Link from 'next/link';
@@ -21,6 +20,9 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import PasswordField from '../PasswordField';
 import classes from './AuthForm.module.scss';
+import Image from 'next/image';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGoogle, faGithub } from '@fortawesome/free-brands-svg-icons';
 
 interface AuthFormProps<T> {
     type: String;
@@ -47,23 +49,35 @@ export default function AuthForm<T>({
     signupSuccess = false,
     setSignupSuccess
 }: AuthFormProps<T>) {
-    const { register, handleSubmit, errors } = useForm<FormInputs>({
+    const { register, handleSubmit, errors, reset } = useForm<FormInputs>({
         resolver: yupResolver(schema)
     });
-
     const [showPassword, setShowPassword] = useState(false);
+    const router = useRouter();
+
+    const onCloseModal = () => {
+        setSignupSuccess(false);
+        reset();
+    };
+
+    const onConfirmModal = () => {
+        router.push('login');
+    };
 
     return (
         <>
             <Container component="main" maxWidth="xs">
                 <div className="auth-container">
                     <Paper className="auth-container paper">
-                        <Avatar>
-                            <LockOutlinedIcon />
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
-                            {type === 'login' ? 'Sign In' : 'Sign Up'}
-                        </Typography>
+                        <div className={classes.header}>
+                            <Image
+                                src="/markdownv.svg"
+                                alt="MarkdownV logo"
+                                width={70}
+                                height={70}
+                            />
+                            <h1>MarkdownV</h1>
+                        </div>
                         {serverError && (
                             <Typography
                                 variant="body1"
@@ -140,6 +154,17 @@ export default function AuthForm<T>({
                                 </Grid>
                             </Grid>
                         </form>
+                        <p className={classes.alternative}>
+                            or you can sign in with
+                        </p>
+                        <div className={classes.oauth}>
+                            <button className={classes.google}>
+                                <FontAwesomeIcon icon={faGoogle} />
+                            </button>
+                            <button className={classes.github}>
+                                <FontAwesomeIcon icon={faGithub} />
+                            </button>
+                        </div>
                     </Paper>
                 </div>
                 <Box mt={8}>
@@ -151,7 +176,7 @@ export default function AuthForm<T>({
                 aria-describedby="transition-modal-description"
                 className={classes.modal}
                 open={signupSuccess}
-                onClose={() => setSignupSuccess(false)}
+                onClose={onCloseModal}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
@@ -170,6 +195,13 @@ export default function AuthForm<T>({
                             You can now login with the information you provided
                             in order to start using MarkdownV.
                         </p>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={onConfirmModal}
+                        >
+                            Login
+                        </Button>
                     </div>
                 </Fade>
             </Modal>

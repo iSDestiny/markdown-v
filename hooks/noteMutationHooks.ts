@@ -1,16 +1,14 @@
+import { useRouter } from 'next/router';
 import { useMutation, useQueryCache } from 'react-query';
 import {
     addNote,
+    addTag,
     deleteNote,
+    deleteTag,
     modifyNote,
     setTags,
-    addTag,
-    deleteTag,
     toggleFavorite
 } from '../utility/noteMutations';
-import { NextRouter, useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
-import { setNoteToSaved } from '../store/slices/editorSlice';
 
 export const useMutateAddNote = () => {
     const router = useRouter();

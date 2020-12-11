@@ -13,6 +13,10 @@ export default class MyDocument extends Document {
                         content={theme.palette.primary.main}
                     />
                     <link
+                        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100&display=swap"
+                        rel="stylesheet"
+                    />
+                    <link
                         rel="stylesheet"
                         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
                     />
