@@ -12,10 +12,11 @@ import {
     toggleEdit,
     selectEditor,
     setIsGlobalSearchOpen,
-    setEditorType
+    setCurrent
 } from '../../store/slices/editorSlice';
 import useLoader from '../../hooks/useLoader';
 import { useEffect, useRef } from 'react';
+import mod from '../../utility/mod';
 
 interface AceProps {
     theme: string;
@@ -30,7 +31,7 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
         { isLoading: editIsLoading }
     ] = useMutateModifyNote();
     const dispatch = useDispatch();
-    const { editorType, current, isGlobalSearchOpen } = useSelector(
+    const { editorType, current, notes, isGlobalSearchOpen } = useSelector(
         selectEditor
     );
     const editorRef = useRef<AceEditor>();
@@ -51,10 +52,6 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
         }
     }, [current]);
 
-    useEffect(() => {
-        dispatch(setEditorType({ type: 'vim' }));
-    }, []);
-
     const save = async () => {
         console.log(Vim);
         if (note) {
@@ -72,18 +69,47 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
         dispatch(setIsGlobalSearchOpen({ open: true }));
     };
 
+    const nextTab = () => {
+        const index = notes.findIndex((note) => note._id === current);
+        if (index) {
+            const newIndex = mod(index + 1, notes.length);
+            const newCurrent = notes[newIndex]._id;
+            dispatch(setCurrent({ current: newCurrent }));
+        }
+    };
+
+    const prevTab = () => {
+        const index = notes.findIndex((note) => note._id === current);
+        if (index) {
+            const newIndex = mod(index - 1, notes.length);
+            const newCurrent = notes[newIndex]._id;
+            dispatch(setCurrent({ current: newCurrent }));
+        }
+    };
+
     Vim.unmap('<C-p>');
     Vim.map('jj', '<Esc>', 'insert');
     Vim.map('jk', '<Esc>', 'insert');
     Vim.map('kj', '<Esc>', 'insert');
+
     Vim.defineEx('write', 'w', async (editor: IAceEditor) => {
         save();
     });
+
     Vim.defineEx('quit', 'q', (editor: IAceEditor) => {
         dispatch(toggleEdit());
     });
+
     Vim.defineEx('wquit', 'wq', async (editor: IAceEditor) => {
         saveQuit();
+    });
+
+    Vim.defineEx('tabnext', 'tabn', async (editor: IAceEditor) => {
+        nextTab();
+    });
+
+    Vim.defineEx('tabprev', 'tabp', async (editor: IAceEditor) => {
+        prevTab();
     });
 
     return (

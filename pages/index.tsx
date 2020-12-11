@@ -65,6 +65,14 @@ export default function Notes() {
                 await mutateModifyNote(note);
                 dispatch(setNoteToSaved());
             }
+        } else if (
+            (event.ctrlKey && event.key === 'PageUp') ||
+            event.key === 'PageUp'
+        ) {
+            event.preventDefault();
+            console.log('pageup');
+        } else if (event.ctrlKey && event.key === 'PageDown') {
+            event.preventDefault();
         }
     };
 
