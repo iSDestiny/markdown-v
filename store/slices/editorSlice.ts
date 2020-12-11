@@ -88,8 +88,7 @@ const editorSlice = createSlice({
         nonSearchedNotes: [],
         notes: [],
         loaders: {},
-        // sorts notes by title ascending as default
-        sortType: 'titleAsc',
+        sortType: 'titleAsc', // sorts notes by title ascending as default
         filter: { name: 'All Notes', type: 'nonTag' },
         searchQuery: ''
     },

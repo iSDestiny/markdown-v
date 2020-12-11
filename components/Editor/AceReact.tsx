@@ -11,9 +11,11 @@ import {
     setNoteToSaved,
     toggleEdit,
     selectEditor,
-    setIsGlobalSearchOpen
+    setIsGlobalSearchOpen,
+    setEditorType
 } from '../../store/slices/editorSlice';
 import useLoader from '../../hooks/useLoader';
+import { useEffect, useRef } from 'react';
 
 interface AceProps {
     theme: string;
@@ -28,8 +30,30 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
         { isLoading: editIsLoading }
     ] = useMutateModifyNote();
     const dispatch = useDispatch();
-    const { editorType } = useSelector(selectEditor);
+    const { editorType, current, isGlobalSearchOpen } = useSelector(
+        selectEditor
+    );
+    const editorRef = useRef<AceEditor>();
+
     useLoader('modify', editIsLoading);
+
+    useEffect(() => {
+        const refCurr = editorRef.current;
+        if (refCurr && !isGlobalSearchOpen) {
+            refCurr.editor.focus();
+        }
+    }, [current, isGlobalSearchOpen]);
+
+    useEffect(() => {
+        const refCurr = editorRef.current;
+        if (refCurr) {
+            refCurr.editor.gotoLine(1, 0, true);
+        }
+    }, [current]);
+
+    useEffect(() => {
+        dispatch(setEditorType({ type: 'vim' }));
+    }, []);
 
     const save = async () => {
         console.log(Vim);
@@ -64,6 +88,7 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
 
     return (
         <AceEditor
+            ref={editorRef}
             mode="markdown"
             theme={theme}
             onChange={onChange}
@@ -75,7 +100,7 @@ const AceReact = ({ theme, onChange, note, width }: AceProps) => {
             wrapEnabled={true}
             fontSize={16}
             value={note ? note.content : ''}
-            keyboardHandler={editorType}
+            keyboardHandler={editorType ? editorType : null}
             height="100%"
             width={'' + width}
             setOptions={{

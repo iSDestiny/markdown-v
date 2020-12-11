@@ -63,13 +63,17 @@ const TopMenu = ({ notes }: TopMenuProps) => {
     useLoader('delete', deleteIsLoading);
     useLoader('modify', editIsLoading);
 
+    const onToggleEdit = () => {
+        dispatch(toggleEdit());
+    };
+
     return (
         <>
             <div className={classes['top-menu']}>
                 <div className={classes.left}>
                     <ToggleIconButton
                         toggle={canEdit}
-                        setToggle={() => dispatch(toggleEdit())}
+                        setToggle={onToggleEdit}
                         value="edit"
                         selectedTitle="Edit"
                         deselectedTitle="Stop Editing"
