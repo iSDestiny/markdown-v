@@ -1,8 +1,8 @@
-import { oauthLogin } from 'controllers/auth';
-import { ExtendedRequest, nextConnectDB } from 'middleware/connect';
 import passport from 'middleware/passport';
+import { ExtendedRequest, nextConnectDB } from 'middleware/connect';
 import { NextApiResponse } from 'next';
 import nc, { NextHandler } from 'next-connect';
+import { oauthLogin } from 'controllers/auth';
 
 const onError = (
     err: any,
@@ -21,7 +21,7 @@ handler.use(nextConnectDB);
 handler.use(passport.initialize());
 
 handler.get(
-    passport.authenticate('google', {
+    passport.authenticate('github', {
         failureRedirect: `${process.env.CLIENT_ORIGIN}/login`
     }),
     oauthLogin

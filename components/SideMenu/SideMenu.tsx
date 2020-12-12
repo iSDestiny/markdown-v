@@ -32,6 +32,14 @@ const SideMenu = () => {
         return allUniqueTags;
     };
 
+    const getDisplayUser = () => {
+        const { email, displayName } = queryCache.getQueryData<{
+            email: string;
+            displayName: string;
+        }>('authInfo');
+        return displayName ? displayName : email;
+    };
+
     return (
         <>
             <div className={classes.root}>
@@ -45,13 +53,7 @@ const SideMenu = () => {
                                 fontSize="large"
                                 style={{ margin: 'auto 0' }}
                             />
-                            <h1>
-                                {
-                                    queryCache.getQueryData<{ email: string }>(
-                                        'authInfo'
-                                    )?.email
-                                }
-                            </h1>
+                            <h1>{getDisplayUser()}</h1>
                         </div>
                         <ExpandMore style={{ margin: 'auto 0' }} />
                     </button>

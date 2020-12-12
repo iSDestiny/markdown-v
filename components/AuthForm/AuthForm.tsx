@@ -169,7 +169,10 @@ export default function AuthForm<T>({
                                 </a>
                             </Tooltip>
                             <Tooltip title="Sign in with Github">
-                                <a className={classes.github}>
+                                <a
+                                    className={classes.github}
+                                    href="/api/auth/github"
+                                >
                                     <FontAwesomeIcon icon={faGithub} />
                                 </a>
                             </Tooltip>

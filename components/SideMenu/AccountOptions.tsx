@@ -15,7 +15,10 @@ interface AccountOptionsProps {
 const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
     const [accountInfoOpen, setAccountInfoOpen] = useState(false);
     const queryCache = useQueryCache();
-    const { email } = queryCache.getQueryData<{ email: string }>('authInfo');
+    const { email, displayName } = queryCache.getQueryData<{
+        email: string;
+        displayName: string;
+    }>('authInfo');
 
     const accountInfoHandler = () => {
         setAnchorEl(null);
@@ -55,7 +58,7 @@ const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
                         style={{ margin: 'auto 0' }}
                     />
                     <ListItemText
-                        // primary="Jason Bugallon"
+                        primary={displayName}
                         secondary={email}
                         style={{ paddingLeft: 9 }}
                     />

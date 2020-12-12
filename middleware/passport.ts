@@ -2,12 +2,10 @@ import { IUser } from './../models/User';
 import passport from 'passport';
 import {
     Strategy as GoogleStrategy,
-    VerifyCallback,
-    VerifyFunctionWithRequest
+    VerifyCallback
 } from 'passport-google-oauth2';
+import { Strategy as GithubStrategy } from 'passport-github2';
 import { ExtendedRequest } from './connect';
-import bcrypt from 'bcrypt';
-import crypto from 'crypto';
 
 export interface PassportExtendedRequest extends ExtendedRequest {
     user: IUser;
@@ -21,15 +19,15 @@ interface GoogleProfile {
     email: string;
 }
 
-const callback = async function (
+const googleCallback = async function (
     req: any,
     accessToken: string,
     refreshToken: string,
-    profile: any,
+    profile: GoogleProfile,
     done: VerifyCallback
 ) {
     console.log('IN PASSPORT CALLBACK!');
-    console.log(profile);
+    // console.log(profile);
     const { User } = req.models;
     const user: IUser = await User.findOneAndUpdate(
         { email: profile.email },
@@ -38,10 +36,27 @@ const callback = async function (
     );
     console.log(user);
     if (user) done(null, user);
-    else
-        done(new Error('User was not created'), false, {
-            message: 'Invalid google account'
-        });
+    else done(new Error('User was not created'), false);
+};
+
+const githubCallback = async function (
+    req: any,
+    accessToken: string,
+    refreshToken: string,
+    profile: GoogleProfile,
+    done: VerifyCallback
+) {
+    console.log('IN PASSPORT GITHUB CALLBACK!');
+    console.log(profile);
+    const { User } = req.models;
+    const user: IUser = await User.findOneAndUpdate(
+        { email: profile.email },
+        { githubId: profile.id, displayName: profile.displayName },
+        { upsert: true, new: true }
+    );
+    console.log(user);
+    if (user) done(null, user);
+    else done(new Error('User was not created'), false);
 };
 
 passport.use(
@@ -52,7 +67,19 @@ passport.use(
             callbackURL: `${process.env.CLIENT_ORIGIN}/api/auth/google/callback`,
             passReqToCallback: true
         },
-        callback
+        googleCallback
+    )
+);
+
+passport.use(
+    new GithubStrategy(
+        {
+            clientID: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+            callbackURL: `${process.env.CLIENT_ORIGIN}/api/auth/github/callback`,
+            passReqToCallback: true
+        },
+        githubCallback
     )
 );
 

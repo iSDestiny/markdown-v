@@ -67,6 +67,7 @@
     "@types/nodemailer": "^6.4.0",
     "@types/nodemailer-sendgrid": "^1.0.0",
     "@types/passport": "^1.0.4",
+    "@types/passport-github2": "^1.2.4",
     "@types/passport-google-oauth2": "^0.1.3",
     "@types/react": "^16.9.56",
     "@types/react-redux": "^7.1.11",

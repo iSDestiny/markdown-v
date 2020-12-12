@@ -18,6 +18,7 @@ export interface IUser extends mongoose.Document {
     password: string;
     displayName: string;
     googleId: string;
+    githubId: string;
     addNote: (tags?: INote['tags'], favorite?: INote['favorite']) => any;
     getNotes: () => any;
     deleteNote: (id: any) => any;
@@ -33,12 +34,12 @@ export interface IUser extends mongoose.Document {
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
-        required: true,
         unique: true
     },
     password: String,
     displayName: String,
     googleId: String,
+    githubId: String,
     notes: [
         {
             type: new mongoose.Schema(
