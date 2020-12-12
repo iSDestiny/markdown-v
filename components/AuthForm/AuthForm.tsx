@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import axios from 'axios';
 import {
     Backdrop,
     Box,
@@ -9,6 +10,7 @@ import {
     Modal,
     Paper,
     TextField,
+    Tooltip,
     Typography
 } from '@material-ui/core';
 import { useRouter } from 'next/router';
@@ -158,12 +160,19 @@ export default function AuthForm<T>({
                             or you can sign in with
                         </p>
                         <div className={classes.oauth}>
-                            <button className={classes.google}>
-                                <FontAwesomeIcon icon={faGoogle} />
-                            </button>
-                            <button className={classes.github}>
-                                <FontAwesomeIcon icon={faGithub} />
-                            </button>
+                            <Tooltip title="Sign in with Google">
+                                <a
+                                    className={classes.google}
+                                    href="/api/auth/google"
+                                >
+                                    <FontAwesomeIcon icon={faGoogle} />
+                                </a>
+                            </Tooltip>
+                            <Tooltip title="Sign in with Github">
+                                <a className={classes.github}>
+                                    <FontAwesomeIcon icon={faGithub} />
+                                </a>
+                            </Tooltip>
                         </div>
                     </Paper>
                 </div>

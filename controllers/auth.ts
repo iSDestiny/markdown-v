@@ -59,6 +59,8 @@ export const postLogin: noteParamTypes = async (req, res, models) => {
     const { email, password }: { email: string; password: string } = req.body;
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) throw new CustomStatusError('Invalid email or password', 403);
+    if (!user.password)
+        throw new CustomStatusError('Invalid email or password', 403);
     const didMatch = await bcrypt.compare(password, user.password);
     if (!didMatch)
         throw new CustomStatusError('Invalid email or password', 403);
@@ -69,15 +71,14 @@ export const postLogin: noteParamTypes = async (req, res, models) => {
     );
     const cookies = new Cookies(req, res);
     cookies.set('ACCESS_TOKEN', token);
-    // return res.status(201).json({ message: 'login successful' });
-    res.writeHead(302, { Location: '/' });
+    res.status(303).redirect('/');
     return res.end();
 };
 
 export const postLogout = async (req: NextApiRequest, res: NextApiResponse) => {
     const cookies = new Cookies(req, res);
     cookies.set('ACCESS_TOKEN');
-    res.writeHead(302, { Location: '/login' });
+    res.status(303).redirect('/login');
     return res.end();
 };
 

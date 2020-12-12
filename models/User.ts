@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import CustomStatusError from '../utility/CustomStatusError';
+import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 export interface INote extends mongoose.Document {
     _id: mongoose.Schema.Types.ObjectId;
@@ -14,6 +16,8 @@ export interface INote extends mongoose.Document {
 export interface IUser extends mongoose.Document {
     email: string;
     password: string;
+    displayName: string;
+    googleId: string;
     addNote: (tags?: INote['tags'], favorite?: INote['favorite']) => any;
     getNotes: () => any;
     deleteNote: (id: any) => any;
@@ -32,10 +36,9 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    password: {
-        type: String,
-        required: true
-    },
+    password: String,
+    displayName: String,
+    googleId: String,
     notes: [
         {
             type: new mongoose.Schema(

@@ -29,7 +29,7 @@ export default function Login() {
                 fetchLogin
             );
             console.log(data);
-            Router.push('/');
+            // Router.push('/');
         } catch ({
             response: {
                 data: { message }
