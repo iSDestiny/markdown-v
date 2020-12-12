@@ -6,6 +6,7 @@ import passport, { PassportExtendedRequest } from 'middleware/passport';
 import { ExtendedRequest, nextConnectDB } from 'middleware/connect';
 import { NextApiResponse } from 'next';
 import CustomStatusError from 'utility/CustomStatusError';
+import { oauthLogin } from 'controllers/auth';
 
 const onError = (
     err: any,
@@ -13,6 +14,7 @@ const onError = (
     res: NextApiResponse,
     next: NextHandler
 ) => {
+    console.log(err);
     req.dbConnection.close();
     res.status(303).redirect(`${process.env.CLIENT_ORIGIN}/login`);
 };
@@ -27,19 +29,7 @@ handler.get(
     passport.authenticate('google', {
         failureRedirect: `${process.env.CLIENT_ORIGIN}/login`
     }),
-    (req: PassportExtendedRequest, res) => {
-        console.log('IN GOOGLE CALLBACK!');
-        console.log(req.user);
-        if (!req.user) throw new CustomStatusError('Invalid User', 401);
-        const token = jwt.sign(
-            { email: req.user.email, userId: req.user._id },
-            process.env.JWT_SECRET,
-            { expiresIn: '1d' }
-        );
-        const cookies = new Cookies(req, res);
-        cookies.set('ACCESS_TOKEN', token);
-        res.status(303).redirect(`${process.env.CLIENT_ORIGIN}`);
-    }
+    oauthLogin
 );
 
 export default handler;

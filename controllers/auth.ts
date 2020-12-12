@@ -1,3 +1,4 @@
+import { PassportExtendedRequest } from 'middleware/passport';
 import Cookies from 'cookies';
 import { INote } from './../models/Note';
 import { IUser } from './../models/User';
@@ -215,4 +216,20 @@ export const postNewPassword: noteParamTypes = async (req, res, models) => {
 
     res.status(204).send('successfully changed password');
     return res.end();
+};
+
+export const oauthLogin = (
+    req: PassportExtendedRequest,
+    res: NextApiResponse
+) => {
+    console.log('in oauth');
+    if (!req.user) throw new CustomStatusError('Invalid User', 401);
+    const token = jwt.sign(
+        { email: req.user.email, userId: req.user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: '1d' }
+    );
+    const cookies = new Cookies(req, res);
+    cookies.set('ACCESS_TOKEN', token);
+    res.status(303).redirect(`${process.env.CLIENT_ORIGIN}`);
 };
