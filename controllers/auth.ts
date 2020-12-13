@@ -48,10 +48,10 @@ export const postSignup = async (
     res: NextApiResponse
 ) => {
     const { User } = req.models;
-    console.log(req.body);
     const { email, password }: { email: string; password: string } = req.body;
-    const user = await User.findOne({ email: email.toLowerCase() });
-    if (user) throw new CustomStatusError('Email already exists!', 409);
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+        return res.status(422).json({ errors: errors.array() });
     const encryptedPassword = await bcrypt.hash(password, 12);
     const newUser = new User({
         email: email.toLowerCase(),
@@ -87,63 +87,6 @@ export const postLogout = async (req: NextApiRequest, res: NextApiResponse) => {
     cookies.set('ACCESS_TOKEN');
     res.status(200).end();
 };
-
-// export const putChangePassword: noteParamTypes = async (req, res, models) => {
-//     const { User } = models;
-//     const {
-//         'new-password': newPassword
-//     }: {
-//         'new-password': string;
-//     } = req.body;
-//     const userId = authenticate(req, res);
-//     const user = await User.findById(userId);
-//     if (!user) throw new CustomStatusError('User not found', 404);
-
-//     const validateBody = runMiddleware(
-//         validateMiddleware(
-//             [
-//                 body('current-password', 'Invalid Password').custom(
-//                     async (value, { req }) => {
-//                         const userPassword = user.password;
-//                         const didMatch = await bcrypt.compare(
-//                             value,
-//                             userPassword
-//                         );
-//                         if (!didMatch)
-//                             throw new Error('Provided password is incorrect');
-//                         return true;
-//                     }
-//                 ),
-//                 body('confirm-password').custom((value, { req }) => {
-//                     if (value !== req.body['new-password'])
-//                         throw new Error('Passwords did not match!');
-//                     return true;
-//                 }),
-//                 body('new-password')
-//                     .isLength({ min: 5 })
-//                     .withMessage('Password must be at least 5 characters long')
-//                     .custom((value, { req }) => {
-//                         if (value === req.body['current-password'])
-//                             throw new Error(
-//                                 'New password cannot be the same as the current password!'
-//                             );
-//                         return true;
-//                     })
-//             ],
-//             validationResult
-//         )
-//     );
-
-//     await validateBody(req, res);
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty())
-//         return res.status(422).json({ errors: errors.array() });
-
-//     const encryptedPassword = await bcrypt.hash(newPassword, 12);
-//     await user.changePassword(encryptedPassword);
-
-//     return res.status(204).send('success');
-// };
 
 export const putChangePassword = async (
     req: ExtendedRequest,

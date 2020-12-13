@@ -27,12 +27,18 @@ export default function SignUp() {
             setServerError('');
         } catch ({
             response: {
-                data: { message }
+                data: { errors }
             }
         }) {
-            console.log(message);
+            if (errors && errors.length > 0) {
+                console.log(errors);
+                setServerError(errors[0].msg);
+            } else {
+                setServerError(
+                    'Something went wrong with the server, please try again'
+                );
+            }
             setSignupSuccess(false);
-            setServerError(message);
         }
     };
     return (
