@@ -1,28 +1,15 @@
-import { deleteNote } from '../../../controllers/notes';
-import connect from '../../../middleware/connect';
+import nc from 'next-connect';
+import onError from 'utility/onError';
+import authenticate from 'middleware/authenticate';
+import { ExtendedRequest, nextConnectDB } from 'middleware/connect';
+import { NextApiResponse } from 'next';
+import { deleteNote } from 'controllers/notes';
 
-export default connect(async (req, res, connection, models) => {
-    const { method } = req;
+const handler = nc<ExtendedRequest, NextApiResponse>({ onError });
 
-    try {
-        switch (method) {
-            case 'DELETE':
-                console.log('in delete');
-                return await deleteNote(req, res, models);
-            default:
-                throw new Error('Invalid http method');
-        }
-    } catch (error) {
-        console.log(error);
-        error.status = error.status || 500;
-        res.status(error.status).json({ message: error.message });
-    } finally {
-        connection.close();
-    }
-});
+handler.use(nextConnectDB);
+handler.use(authenticate);
 
-export const config = {
-    api: {
-        externalResolver: true
-    }
-};
+handler.delete(deleteNote);
+
+export default handler;
