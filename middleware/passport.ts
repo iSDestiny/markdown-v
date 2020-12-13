@@ -30,8 +30,8 @@ const googleCallback = async function (
     // console.log(profile);
     const { User } = req.models;
     const user: IUser = await User.findOneAndUpdate(
-        { email: profile.email },
-        { googleId: profile.id, displayName: profile.displayName },
+        { email: profile.email, googleId: profile.id },
+        { displayName: profile.displayName },
         { upsert: true, new: true }
     );
     console.log(user);
@@ -50,8 +50,8 @@ const githubCallback = async function (
     console.log(profile);
     const { User } = req.models;
     const user: IUser = await User.findOneAndUpdate(
-        { email: profile.email },
-        { githubId: profile.id, displayName: profile.displayName },
+        { email: profile.email, githubId: profile.id },
+        { displayName: profile.displayName },
         { upsert: true, new: true }
     );
     console.log(user);

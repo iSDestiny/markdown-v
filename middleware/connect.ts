@@ -48,6 +48,7 @@ export interface ExtendedRequest extends NextApiRequest {
     models: {
         User: mongoose.Model<IUser, {}>;
     };
+    user: IUser;
 }
 
 export const nextConnectDB = async (

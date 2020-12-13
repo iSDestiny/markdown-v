@@ -12,7 +12,10 @@ interface AccountInfoProps {
 const AccountInfoModal = ({ isOpen, setIsOpen }: AccountInfoProps) => {
     const [changePasswordOpen, setChangePasswordOpen] = useState(false);
     const queryCache = useQueryCache();
-    const { email } = queryCache.getQueryData<{ email: string }>('authInfo');
+    const { email, displayName } = queryCache.getQueryData<{
+        email: string;
+        displayName: string;
+    }>('authInfo');
 
     return (
         <>
@@ -53,7 +56,11 @@ const AccountInfoModal = ({ isOpen, setIsOpen }: AccountInfoProps) => {
                                         classes['account-info-item-body']
                                     }
                                 >
-                                    <p>{email}</p>
+                                    <p>
+                                        {email
+                                            ? email
+                                            : 'You do not have an email address'}
+                                    </p>
                                     <Tooltip title="Not implemented">
                                         <a
                                             className={
@@ -78,10 +85,19 @@ const AccountInfoModal = ({ isOpen, setIsOpen }: AccountInfoProps) => {
                                         classes['account-info-item-body']
                                     }
                                 >
-                                    <p>Hidden for security purposes</p>
+                                    <p>
+                                        {email
+                                            ? 'Hidden for security purposes'
+                                            : 'You do not have an email thus cannot change password'}
+                                    </p>
                                     <a
                                         onClick={() =>
                                             setChangePasswordOpen(true)
+                                        }
+                                        className={
+                                            email
+                                                ? null
+                                                : classes['disabled-change']
                                         }
                                     >
                                         Change Password

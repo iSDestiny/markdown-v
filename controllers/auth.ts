@@ -13,6 +13,7 @@ import runMiddleware from '../middleware/runMiddleware';
 import validateMiddleware from '../middleware/validateMiddleware';
 import nodemailer from 'nodemailer';
 import nodemailerSendgrid from 'nodemailer-sendgrid';
+import { ExtendedRequest } from 'middleware/connect';
 
 let transport = nodemailer.createTransport(
     nodemailerSendgrid({ apiKey: process.env.SENDGRID_API_KEY })
@@ -27,13 +28,19 @@ type noteParamTypes = (
     }
 ) => Promise<void>;
 
-export const getAuthInfo: noteParamTypes = async (req, res, models) => {
-    const { User } = models;
-    const userId = authenticate(req, res);
-    const user = await User.findById(userId);
+// export const getAuthInfo: noteParamTypes = async (req, res, models) => {
+//     const { User } = models;
+//     const userId = authenticate(req, res);
+//     const user = await User.findById(userId);
+//     return res
+//         .status(200)
+//         .json({ email: user.email, displayName: user.displayName });
+// };
+
+export const getAuthInfo = (req: ExtendedRequest, res: NextApiResponse) => {
     return res
         .status(200)
-        .json({ email: user.email, displayName: user.displayName });
+        .json({ email: req.user.email, displayName: req.user.displayName });
 };
 
 export const postSignup: noteParamTypes = async (req, res, models) => {
@@ -150,7 +157,7 @@ export const postResetPassword: noteParamTypes = async (req, res, models) => {
 
     transport.sendMail({
         to: email,
-        from: 'jbugallon@gmail.com',
+        from: 'markdownvapp@gmail.com',
         subject: 'Password Reset',
         html: `
             <h1>MarkdownV Password Reset</h1>
