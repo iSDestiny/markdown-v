@@ -59,8 +59,8 @@ export const postSignup: noteParamTypes = async (req, res, models) => {
     return res.status(201).send('success');
 };
 
-export const postLogin: noteParamTypes = async (req, res, models) => {
-    const { User } = models;
+export const postLogin = async (req: ExtendedRequest, res: NextApiResponse) => {
+    const { User } = req.models;
     const { email, password }: { email: string; password: string } = req.body;
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) throw new CustomStatusError('Invalid email or password', 403);
@@ -76,8 +76,7 @@ export const postLogin: noteParamTypes = async (req, res, models) => {
     );
     const cookies = new Cookies(req, res);
     cookies.set('ACCESS_TOKEN', token);
-    res.status(303).redirect('/');
-    return res.end();
+    res.status(200).json({ message: 'success' });
 };
 
 export const postLogout = async (req: NextApiRequest, res: NextApiResponse) => {

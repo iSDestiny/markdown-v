@@ -24,12 +24,11 @@ export default function Login() {
     ) => {
         event.preventDefault();
         try {
-            const data = await queryCache.fetchQuery(
+            await queryCache.fetchQuery(
                 ['isAuth', { email, password }],
                 fetchLogin
             );
-            console.log(data);
-            // Router.push('/');
+            Router.push('/');
         } catch ({
             response: {
                 data: { message }
