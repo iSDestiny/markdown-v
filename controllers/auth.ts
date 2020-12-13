@@ -95,9 +95,12 @@ export const putChangePassword = async (
     res.status(204).end();
 };
 
-export const postResetPassword: noteParamTypes = async (req, res, models) => {
-    const { User } = models;
-    const { email } = req.body;
+export const postResetPassword = async (
+    req: ExtendedRequest,
+    res: NextApiResponse
+) => {
+    const { User } = req.models;
+    const { email }: { email: string } = req.body;
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) throw new CustomStatusError('Email does not exist!', 404);
     const token = jwt.sign(
@@ -119,59 +122,10 @@ export const postResetPassword: noteParamTypes = async (req, res, models) => {
         `
     });
 
-    return res.status(200).json({
+    res.status(200).json({
         message: 'password reset email was sent to the provided email'
     });
 };
-
-// export const postNewPassword: noteParamTypes = async (req, res, models) => {
-//     const { User } = models;
-//     const { password, token }: { password: string; token: string } = req.body;
-//     const validateBody = runMiddleware(
-//         validateMiddleware(
-//             [
-//                 body('password', 'Invalid password')
-//                     .isLength({ min: 5 })
-//                     .withMessage('Password must be at least 5 characters'),
-//                 body('confirm-password', 'Invalid confirm password').custom(
-//                     (value, { req }) => {
-//                         if (value !== req.body.password)
-//                             throw new Error('Passwords did not match!');
-//                         return true;
-//                     }
-//                 )
-//             ],
-//             validationResult
-//         )
-//     );
-//     await validateBody(req, res);
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty())
-//         return res.status(422).json({ errors: errors.array() });
-
-//     let decoded: any;
-//     try {
-//         decoded = jwt.verify(token, process.env.RESET_SECRET);
-//     } catch (err) {
-//         throw new CustomStatusError(
-//             'Provided token was invalid or has expired, please request another reset',
-//             404
-//         );
-//     }
-//     const { userId } = decoded;
-//     const user = await User.findById(userId);
-//     if (!user)
-//         throw new CustomStatusError(
-//             'Invalid token, return a nonexistent user',
-//             404
-//         );
-
-//     const encryptedPassword = await bcrypt.hash(password, 12);
-//     await user.changePassword(encryptedPassword);
-
-//     res.status(204).send('successfully changed password');
-//     return res.end();
-// };
 
 export const postNewPassword = async (
     req: ExtendedRequest,

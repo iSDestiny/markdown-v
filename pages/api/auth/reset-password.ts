@@ -1,31 +1,13 @@
-import connect, { handlerType } from '../../../middleware/connect';
-import CustomStatusError from '../../../utility/CustomStatusError';
-import { postResetPassword } from './../../../controllers/auth';
+import { postResetPassword } from 'controllers/auth';
+import { ExtendedRequest, nextConnectDB } from 'middleware/connect';
+import { NextApiResponse } from 'next';
+import nc from 'next-connect';
+import onError from 'utility/onError';
 
-const changePassword: handlerType = async (req, res, connection, models) => {
-    const { method } = req;
+const handler = nc<ExtendedRequest, NextApiResponse>({ onError });
 
-    try {
-        switch (method) {
-            case 'POST':
-                console.log('in post reset password');
-                return await postResetPassword(req, res, models);
-            default:
-                throw new CustomStatusError('Invalid http method', 405);
-        }
-    } catch (error) {
-        console.log(error);
-        if (!error.status) error.status = 500;
-        res.status(error.status).json({ message: error.message });
-    } finally {
-        connection.close();
-    }
-};
+handler.use(nextConnectDB);
 
-export default connect(changePassword);
+handler.post(postResetPassword);
 
-export const config = {
-    api: {
-        externalResolver: true
-    }
-};
+export default handler;
