@@ -1,32 +1,17 @@
-import { PassportExtendedRequest } from 'middleware/passport';
-import Cookies from 'cookies';
-import { INote } from './../models/Note';
-import { IUser } from './../models/User';
-import mongoose from 'mongoose';
-import { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcrypt';
+import Cookies from 'cookies';
+import { validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
-import CustomStatusError from '../utility/CustomStatusError';
-import authenticate from '../middleware/authenticate';
-import { body, validationResult } from 'express-validator';
-import runMiddleware from '../middleware/runMiddleware';
-import validateMiddleware from '../middleware/validateMiddleware';
+import { ExtendedRequest } from 'middleware/connect';
+import { PassportExtendedRequest } from 'middleware/passport';
+import { NextApiRequest, NextApiResponse } from 'next';
 import nodemailer from 'nodemailer';
 import nodemailerSendgrid from 'nodemailer-sendgrid';
-import { ExtendedRequest } from 'middleware/connect';
+import CustomStatusError from '../utility/CustomStatusError';
 
 let transport = nodemailer.createTransport(
     nodemailerSendgrid({ apiKey: process.env.SENDGRID_API_KEY })
 );
-
-type noteParamTypes = (
-    req: NextApiRequest,
-    res: NextApiResponse,
-    models: {
-        Note: mongoose.Model<INote, {}>;
-        User: mongoose.Model<IUser, {}>;
-    }
-) => Promise<void>;
 
 export const getAuthInfo = (req: ExtendedRequest, res: NextApiResponse) => {
     return res
