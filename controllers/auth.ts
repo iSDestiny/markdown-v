@@ -43,8 +43,11 @@ export const getAuthInfo = (req: ExtendedRequest, res: NextApiResponse) => {
         .json({ email: req.user.email, displayName: req.user.displayName });
 };
 
-export const postSignup: noteParamTypes = async (req, res, models) => {
-    const { User } = models;
+export const postSignup = async (
+    req: ExtendedRequest,
+    res: NextApiResponse
+) => {
+    const { User } = req.models;
     console.log(req.body);
     const { email, password }: { email: string; password: string } = req.body;
     const user = await User.findOne({ email: email.toLowerCase() });
@@ -56,7 +59,7 @@ export const postSignup: noteParamTypes = async (req, res, models) => {
         notes: []
     });
     await newUser.save();
-    return res.status(201).send('success');
+    res.status(201).end();
 };
 
 export const postLogin = async (req: ExtendedRequest, res: NextApiResponse) => {
@@ -82,8 +85,7 @@ export const postLogin = async (req: ExtendedRequest, res: NextApiResponse) => {
 export const postLogout = async (req: NextApiRequest, res: NextApiResponse) => {
     const cookies = new Cookies(req, res);
     cookies.set('ACCESS_TOKEN');
-    res.status(303).redirect('/login');
-    return res.end();
+    res.status(200).end();
 };
 
 export const putChangePassword: noteParamTypes = async (req, res, models) => {

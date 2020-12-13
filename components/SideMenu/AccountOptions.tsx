@@ -47,10 +47,6 @@ const AccountOptions = ({ anchorEl, setAnchorEl }: AccountOptionsProps) => {
                 open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
             >
-                {/* <ListItemText
-                    primary="Account"
-                    style={{ paddingLeft: '1rem' }}
-                /> */}
                 <h1 className={classes['account-heading']}>Account</h1>
                 <MenuItem onClick={accountInfoHandler}>
                     <AccountCircle
