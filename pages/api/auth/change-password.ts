@@ -1,31 +1,43 @@
-import connect, { handlerType } from '../../../middleware/connect';
-import CustomStatusError from '../../../utility/CustomStatusError';
-import { putChangePassword } from './../../../controllers/auth';
+import bcrypt from 'bcrypt';
+import { putChangePassword } from 'controllers/auth';
+import { ExtendedRequest, nextConnectDB } from 'middleware/connect';
+import { NextApiResponse } from 'next';
+import nc from 'next-connect';
+import authenticate from 'middleware/authenticate';
+import onError from 'utility/onError';
+import { body } from 'express-validator';
 
-const changePassword: handlerType = async (req, res, connection, models) => {
-    const { method } = req;
+const handler = nc<ExtendedRequest, NextApiResponse>({ onError });
 
-    try {
-        switch (method) {
-            case 'PUT':
-                console.log('in put change password');
-                return await putChangePassword(req, res, models);
-            default:
-                throw new CustomStatusError('Invalid http method', 405);
+handler.use(nextConnectDB);
+handler.use(authenticate);
+
+const validateMiddleware = [
+    body('current-password', 'Invalid Password').custom(
+        async (value, { req }) => {
+            const userPassword = req.user.password;
+            const didMatch = await bcrypt.compare(value, userPassword);
+            if (!didMatch) throw new Error('Provided password is incorrect');
+            return true;
         }
-    } catch (error) {
-        console.log(error);
-        if (!error.status) error.status = 500;
-        res.status(error.status).json({ message: error.message });
-    } finally {
-        connection.close();
-    }
-};
+    ),
+    body('confirm-password').custom((value, { req }) => {
+        if (value !== req.body['new-password'])
+            throw new Error('Passwords did not match!');
+        return true;
+    }),
+    body('new-password')
+        .isLength({ min: 5 })
+        .withMessage('Password must be at least 5 characters long')
+        .custom((value, { req }) => {
+            if (value === req.body['current-password'])
+                throw new Error(
+                    'New password cannot be the same as the current password!'
+                );
+            return true;
+        })
+];
 
-export default connect(changePassword);
+handler.put(...validateMiddleware, putChangePassword);
 
-export const config = {
-    api: {
-        externalResolver: true
-    }
-};
+export default handler;
