@@ -1,32 +1,27 @@
-import connect, { handlerType } from '../../../middleware/connect';
-import CustomStatusError from '../../../utility/CustomStatusError';
-import { postNewPassword } from './../../../controllers/auth';
+import { postNewPassword } from 'controllers/auth';
+import { ExtendedRequest, nextConnectDB } from 'middleware/connect';
+import { NextApiResponse } from 'next';
+import nc from 'next-connect';
+import onError from 'utility/onError';
+import { body } from 'express-validator';
 
-const newPassword: handlerType = async (req, res, connection, models) => {
-    const { method } = req;
+const handler = nc<ExtendedRequest, NextApiResponse>({ onError });
 
-    try {
-        switch (method) {
-            case 'POST':
-                console.log('in post new password');
-                return await postNewPassword(req, res, models);
-            default:
-                throw new CustomStatusError('Invalid http method', 405);
+handler.use(nextConnectDB);
+
+const validateMiddleware = [
+    body('password', 'Invalid password')
+        .isLength({ min: 5 })
+        .withMessage('Password must be at least 5 characters'),
+    body('confirm-password', 'Invalid confirm password').custom(
+        (value, { req }) => {
+            if (value !== req.body.password)
+                throw new Error('Passwords did not match!');
+            return true;
         }
-    } catch (error) {
-        console.log(error);
-        if (!error.status) error.status = 500;
-        console.log(error.message);
-        res.status(error.status).json({ message: error.message });
-    } finally {
-        connection.close();
-    }
-};
+    )
+];
 
-export default connect(newPassword);
+handler.post(...validateMiddleware, postNewPassword);
 
-export const config = {
-    api: {
-        externalResolver: true
-    }
-};
+export default handler;
