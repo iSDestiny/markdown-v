@@ -10,6 +10,8 @@ import PasswordField from '../../components/PasswordField';
 import { useRouter } from 'next/router';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { GetServerSideProps } from 'next';
+import isUnauthenticated from 'utility/isUnauthenticated';
 
 interface FormInput {
     password: string;
@@ -146,3 +148,7 @@ const ResetPasswordNew = () => {
 };
 
 export default ResetPasswordNew;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    return isUnauthenticated(ctx);
+};
