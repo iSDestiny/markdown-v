@@ -32,22 +32,35 @@ export const postSignup = async (
     const newUser = new User({
         email: email.toLowerCase(),
         password: encryptedPassword,
+        isConfirmed: false,
         notes: []
     });
     await newUser.save();
     res.status(201).end();
+    transport.sendMail({
+        to: email,
+        from: 'markdownvapp@gmail.com',
+        subject: 'Email Confirmation',
+        html: `
+            <h1>MarkdownV Email Confirmation</h1>
+            <p>Press this <a href="${process.env.CLIENT_ORIGIN}/confirmation/${newUser._id}" target="_blank">link</a> to verify
+            your email</p>
+        `
+    });
 };
 
 export const postLogin = async (req: ExtendedRequest, res: NextApiResponse) => {
     const { User } = req.models;
     const { email, password }: { email: string; password: string } = req.body;
     const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) throw new CustomStatusError('Invalid email or password', 403);
+    if (!user) throw new CustomStatusError('Invalid email or password', 401);
     if (!user.password)
-        throw new CustomStatusError('Invalid email or password', 403);
+        throw new CustomStatusError('Invalid email or password', 401);
     const didMatch = await bcrypt.compare(password, user.password);
     if (!didMatch)
-        throw new CustomStatusError('Invalid email or password', 403);
+        throw new CustomStatusError('Invalid email or password', 401);
+    if (!user.isConfirmed)
+        throw new CustomStatusError('Email has not been verified', 403);
     const token = jwt.sign(
         { email: user.email, userId: user._id },
         process.env.JWT_SECRET,
