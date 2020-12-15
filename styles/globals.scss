@@ -14,8 +14,11 @@ body {
 }
 
 a {
-    color: inherit;
+    color: $primary;
     text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 * {

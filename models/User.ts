@@ -19,6 +19,7 @@ export interface IUser extends mongoose.Document {
     displayName: string;
     googleId: string;
     githubId: string;
+    isConfirmed: boolean;
     addNote: (tags?: INote['tags'], favorite?: INote['favorite']) => any;
     getNotes: () => any;
     deleteNote: (id: any) => any;
@@ -38,8 +39,15 @@ const userSchema = new mongoose.Schema({
     },
     password: String,
     displayName: String,
-    googleId: String,
-    githubId: String,
+    googleId: {
+        type: String,
+        unique: true
+    },
+    githubId: {
+        type: String,
+        unique: true
+    },
+    isConfirmed: Boolean,
     notes: [
         {
             type: new mongoose.Schema(

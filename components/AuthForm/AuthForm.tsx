@@ -29,9 +29,13 @@ import { faGoogle, faGithub } from '@fortawesome/free-brands-svg-icons';
 interface AuthFormProps<T> {
     type: String;
     onSubmit: SubmitHandler<T>;
-    serverError: string;
+    serverError: {
+        type: 'verification' | 'invalidCredentials';
+        message: string;
+    };
     signupSuccess?: boolean;
     setSignupSuccess?: React.Dispatch<React.SetStateAction<boolean>>;
+    email?: string;
 }
 
 interface FormInputs {
@@ -49,8 +53,12 @@ export default function AuthForm<T>({
     onSubmit,
     serverError,
     signupSuccess = false,
-    setSignupSuccess
+    setSignupSuccess,
+    email
 }: AuthFormProps<T>) {
+    const [sentOpenType, setSendOpenType] = useState<'success' | 'failed' | ''>(
+        ''
+    );
     const { register, handleSubmit, errors, reset } = useForm<FormInputs>({
         resolver: yupResolver(schema)
     });
@@ -65,6 +73,21 @@ export default function AuthForm<T>({
     const onConfirmModal = () => {
         router.push('login');
     };
+
+    const sendEmail = async () => {
+        try {
+            await axios.post('api/auth/verification', { email });
+            setSendOpenType('success');
+        } catch ({ response }) {
+            setSendOpenType('failed');
+        }
+    };
+
+    const sendEmailLink = (
+        <a className={classes.email} onClick={sendEmail}>
+            here
+        </a>
+    );
 
     return (
         <>
@@ -89,7 +112,18 @@ export default function AuthForm<T>({
                                     marginTop: '0.5rem'
                                 }}
                             >
-                                {serverError}
+                                {serverError.type === 'invalidCredentials' ? (
+                                    serverError.message
+                                ) : (
+                                    <>
+                                        <span>
+                                            Your email has not been verified
+                                            yet, click
+                                        </span>
+                                        {sendEmailLink}
+                                        <span>to send again</span>
+                                    </>
+                                )}
                             </Typography>
                         )}
                         <form

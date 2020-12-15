@@ -11,7 +11,10 @@ type SignUpFormValues = {
 };
 
 export default function SignUp() {
-    const [serverError, setServerError] = useState('');
+    const [serverError, setServerError] = useState<{
+        type: 'verification' | 'invalidCredentials';
+        message: string;
+    }>();
     const [signupSuccess, setSignupSuccess] = useState(false);
     const signup: SubmitHandler<SignUpFormValues> = async (
         { email, password },
@@ -24,7 +27,7 @@ export default function SignUp() {
                 { email, password }
             );
             setSignupSuccess(true);
-            setServerError('');
+            setServerError(null);
         } catch ({
             response: {
                 data: { errors }
@@ -32,11 +35,15 @@ export default function SignUp() {
         }) {
             if (errors && errors.length > 0) {
                 console.log(errors);
-                setServerError(errors[0].msg);
+                setServerError({
+                    type: 'verification',
+                    message: errors[0].msg
+                });
             } else {
-                setServerError(
-                    'Something went wrong with the server, please try again'
-                );
+                setServerError({
+                    type: 'verification',
+                    message: 'Something went wrong please try again'
+                });
             }
             setSignupSuccess(false);
         }

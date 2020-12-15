@@ -6,8 +6,6 @@ import { SubmitHandler } from 'react-hook-form';
 import { fetchLogin } from '../utility/fetchAuth';
 import { GetServerSideProps } from 'next';
 import isUnauthenticated from '../utility/isUnauthenticated';
-// import { GetServerSideProps } from 'next';
-// import isUnauthenticated from '../utility/isUnauthenticated';
 
 type LoginFormValues = {
     email: string;
@@ -16,7 +14,10 @@ type LoginFormValues = {
 
 export default function Login() {
     const queryCache = useQueryCache();
-    const [serverError, setServerError] = useState('');
+    const [serverError, setServerError] = useState<{
+        type: 'verification' | 'invalidCredentials';
+        message: string;
+    }>();
 
     const login: SubmitHandler<LoginFormValues> = async (
         { email, password },
@@ -29,13 +30,15 @@ export default function Login() {
                 fetchLogin
             );
             Router.push('/');
-        } catch ({
-            response: {
-                data: { message }
-            }
-        }) {
-            console.log(message);
-            setServerError(message);
+        } catch ({ response }) {
+            const { status, data } = response;
+            if (status === 401)
+                setServerError({
+                    type: 'invalidCredentials',
+                    message: data.message
+                });
+            else if (status === 403)
+                setServerError({ type: 'verification', message: data.message });
             queryCache.setQueryData('isAuth', false);
         }
     };
