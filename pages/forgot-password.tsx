@@ -28,7 +28,14 @@ const schema = yup.object().shape({
 
 const forgotPassword = () => {
     const [isSuccessOpen, setIsSuccessOpen] = useState(false);
-    const { setError, clearErrors, handleSubmit, errors, register } = useForm({
+    const {
+        setError,
+        clearErrors,
+        handleSubmit,
+        errors,
+        reset,
+        register
+    } = useForm({
         resolver: yupResolver(schema)
     });
 
@@ -45,6 +52,7 @@ const forgotPassword = () => {
                 { email: email.toLowerCase() }
             );
             clearErrors();
+            reset();
             setIsSuccessOpen(true);
         } catch ({ response }) {
             const {
