@@ -56,7 +56,7 @@ export default function AuthForm<T>({
     setSignupSuccess,
     email
 }: AuthFormProps<T>) {
-    const [sentOpenType, setSendOpenType] = useState<'success' | 'failed' | ''>(
+    const [sentOpenType, setSentOpenType] = useState<'success' | 'failed' | ''>(
         ''
     );
     const { register, handleSubmit, errors, reset } = useForm<FormInputs>({
@@ -70,16 +70,21 @@ export default function AuthForm<T>({
         reset();
     };
 
+    const onCloseConfirmationModal = () => {
+        setSentOpenType('');
+        reset();
+    };
+
     const onConfirmModal = () => {
         router.push('login');
     };
 
     const sendEmail = async () => {
         try {
-            await axios.post('api/auth/verification', { email });
-            setSendOpenType('success');
+            await axios.post('api/auth/send-verification', { email });
+            setSentOpenType('success');
         } catch ({ response }) {
-            setSendOpenType('failed');
+            setSentOpenType('failed');
         }
     };
 
@@ -244,9 +249,48 @@ export default function AuthForm<T>({
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={onConfirmModal}
+                            onClick={() => onConfirmModal()}
                         >
                             Login
+                        </Button>
+                    </div>
+                </Fade>
+            </Modal>
+            <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={Boolean(sentOpenType)}
+                onClose={() => onCloseConfirmationModal()}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                    timeout: 500
+                }}
+            >
+                <Fade in={Boolean(sentOpenType)}>
+                    <div className={classes['modal-content']}>
+                        <h2
+                            id="transition-modal-title"
+                            className={classes.success}
+                        >
+                            {sentOpenType === 'success'
+                                ? 'Verification email sent'
+                                : 'Verification email failed to send'}
+                        </h2>
+                        <p id="transition-modal-description">
+                            {sentOpenType === 'success'
+                                ? `Verification email was sent to the appropriate email,
+                                please follow the instructions on the email to verify your account`
+                                : `Verification email failed to send, please try again, if it keeps
+                                failing then there is something wrong with the server or it is down`}
+                        </p>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => onCloseConfirmationModal()}
+                        >
+                            Close
                         </Button>
                     </div>
                 </Fade>

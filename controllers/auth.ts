@@ -173,3 +173,39 @@ export const oauthLogin = (
     cookies.set('ACCESS_TOKEN', token);
     res.status(303).redirect(`${process.env.CLIENT_ORIGIN}`);
 };
+
+export const sendVerification = async (
+    req: ExtendedRequest,
+    res: NextApiResponse
+) => {
+    console.log('in verification');
+    const { email } = req.body;
+    const { User } = req.models;
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) throw new CustomStatusError('Email does not exist!', 404);
+    res.status(200).end();
+    transport.sendMail({
+        to: email,
+        from: 'markdownvapp@gmail.com',
+        subject: 'Email Confirmation',
+        html: `
+            <h1>MarkdownV Email Confirmation</h1>
+            <p>Press this <a href="${process.env.CLIENT_ORIGIN}/confirmation/${user._id}" target="_blank">link</a> to verify
+            your email</p>
+        `
+    });
+};
+
+export const verifyEmail = async (
+    req: ExtendedRequest,
+    res: NextApiResponse
+) => {
+    console.log('in verify email');
+    const { id } = req.body;
+    const { User } = req.models;
+    const user = await User.findById(id);
+    if (!user) throw new CustomStatusError('User does not exist!', 404);
+    user.isConfirmed = true;
+    await user.save();
+    res.status(200).end();
+};

@@ -14,6 +14,7 @@ type LoginFormValues = {
 
 export default function Login() {
     const queryCache = useQueryCache();
+    const [email, setEmail] = useState('');
     const [serverError, setServerError] = useState<{
         type: 'verification' | 'invalidCredentials';
         message: string;
@@ -37,13 +38,22 @@ export default function Login() {
                     type: 'invalidCredentials',
                     message: data.message
                 });
-            else if (status === 403)
+            else if (status === 403) {
                 setServerError({ type: 'verification', message: data.message });
+                setEmail(email);
+            }
             queryCache.setQueryData('isAuth', false);
         }
     };
 
-    return <AuthForm type="login" onSubmit={login} serverError={serverError} />;
+    return (
+        <AuthForm
+            type="login"
+            onSubmit={login}
+            serverError={serverError}
+            email={email}
+        />
+    );
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
