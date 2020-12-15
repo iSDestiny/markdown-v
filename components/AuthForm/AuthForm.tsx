@@ -240,11 +240,14 @@ export default function AuthForm<T>({
                             id="transition-modal-title"
                             className={classes.success}
                         >
-                            Thanks! You have been successfully registered.
+                            One last step! Confirm your email address!
                         </h2>
                         <p id="transition-modal-description">
-                            You can now login with the information you provided
-                            in order to start using MarkdownV.
+                            In order to use markdownv we require users to verify
+                            their email in order to prevent people from using
+                            emails that they do not own. Please follow the
+                            instructions sent to your email to verify your email
+                            address.
                         </p>
                         <Button
                             variant="contained"

@@ -16,7 +16,7 @@ const Confirmation = ({ isConfirmed }: { isConfirmed: boolean }) => {
                         style={{ marginBottom: '1rem' }}
                     >
                         {isConfirmed
-                            ? 'Confirm Successful'
+                            ? 'Success!'
                             : 'Failed to confirm your email'}
                     </Typography>
                     <Typography variant="body1">
