@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import Router from 'next/router';
-import AuthForm from '../components/AuthForm';
-import { useQueryCache, useQuery } from 'react-query';
-import { SubmitHandler } from 'react-hook-form';
-import { fetchLogin } from '../utility/fetchAuth';
+import AuthForm from 'components/AuthForm';
 import { GetServerSideProps } from 'next';
-import isUnauthenticated from '../utility/isUnauthenticated';
+import Router from 'next/router';
+import { useState } from 'react';
+import { SubmitHandler } from 'react-hook-form';
+import { useQueryCache } from 'react-query';
+import { fetchLogin } from 'utility/fetchAuth';
+import isUnauthenticated from 'utility/isUnauthenticated';
 
 type LoginFormValues = {
     email: string;

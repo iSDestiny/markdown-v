@@ -8,13 +8,13 @@ import {
     Container
 } from '@material-ui/core';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import classes from '../styles/ForgotPassword.module.scss';
+import classes from 'styles/ForgotPassword.module.scss';
 import Link from 'next/link';
-import Copyright from '../components/Copyright';
+import Copyright from 'components/Copyright';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
-import InfoModal from '../components/InfoModal';
+import InfoModal from 'components/InfoModal';
 import isUnauthenticated from 'utility/isUnauthenticated';
 import { GetServerSideProps } from 'next';
 

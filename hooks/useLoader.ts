@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoader, selectEditor } from '../store/slices/editorSlice';
+import { setLoader, selectEditor } from 'store/slices/editorSlice';
 
 const useLoader = (name: string, isLoading: boolean) => {
     const dispatch = useDispatch();

@@ -6,11 +6,11 @@ import {
     setCurrent,
     setFilter,
     setIsGlobalSearchOpen
-} from '../../store/slices/editorSlice';
+} from 'store/slices/editorSlice';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import dynamic from 'next/dynamic';
-import mod from '../../utility/mod';
+import mod from 'utility/mod';
 const ScrollIntoViewIfNeeded = dynamic(
     () => import('react-scroll-into-view-if-needed'),
     {

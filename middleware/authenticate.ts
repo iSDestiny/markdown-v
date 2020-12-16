@@ -2,7 +2,7 @@ import { NextHandler } from 'next-connect';
 import { NextApiResponse } from 'next';
 import Cookies from 'cookies';
 import jwt from 'jsonwebtoken';
-import CustomStatusError from '../utility/CustomStatusError';
+import CustomStatusError from 'utility/CustomStatusError';
 import { ExtendedRequest } from './connect';
 
 const authenticate = async (

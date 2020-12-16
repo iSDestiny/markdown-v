@@ -1,6 +1,6 @@
 import { ExtendedRequest } from 'middleware/connect';
 import { NextApiResponse } from 'next';
-import CustomStatusError from '../utility/CustomStatusError';
+import CustomStatusError from 'utility/CustomStatusError';
 
 interface NoteRequestBodyI {
     _id: string;

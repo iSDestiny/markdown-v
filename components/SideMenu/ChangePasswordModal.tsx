@@ -8,12 +8,12 @@ import {
     DialogTitle
 } from '@material-ui/core';
 import { useState } from 'react';
-import { ErrorOption, SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import PasswordField from '../PasswordField';
 import classes from './SideMenu.module.scss';
 import SuccessModal from './SuccessModal';
-import addServerErrors from '../../utility/addServerErrors';
+import addServerErrors from 'utility/addServerErrors';
 
 interface FormInputs {
     ['current-password']: string;

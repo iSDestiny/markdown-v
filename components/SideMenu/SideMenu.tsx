@@ -23,7 +23,6 @@ const SideMenu = () => {
     const dispatch = useDispatch();
 
     const getAllUniqueTags = () => {
-        // const allTags = notes.reduce((prev, note) => )
         let allUniqueTags: string[] = [];
         nonFilteredNotes.forEach((note) => {
             const tags = note.tags.map(({ tag }) => tag);

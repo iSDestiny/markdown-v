@@ -8,7 +8,7 @@ import {
     modifyNote,
     setTags,
     toggleFavorite
-} from '../utility/noteMutations';
+} from 'utility/noteMutations';
 
 export const useMutateAddNote = () => {
     const router = useRouter();

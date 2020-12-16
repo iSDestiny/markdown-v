@@ -10,7 +10,7 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectEditor, setSort } from '../../store/slices/editorSlice';
+import { selectEditor, setSort } from 'store/slices/editorSlice';
 import classes from './NotesMenu.module.scss';
 import classNames from 'classnames';
 

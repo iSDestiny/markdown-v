@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 import CustomStatusError from '../utility/CustomStatusError';
-import bcrypt from 'bcrypt';
-import crypto from 'crypto';
 
 export interface INote extends mongoose.Document {
     _id: mongoose.Schema.Types.ObjectId;

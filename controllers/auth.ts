@@ -7,9 +7,8 @@ import { PassportExtendedRequest } from 'middleware/passport';
 import { NextApiRequest, NextApiResponse } from 'next';
 import nodemailer from 'nodemailer';
 import nodemailerSendgrid from 'nodemailer-sendgrid';
-import CustomStatusError from '../utility/CustomStatusError';
+import CustomStatusError from 'utility/CustomStatusError';
 import Email from 'email-templates';
-import path from 'path';
 
 const transport = nodemailer.createTransport(
     nodemailerSendgrid({ apiKey: process.env.SENDGRID_API_KEY })

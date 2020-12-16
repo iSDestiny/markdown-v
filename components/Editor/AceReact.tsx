@@ -13,10 +13,10 @@ import {
     selectEditor,
     setIsGlobalSearchOpen,
     setCurrent
-} from '../../store/slices/editorSlice';
-import useLoader from '../../hooks/useLoader';
+} from 'store/slices/editorSlice';
+import useLoader from 'hooks/useLoader';
 import { useEffect, useRef } from 'react';
-import mod from '../../utility/mod';
+import mod from 'utility/mod';
 
 interface AceProps {
     theme: string;

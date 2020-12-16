@@ -3,7 +3,7 @@ import ReactResizeDetector from 'react-resize-detector';
 import classes from './Editor.module.scss';
 import classNames from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectEditor, setNotesFromEdit } from '../../store/slices/editorSlice';
+import { selectEditor, setNotesFromEdit } from 'store/slices/editorSlice';
 
 const AceReact = dynamic(() => import('./AceReact'), {
     ssr: false

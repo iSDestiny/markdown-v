@@ -1,29 +1,29 @@
 import { LinearProgress } from '@material-ui/core';
 import Head from 'next/head';
 import Router from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { ReactQueryDevtools } from 'react-query-devtools';
 import { useDispatch, useSelector } from 'react-redux';
-import Editor from '../components/Editor';
-import LoadingScreen from '../components/LoadingScreen';
-import NotesMenu from '../components/NotesMenu';
-import Preview from '../components/Preview';
-import SideMenu from '../components/SideMenu';
-import TopMenu from '../components/TopMenu';
-import useLoader from '../hooks/useLoader';
+import Editor from 'components/Editor';
+import LoadingScreen from 'components/LoadingScreen';
+import NotesMenu from 'components/NotesMenu';
+import Preview from 'components/Preview';
+import SideMenu from 'components/SideMenu';
+import TopMenu from 'components/TopMenu';
+import useLoader from 'hooks/useLoader';
 import {
     selectEditor,
     setIsGlobalSearchOpen,
     setNotesFromOriginal,
     setNoteToSaved
-} from '../store/slices/editorSlice';
-import classes from '../styles/Home.module.scss';
-import { fetchAuthInfo } from '../utility/fetchAuth';
-import fetchNotes from '../utility/fetchNotes';
+} from 'store/slices/editorSlice';
+import classes from 'styles/Home.module.scss';
+import { fetchAuthInfo } from 'utility/fetchAuth';
+import fetchNotes from 'utility/fetchNotes';
 import classNames from 'classnames';
-import GlobalSearchBar from '../components/GlobalSearchBar';
-import { useMutateModifyNote } from '../hooks/noteMutationHooks';
+import GlobalSearchBar from 'components/GlobalSearchBar';
+import { useMutateModifyNote } from 'hooks/noteMutationHooks';
 
 export default function Notes() {
     const redirectOnFailedFetch = (err: any) => {
