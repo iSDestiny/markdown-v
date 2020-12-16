@@ -1,8 +1,5 @@
 body {
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: #1b1e2b;
     overflow: hidden;
     color: #eee;
@@ -18,20 +15,55 @@ body {
     margin: 0;
 }
 
+p {
+    color: #eee !important;
+}
+
+img {
+    margin: auto;
+    margin-bottom: 1rem;
+}
+
+a {
+    color: #7cbfaf !important;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #7cbfaf !important;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+h1 {
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.literal {
+    margin: 1rem 0;
+}
+
 .confirm-btn {
+    display: block;
+    margin: 1.7rem auto;
     background-color: #7cbfaf;
     border-radius: 7px;
     cursor: pointer;
-    font-size: 2rem;
+    text-align: center;
+    color: #eee !important;
+    font-size: 1.5rem;
     padding: 1rem;
+    width: 30%;
 }
 
 .paper {
-    margin: 1rem 0;
-    padding: 1rem;
+    width: 600px;
+    margin: 2rem auto;
+    border-radius: 5px;
+    padding: 2rem;
     background-color: #292d3e;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     text-align: start;
 }

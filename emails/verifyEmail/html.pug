@@ -4,7 +4,7 @@ html
       include style.css
     link(href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100&display=swap")
     link(href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap")
-  body
+  body(style={display: 'flex', width: '100%', ['justify-content']: 'center'})
     div(class="paper")
       h1 Welcome to MarkdownV!
       p.
@@ -12,7 +12,6 @@ html
         All you need to do is press the button below in order to verify your email address.
       a(class="confirm-btn" href=`${linkLiteral}`) Verify Email
       p If that doesn't work then please copy and paste the link below into your browser instead:
-      a(href=`${linkLiteral}`) #{linkLiteral}
+      div(class="literal")
+        a(href=`${linkLiteral}`) #{linkLiteral}
       p(class="help-msg") If you need help or have any questions just reply to this email.
-
-

@@ -8,10 +8,20 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import nodemailer from 'nodemailer';
 import nodemailerSendgrid from 'nodemailer-sendgrid';
 import CustomStatusError from '../utility/CustomStatusError';
+import Email from 'email-templates';
+import path from 'path';
 
-let transport = nodemailer.createTransport(
+const transport = nodemailer.createTransport(
     nodemailerSendgrid({ apiKey: process.env.SENDGRID_API_KEY })
 );
+
+const emailTemplate = new Email({
+    message: {
+        from: 'markdownvapp@gmail.com'
+    },
+    send: true,
+    transport
+});
 
 export const getAuthInfo = (req: ExtendedRequest, res: NextApiResponse) => {
     return res
@@ -37,16 +47,29 @@ export const postSignup = async (
     });
     await newUser.save();
     res.status(201).end();
-    transport.sendMail({
-        to: email,
-        from: 'markdownvapp@gmail.com',
-        subject: 'Email Confirmation',
-        html: `
-            <h1>MarkdownV Email Confirmation</h1>
-            <p>Press this <a href="${process.env.CLIENT_ORIGIN}/confirmation/${newUser._id}" target="_blank">link</a> to verify
-            your email</p>
-        `
-    });
+    // transport.sendMail({
+    //     to: email,
+    //     from: 'markdownvapp@gmail.com',
+    //     subject: 'Email Confirmation',
+    //     html: `
+    //         <h1>MarkdownV Email Confirmation</h1>
+    //         <p>Press this <a href="${process.env.CLIENT_ORIGIN}/confirmation/${newUser._id}" target="_blank">link</a> to verify
+    //         your email</p>
+    //     `
+    // });
+    try {
+        await emailTemplate.send({
+            template: 'verifyEmail',
+            message: {
+                to: email
+            },
+            locals: {
+                linkLiteral: `${process.env.CLIENT_ORIGIN}/confirmation/${newUser._id}`
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 export const postLogin = async (req: ExtendedRequest, res: NextApiResponse) => {
@@ -184,16 +207,29 @@ export const sendVerification = async (
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) throw new CustomStatusError('Email does not exist!', 404);
     res.status(200).end();
-    transport.sendMail({
-        to: email,
-        from: 'markdownvapp@gmail.com',
-        subject: 'Email Confirmation',
-        html: `
-            <h1>MarkdownV Email Confirmation</h1>
-            <p>Press this <a href="${process.env.CLIENT_ORIGIN}/confirmation/${user._id}" target="_blank">link</a> to verify
-            your email</p>
-        `
-    });
+    // transport.sendMail({
+    //     to: email,
+    //     from: 'markdownvapp@gmail.com',
+    //     subject: 'Email Confirmation',
+    //     html: `
+    //         <h1>MarkdownV Email Confirmation</h1>
+    //         <p>Press this <a href="${process.env.CLIENT_ORIGIN}/confirmation/${user._id}" target="_blank">link</a> to verify
+    //         your email</p>
+    //     `
+    // });
+    try {
+        await emailTemplate.send({
+            template: 'verifyEmail',
+            message: {
+                to: email
+            },
+            locals: {
+                linkLiteral: `${process.env.CLIENT_ORIGIN}/confirmation/${user._id}`
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 export const verifyEmail = async (
