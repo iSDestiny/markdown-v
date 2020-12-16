@@ -1,0 +1,20 @@
+html
+  head
+    style
+      include style.css
+    link(href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100&display=swap")
+    link(href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap")
+  body
+    div(class="paper")
+      h1 Password Reset
+      p.
+        We have received a password reset request for your MarkdownV account associated
+        with this email. In order to reset your password please click the button below.
+        Please note that you will only be able to reset your password with this link within
+        the next hour before it expires. If it does expire, please request another password
+        reset on the site.
+      a(class="confirm-btn" href=`${linkLiteral}`) Reset Password
+      p If that doesn't work then copy and paste the link below into your browser instead:
+      div(class="literal")
+        a(href=`${linkLiteral}`) #{linkLiteral}
+      p(class="help-msg") If you need help or have any questions just reply to this email.

@@ -42,7 +42,7 @@ const forgotPassword = () => {
     const modalHeading = 'Successfully sent password reset to provided email!';
     const modalDescription = `Please check your email and follow the instructions
     in order to reset your password. Be aware that the reset
-    will only be valid for 30 mins`;
+    will only be valid for 1 hour`;
 
     const onSubmit: SubmitHandler<FormInputs> = async ({ email }, event) => {
         try {

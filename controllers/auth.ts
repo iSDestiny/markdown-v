@@ -46,16 +46,6 @@ export const postSignup = async (
     });
     await newUser.save();
     res.status(201).end();
-    // transport.sendMail({
-    //     to: email,
-    //     from: 'markdownvapp@gmail.com',
-    //     subject: 'Email Confirmation',
-    //     html: `
-    //         <h1>MarkdownV Email Confirmation</h1>
-    //         <p>Press this <a href="${process.env.CLIENT_ORIGIN}/confirmation/${newUser._id}" target="_blank">link</a> to verify
-    //         your email</p>
-    //     `
-    // });
     try {
         await emailTemplate.send({
             template: 'verifyEmail',
@@ -126,25 +116,26 @@ export const postResetPassword = async (
     const token = jwt.sign(
         { email, userId: user._id },
         process.env.RESET_SECRET,
-        { expiresIn: '30m' }
+        { expiresIn: '1h' }
     );
-
-    transport.sendMail({
-        to: email,
-        from: 'markdownvapp@gmail.com',
-        subject: 'Password Reset',
-        html: `
-            <h1>MarkdownV Password Reset</h1>
-            <p>Greetings from MarkdownV! According to our records you have requested for a password reset.
-            Please click this <a href="${process.env.CLIENT_ORIGIN}/reset/${token}">link</a> to set up a
-            new password. This link is only valid for <strong>30 minutes</strong>, please reset your password
-            within this time.</p>
-        `
-    });
 
     res.status(200).json({
         message: 'password reset email was sent to the provided email'
     });
+
+    try {
+        await emailTemplate.send({
+            template: 'resetPassword',
+            message: {
+                to: email
+            },
+            locals: {
+                linkLiteral: `${process.env.CLIENT_ORIGIN}/reset/${token}`
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 export const postNewPassword = async (
