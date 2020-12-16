@@ -12,7 +12,6 @@ interface NoteRequestBodyI {
 
 export const getNotes = async (req: ExtendedRequest, res: NextApiResponse) => {
     const userNotes = await req.user.getNotes();
-    console.log(userNotes);
     res.status(200).json(userNotes);
 };
 
