@@ -72,7 +72,6 @@ export default function AuthForm<T>({
 
     const onCloseConfirmationModal = () => {
         setSentOpenType('');
-        reset();
     };
 
     const onConfirmModal = () => {
@@ -277,15 +276,17 @@ export default function AuthForm<T>({
                             id="transition-modal-title"
                             className={classes.success}
                         >
-                            {sentOpenType === 'success'
-                                ? 'Verification email sent'
-                                : 'Verification email failed to send'}
+                            {sentOpenType === 'success' &&
+                                'Verification email sent'}
+                            {sentOpenType === 'failed' &&
+                                'Verification email failed to send'}
                         </h2>
                         <p id="transition-modal-description">
-                            {sentOpenType === 'success'
-                                ? `Verification email was sent to the appropriate email,
-                                please follow the instructions on the email to verify your account`
-                                : `Verification email failed to send, please try again, if it keeps
+                            {sentOpenType === 'success' &&
+                                `Verification email was sent to the appropriate email,
+                                please follow the instructions on the email to verify your account`}
+                            {sentOpenType === 'failed' &&
+                                `Verification email failed to send, please try again, if it keeps
                                 failing then there is something wrong with the server or it is down`}
                         </p>
                         <Button

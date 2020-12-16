@@ -36,7 +36,8 @@ const googleCallback = async function (
             const newUser = new User({
                 email: profile.email.toLowerCase(),
                 googleId: profile.id,
-                displayName: profile.displayName
+                displayName: profile.displayName,
+                isConfirmed: true
             });
             await newUser.save();
             done(null, newUser);
@@ -67,7 +68,8 @@ const githubCallback = async function (
             const newUser = new User({
                 email: newEmail,
                 githubId: profile.id,
-                displayName: profile.displayName
+                displayName: profile.displayName,
+                isConfirmed: true
             });
             await newUser.save();
             done(null, newUser);
