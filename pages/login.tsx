@@ -30,7 +30,7 @@ export default function Login() {
                 ['isAuth', { email, password }],
                 fetchLogin
             );
-            Router.push('/');
+            Router.push('/app');
         } catch ({ response }) {
             const { status, data } = response;
             if (status === 401)
