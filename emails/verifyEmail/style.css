@@ -2,7 +2,6 @@ body {
     width: 100%;
     padding: 1rem;
     background-color: #1b1e2b;
-    overflow: hidden;
     color: #eee;
     scrollbar-width: thin;
     font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif, apple-system,
@@ -62,6 +61,7 @@ h1 {
 }
 
 .paper {
+    overflow-wrap: break-word;
     width: 600px;
     margin: 2rem auto;
     border-radius: 5px;
