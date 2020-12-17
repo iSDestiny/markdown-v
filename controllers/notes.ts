@@ -11,8 +11,6 @@ interface NoteRequestBodyI {
 }
 
 export const getNotes = async (req: ExtendedRequest, res: NextApiResponse) => {
-    // const userNotes = await req.user.getNotes();
-    // res.status(200).json(userNotes);
     const { Note } = req.models;
     const notes = await Note.find({ userId: req.user._id });
     res.status(200).json(notes);
@@ -21,7 +19,6 @@ export const getNotes = async (req: ExtendedRequest, res: NextApiResponse) => {
 export const postNotes = async (req: ExtendedRequest, res: NextApiResponse) => {
     const { favorite, tags }: { favorite: boolean; tags: Tag[] } = req.body;
     const { Note } = req.models;
-    // const note = await req.user.addNote(tags, favorite);
     let note = new Note({ favorite, tags, userId: req.user._id });
     note = await note.save();
     res.status(201).json({ message: 'Added note successfully', note });
@@ -33,7 +30,6 @@ export const deleteNote = async (
 ) => {
     const { id } = req.query;
     const { Note } = req.models;
-    // const deleted = await req.user.deleteNote(id);
     const deleted = await Note.findOneAndDelete({
         userId: req.user._id,
         _id: id
@@ -54,7 +50,6 @@ export const modifyNote = async (
 ) => {
     const { _id: id, content, title }: NoteRequestBodyI = req.body;
     const { Note } = req.models;
-    // const note = await req.user.modifyNote(id, content, title);
     let note = await Note.findOne({ _id: id, userId: req.user._id });
     if (!note)
         throw new CustomStatusError('Tried to modify a nonexistent note', 404);
@@ -74,7 +69,6 @@ export const toggleFavorite = async (
 ) => {
     const { id }: { id: string } = req.body;
     const { Note } = req.models;
-    // const note = await req.user.toggleFavorite(id);
     let note = await Note.findOne({ _id: id, userId: req.user.id });
     if (!note)
         throw new CustomStatusError('Tried to modify a nonexistent note', 404);
@@ -87,7 +81,6 @@ export const toggleFavorite = async (
 export const setTags = async (req: ExtendedRequest, res: NextApiResponse) => {
     const { _id: id, tags }: NoteRequestBodyI = req.body;
     const { Note } = req.models;
-    // const note = await req.user.setTags(id, tags);
     let note = await Note.findOne({ _id: id, userId: req.user.id });
     if (!note)
         throw new CustomStatusError('Tried to modify a nonexistent note', 404);
@@ -100,7 +93,6 @@ export const setTags = async (req: ExtendedRequest, res: NextApiResponse) => {
 export const addTag = async (req: ExtendedRequest, res: NextApiResponse) => {
     const { id, tag: newTag }: { id: string; tag: string } = req.body;
     const { Note } = req.models;
-    // const note = await req.user.addTag(id, tag);
     let note = await Note.findOne({ _id: id, userId: req.user.id });
     if (!note)
         throw new CustomStatusError('Tried to modify a nonexistent note', 404);
@@ -114,7 +106,6 @@ export const addTag = async (req: ExtendedRequest, res: NextApiResponse) => {
 export const deleteTag = async (req: ExtendedRequest, res: NextApiResponse) => {
     const { id, tag: toDelete }: { id: string; tag: string } = req.body;
     const { Note } = req.models;
-    // const note = await req.user.deleteTag(id, tag);
     let note = await Note.findOne({ _id: id, userId: req.user.id });
     if (!note)
         throw new CustomStatusError('Tried to modify a nonexistent note', 404);
