@@ -5,6 +5,8 @@ export interface INote extends mongoose.Document {
     content: string;
     createdAt: Date;
     updatedAt: Date;
+    tags: Tag[];
+    favorite: boolean;
     userId: mongoose.Schema.Types.ObjectId;
 }
 
@@ -20,9 +22,16 @@ const noteSchema = new mongoose.Schema(
             required: true,
             default: '# Untitled'
         },
+        tags: [{ tag: { type: String, required: true, unique: true } }],
+        favorite: {
+            type: Boolean,
+            default: false,
+            required: true
+        },
         userId: {
             type: mongoose.Schema.Types.ObjectId,
-            required: true
+            required: true,
+            ref: 'User'
         }
     },
     { timestamps: true }

@@ -18,6 +18,7 @@ export interface ExtendedRequest extends NextApiRequest {
     dbConnection: mongoose.Connection;
     models: {
         User: mongoose.Model<IUser, {}>;
+        Note: mongoose.Model<INote, {}>;
     };
     user: IUser;
 }
