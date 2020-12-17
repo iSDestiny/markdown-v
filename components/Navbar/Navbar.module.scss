@@ -1,0 +1,40 @@
+@use 'styles/theming/colors.scss' as *;
+
+.navbar {
+    a {
+        color: $text-2;
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    display: flex;
+    padding: 1rem;
+    justify-content: space-between;
+    align-items: center;
+
+    .logo {
+        cursor: pointer;
+        display: flex;
+        font-family: 'JetBrains Mono', monospace;
+        align-items: center;
+        span {
+            font-size: 1.5rem;
+            margin-left: 0.8rem;
+        }
+    }
+
+    .content {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        li {
+            margin: 0 1rem;
+            a {
+                &:hover {
+                    color: $primary;
+                }
+            }
+        }
+    }
+}

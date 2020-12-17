@@ -183,7 +183,7 @@ export const oauthLogin = (
     );
     const cookies = new Cookies(req, res);
     cookies.set('ACCESS_TOKEN', token);
-    res.status(303).redirect(`${process.env.CLIENT_ORIGIN}`);
+    res.status(303).redirect(`${process.env.CLIENT_ORIGIN}/app`);
 };
 
 export const sendVerification = async (
