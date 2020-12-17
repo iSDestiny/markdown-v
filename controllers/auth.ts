@@ -197,16 +197,6 @@ export const sendVerification = async (
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) throw new CustomStatusError('Email does not exist!', 404);
     res.status(200).end();
-    // transport.sendMail({
-    //     to: email,
-    //     from: 'markdownvapp@gmail.com',
-    //     subject: 'Email Confirmation',
-    //     html: `
-    //         <h1>MarkdownV Email Confirmation</h1>
-    //         <p>Press this <a href="${process.env.CLIENT_ORIGIN}/confirmation/${user._id}" target="_blank">link</a> to verify
-    //         your email</p>
-    //     `
-    // });
     try {
         await emailTemplate.send({
             template: 'verifyEmail',
