@@ -1,8 +1,9 @@
+import GitHubIcon from '@material-ui/icons/GitHub';
 import classes from './Navbar.module.scss';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Button } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
 import { useQuery } from 'react-query';
 import { fetchAuthInfo } from 'utility/fetchAuth';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -53,6 +54,18 @@ const Navbar = () => {
                     <>
                         {isError && (
                             <>
+                                <li style={{ marginRight: 5 }}>
+                                    <IconButton
+                                        onClick={() =>
+                                            window.open(
+                                                'https://github.com/iSDestiny/markdown-v'
+                                            )
+                                        }
+                                        size="medium"
+                                    >
+                                        <GitHubIcon />
+                                    </IconButton>
+                                </li>
                                 <li>
                                     <Link href="/login">Login</Link>
                                 </li>
@@ -62,15 +75,29 @@ const Navbar = () => {
                             </>
                         )}
                         {isSuccess && (
-                            <li>
-                                <Button
-                                    variant="outlined"
-                                    color="primary"
-                                    onClick={() => router.push('/app')}
-                                >
-                                    Launch App
-                                </Button>
-                            </li>
+                            <>
+                                <li style={{ marginRight: 0 }}>
+                                    <IconButton
+                                        onClick={() =>
+                                            window.open(
+                                                'https://github.com/iSDestiny/markdown-v'
+                                            )
+                                        }
+                                        size="medium"
+                                    >
+                                        <GitHubIcon />
+                                    </IconButton>
+                                </li>
+                                <li>
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        onClick={() => router.push('/app')}
+                                    >
+                                        Launch App
+                                    </Button>
+                                </li>
+                            </>
                         )}
                     </>
                 )}
