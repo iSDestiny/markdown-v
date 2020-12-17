@@ -3,27 +3,16 @@ export interface IUser extends mongoose.Document {
     email: string;
     password: string;
     displayName: string;
-    googleId: string;
-    githubId: string;
     isConfirmed: boolean;
     changePassword: (newPassword: string) => any;
 }
 
 const userSchema = new mongoose.Schema({
-    email: {
-        type: String,
-        unique: true
-    },
+    email: String,
     password: String,
+    githubId: String,
+    googleId: String,
     displayName: String,
-    googleId: {
-        type: String,
-        unique: true
-    },
-    githubId: {
-        type: String,
-        unique: true
-    },
     isConfirmed: Boolean
 });
 

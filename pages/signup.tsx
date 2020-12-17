@@ -36,12 +36,12 @@ export default function SignUp() {
             if (errors && errors.length > 0) {
                 console.log(errors);
                 setServerError({
-                    type: 'verification',
+                    type: 'invalidCredentials',
                     message: errors[0].msg
                 });
             } else {
                 setServerError({
-                    type: 'verification',
+                    type: 'invalidCredentials',
                     message: 'Something went wrong please try again'
                 });
             }

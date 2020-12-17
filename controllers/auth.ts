@@ -41,8 +41,7 @@ export const postSignup = async (
     const newUser = new User({
         email: email.toLowerCase(),
         password: encryptedPassword,
-        isConfirmed: false,
-        notes: []
+        isConfirmed: false
     });
     await newUser.save();
     res.status(201).end();

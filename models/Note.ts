@@ -22,7 +22,7 @@ const noteSchema = new mongoose.Schema(
             required: true,
             default: '# Untitled'
         },
-        tags: [{ tag: { type: String, required: true, unique: true } }],
+        tags: [{ tag: { type: String, required: true } }],
         favorite: {
             type: Boolean,
             default: false,
