@@ -56,7 +56,6 @@ export const modifyNote = async (
     note.content = content;
     note.title = title;
     note = await note.save();
-    console.log('modified!');
     res.status(200).json({
         message: `Modified note with id ${id} successfully`,
         note
@@ -74,7 +73,6 @@ export const toggleFavorite = async (
         throw new CustomStatusError('Tried to modify a nonexistent note', 404);
     note.favorite = !note.favorite;
     note = await note.save();
-    console.log('toggled favorite!');
     return res.status(200).json({ note });
 };
 
@@ -86,7 +84,6 @@ export const setTags = async (req: ExtendedRequest, res: NextApiResponse) => {
         throw new CustomStatusError('Tried to modify a nonexistent note', 404);
     note.tags = tags;
     note = await note.save();
-    console.log('set tags!');
     return res.status(200).json({ note });
 };
 
@@ -111,6 +108,5 @@ export const deleteTag = async (req: ExtendedRequest, res: NextApiResponse) => {
         throw new CustomStatusError('Tried to modify a nonexistent note', 404);
     note.tags = note.tags.filter(({ tag }) => tag !== toDelete);
     note = await note.save();
-    console.log('deleted tag!');
     res.status(200).json({ note });
 };

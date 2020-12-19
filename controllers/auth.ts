@@ -96,7 +96,6 @@ export const putChangePassword = async (
         'new-password': newPassword
     }: { 'new-password': string } = req.body;
     const errors = validationResult(req);
-    console.log(errors);
     if (!errors.isEmpty())
         return res.status(422).json({ errors: errors.array() });
     const encryptedPassword = await bcrypt.hash(newPassword, 12);
@@ -174,7 +173,6 @@ export const oauthLogin = (
     req: PassportExtendedRequest,
     res: NextApiResponse
 ) => {
-    console.log('in oauth');
     if (!req.user) throw new CustomStatusError('Invalid User', 401);
     const token = jwt.sign(
         { email: req.user.email, userId: req.user._id },
@@ -190,7 +188,6 @@ export const sendVerification = async (
     req: ExtendedRequest,
     res: NextApiResponse
 ) => {
-    console.log('in verification');
     const { email } = req.body;
     const { User } = req.models;
     const user = await User.findOne({ email: email.toLowerCase() });
@@ -215,7 +212,6 @@ export const verifyEmail = async (
     req: ExtendedRequest,
     res: NextApiResponse
 ) => {
-    console.log('in verify email');
     const { id } = req.body;
     const { User } = req.models;
     const user = await User.findById(id);
