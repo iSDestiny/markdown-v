@@ -33,6 +33,7 @@
 
     div {
         display: flex;
+        align-items: center;
         padding-right: 1rem;
         overflow: hidden;
         white-space: nowrap;
@@ -84,6 +85,9 @@
 .account-modal-body {
     display: flex;
     flex-direction: column;
+    p {
+        margin-bottom: 1rem;
+    }
 }
 
 .account-info-item {
