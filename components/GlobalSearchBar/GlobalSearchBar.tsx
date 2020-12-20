@@ -5,7 +5,8 @@ import {
     selectEditor,
     setCurrent,
     setFilter,
-    setIsGlobalSearchOpen
+    setIsGlobalSearchOpen,
+    setSearchQuery as setLocalSearchQuery
 } from 'store/slices/editorSlice';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
@@ -42,8 +43,10 @@ const GlobalSearchBar = () => {
 
     const onSelectNote = (id: string) => {
         if (id) dispatch(setCurrent({ current: id }));
-        if (!notes.find((note) => note._id === id))
+        if (!notes.find((note) => note._id === id)) {
+            dispatch(setLocalSearchQuery({ query: '' }));
             dispatch(setFilter({ type: 'nonTag', newFilter: 'All Notes' }));
+        }
         dispatch(setIsGlobalSearchOpen({ open: false }));
         setSearchQuery('');
     };

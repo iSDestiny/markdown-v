@@ -97,7 +97,7 @@ const EditTagsMenu = ({ anchorEl, setAnchorEl }: EditTagsMenuProps) => {
         event
     ) => {
         event.preventDefault();
-        await mutateAddTag({ id: current, tag });
+        await mutateAddTag({ id: current, tag: tag.trim() });
         reset();
     };
 
