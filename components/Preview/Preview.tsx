@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core';
 import { InlineMath, BlockMath } from 'react-katex';
 import math from 'remark-math';
+import Image from 'next/image';
 
 const ResizePanel: any = dynamic(() => import('react-resize-panel'), {
     ssr: false
@@ -32,6 +33,12 @@ interface MarkdownRenderProps {
     children?: ReactNode;
 }
 
+interface MarkdownImage {
+    alt?: string;
+    src?: string;
+    title?: string;
+}
+
 const Preview = ({ isResizable }: PreviewProps) => {
     const { notes, current } = useSelector(selectEditor);
 
@@ -41,6 +48,14 @@ const Preview = ({ isResizable }: PreviewProps) => {
             <InlineMath math={value} />
         ),
         math: ({ value }: MarkdownRenderProps) => <BlockMath math={value} />,
+        image: ({ alt, src, title }: MarkdownImage) => (
+            <img
+                src={src}
+                alt={alt}
+                title={title}
+                style={{ maxWidth: '100%' }}
+            />
+        ),
         table: ({ children }: MarkdownRenderProps) => (
             <TableContainer classes={{ root: classes['table-root'] }}>
                 <Table size="small" aria-label="a dense table">
