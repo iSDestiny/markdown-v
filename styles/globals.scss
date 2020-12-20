@@ -3,7 +3,7 @@
 html,
 body {
     background-color: $bg-dark-3;
-    overflow: hidden;
+    overflow: auto;
     color: $text-2;
     padding: 0;
     margin: 0;
@@ -23,6 +23,8 @@ a {
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 ::-webkit-scrollbar {

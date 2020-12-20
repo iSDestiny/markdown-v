@@ -1,0 +1,111 @@
+@use 'styles/theming/colors.scss' as *;
+
+.container {
+    overflow: auto;
+}
+
+.video {
+    box-shadow: 3px 5px 5px $bg-dark-4;
+    width: 600px;
+    height: 400px;
+    margin: auto;
+    background-color: $bg-dark-4;
+    border-radius: 10px;
+}
+
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+    button {
+        width: 250px;
+        padding: 0.7rem;
+        margin-bottom: 0.7rem;
+    }
+    a {
+        text-decoration: underline;
+    }
+}
+
+.showcase {
+    padding-bottom: 4rem;
+}
+
+.header {
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+
+    .brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        h1 {
+            font-weight: 100;
+            font-size: 3rem;
+            margin-left: 1rem;
+        }
+    }
+
+    p {
+        margin-top: 9px;
+        font-size: 1.2rem;
+        color: $primary;
+    }
+}
+
+.player-wrapper {
+    position: relative;
+    margin: auto;
+    padding-top: 56.25%; /* Player ratio: 100 / (1280 / 720) */
+}
+
+.react-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 10px;
+    video {
+        border-radius: 10px;
+    }
+}
+
+.features {
+    background-color: $bg-dark-1;
+    padding: 6rem 0;
+}
+
+.feature {
+    margin-bottom: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .info {
+        max-width: 600px;
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            font-size: 1.5rem;
+        }
+    }
+    .left {
+        padding-right: 8rem;
+    }
+    .right {
+        padding-left: 8rem;
+    }
+}
+
+.footer {
+    padding: 2rem;
+}
