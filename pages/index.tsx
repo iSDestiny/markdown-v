@@ -152,7 +152,10 @@ const LandingPage = () => {
                                     searching algorithm. You can search while
                                     respecting current filters or globally just
                                     like in vscode by using Ctrl-P to bring up
-                                    the global search menu
+                                    the global search menu. When you are
+                                    searching the text in the results will be
+                                    highlighted appropriately to reflect the
+                                    current query
                                 </p>
                             </div>
                             <Image
@@ -225,6 +228,31 @@ const LandingPage = () => {
                                     for it to appear in the favorites tab
                                 </p>
                             </div>
+                        </div>
+                        <div className={classes.feature}>
+                            <div
+                                className={classNames(
+                                    classes.info,
+                                    classes.left
+                                )}
+                            >
+                                <h1>Full Screen Mode</h1>
+                                <p>
+                                    You can hide the side menus by utilizing
+                                    full screen mode. During this mode only your
+                                    editor, top menu, and preview screen (if
+                                    enabled) will be shown. To navigate to other
+                                    notes in fullscreen mode, the global search
+                                    functionality (Ctrl+P) will be very useful
+                                    here
+                                </p>
+                            </div>
+                            <Image
+                                width={650}
+                                height={350}
+                                src="/markdown-based-img.png"
+                                alt="Markdown based showcase"
+                            />
                         </div>
                     </Container>
                 </section>

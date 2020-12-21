@@ -80,7 +80,7 @@ const ChangePasswordModal = ({ isOpen, setIsOpen }) => {
                 open={isOpen}
                 onClose={() => setIsOpen(false)}
                 aria-labelledby="form-dialog-title"
-                aria-labeledby="form-dialog-content"
+                aria-describedby="form-dialog-content"
                 classes={{ paper: classes['password-modal-paper'] }}
             >
                 <DialogTitle id="form-dialog-title">
