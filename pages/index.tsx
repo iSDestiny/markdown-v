@@ -61,6 +61,7 @@ const LandingPage = () => {
                 </section>
                 <section id="features" className={classes.features}>
                     <Container maxWidth="lg">
+                        <h1 className={classes['section-heading']}>Features</h1>
                         <div className={classes.feature}>
                             <div
                                 className={classNames(
@@ -160,6 +161,70 @@ const LandingPage = () => {
                                 src="/markdown-based-img.png"
                                 alt="Markdown based showcase"
                             />
+                        </div>
+                        <div className={classes.feature}>
+                            <Image
+                                width={650}
+                                height={350}
+                                src="/markdown-based-img.png"
+                                alt="Markdown based showcase"
+                            />
+                            <div
+                                className={classNames(
+                                    classes.info,
+                                    classes.right
+                                )}
+                            >
+                                <h1>Preview Mode</h1>
+                                <p>
+                                    MarkdownV lets you preview your markdown
+                                    while you are writing it with the use of a
+                                    split window that is adjustable
+                                </p>
+                            </div>
+                        </div>
+                        <div className={classes.feature}>
+                            <div
+                                className={classNames(
+                                    classes.info,
+                                    classes.left
+                                )}
+                            >
+                                <h1>Sorting</h1>
+                                <p>
+                                    MarkdownV allows you to sort your notes
+                                    ascending or descending by title, date
+                                    created, and date updated
+                                </p>
+                            </div>
+                            <Image
+                                width={650}
+                                height={350}
+                                src="/markdown-based-img.png"
+                                alt="Markdown based showcase"
+                            />
+                        </div>
+                        <div className={classes.feature}>
+                            <Image
+                                width={650}
+                                height={350}
+                                src="/markdown-based-img.png"
+                                alt="Markdown based showcase"
+                            />
+                            <div
+                                className={classNames(
+                                    classes.info,
+                                    classes.right
+                                )}
+                            >
+                                <h1>Tagging and Favorites</h1>
+                                <p>
+                                    MarkdownV allows you to organize your notes
+                                    with the use of case insensitive tags. You
+                                    can also star your favorite notes in order
+                                    for it to appear in the favorites tab
+                                </p>
+                            </div>
                         </div>
                     </Container>
                 </section>

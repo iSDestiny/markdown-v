@@ -10,6 +10,7 @@
 
     display: flex;
     padding: 1rem;
+    margin-bottom: 3rem;
     justify-content: space-between;
     align-items: center;
 
@@ -24,7 +25,7 @@
         }
     }
 
-    .content {
+    .right {
         list-style: none;
         display: flex;
         align-items: center;
@@ -33,6 +34,23 @@
             a {
                 &:hover {
                     color: $primary;
+                }
+            }
+        }
+    }
+
+    .left {
+        display: flex;
+        align-items: center;
+        .content {
+            margin-left: 2.5rem;
+            display: flex;
+            list-style: none;
+            a {
+                &:hover {
+                    color: $primary;
+                    padding-bottom: 0.5rem;
+                    border-bottom: 3px solid $primary;
                 }
             }
         }

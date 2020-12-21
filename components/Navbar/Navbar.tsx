@@ -22,16 +22,23 @@ const Navbar = () => {
     return (
         <Container maxWidth="lg">
             <nav id="navbar" className={classes.navbar}>
-                <a href="/" className={classes.logo}>
-                    <Image
-                        src="/markdownv.svg"
-                        alt="MarkdownV logo"
-                        width={50}
-                        height={50}
-                    />
-                    <span>MarkdownV</span>
-                </a>
-                <ul className={classes.content}>
+                <div className={classes.left}>
+                    <a href="#" className={classes.logo}>
+                        <Image
+                            src="/markdownv.svg"
+                            alt="MarkdownV logo"
+                            width={50}
+                            height={50}
+                        />
+                        <span>MarkdownV</span>
+                    </a>
+                    <ul className={classes.content}>
+                        <li>
+                            <a href="#features">Features</a>
+                        </li>
+                    </ul>
+                </div>
+                <ul className={classes.right}>
                     {isLoading ? (
                         <>
                             <li>

@@ -2,6 +2,7 @@
 
 html,
 body {
+    scroll-behavior: smooth;
     background-color: $bg-dark-3;
     overflow: auto;
     color: $text-2;
