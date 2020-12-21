@@ -1,16 +1,12 @@
 @use 'styles/theming/colors.scss' as *;
 
+$sm: 600px;
+$md: 960px;
+$lg: 1280px;
+$xl: 1920px;
+
 .container {
     overflow: auto;
-}
-
-.video {
-    box-shadow: 3px 5px 5px $bg-dark-4;
-    width: 600px;
-    height: 400px;
-    margin: auto;
-    background-color: $bg-dark-4;
-    border-radius: 10px;
 }
 
 .auth-container {
@@ -74,36 +70,65 @@
     left: 0;
     border-radius: 10px;
     video {
+        box-shadow: 5px 5px 5px $bg-dark-4;
         border-radius: 10px;
+    }
+}
+
+.feature-video {
+    border-radius: 10px;
+    video {
+        border-radius: 10px;
+    }
+}
+
+.feature-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem 3rem;
+    grid-auto-flow: dense;
+    div:nth-child(4n + 1) {
+        grid-column: 2;
+    }
+
+    @media (max-width: $sm) {
+        grid-template-columns: 1fr;
+        gap: 1rem 1rem;
+        .feature-video-wrapper {
+            margin-bottom: 3rem;
+        }
+        div {
+            grid-column: 1 !important;
+        }
+    }
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 600px;
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+    p {
+        font-size: 1.5rem;
+    }
+
+    @media (max-width: $md) {
+        h1 {
+            font-size: 1.5rem;
+        }
+        p {
+            font-size: 1rem;
+        }
     }
 }
 
 .features {
     background-color: $bg-dark-1;
     padding: 2rem 0;
-}
-
-.feature {
-    margin-bottom: 4rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .info {
-        max-width: 600px;
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-        p {
-            font-size: 1.5rem;
-        }
-    }
-    .left {
-        padding-right: 8rem;
-    }
-    .right {
-        padding-left: 8rem;
-    }
 }
 
 .footer {

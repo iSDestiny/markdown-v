@@ -60,198 +60,170 @@ const LandingPage = () => {
                     </Container>
                 </section>
                 <section id="features" className={classes.features}>
-                    <Container maxWidth="lg">
-                        <h1 className={classes['section-heading']}>Features</h1>
-                        <div className={classes.feature}>
-                            <div
-                                className={classNames(
-                                    classes.info,
-                                    classes.left
-                                )}
-                            >
-                                <h1>Markdown-Based</h1>
-                                <p>
-                                    <a
-                                        href="https://github.github.com/gfm/"
-                                        target="_blank"
-                                    >
-                                        Github flavored markdown
-                                    </a>{' '}
-                                    is the format that notes are written in. You
-                                    can also write math with{' '}
-                                    <a
-                                        href="https://katex.org/"
-                                        target="_blank"
-                                    >
-                                        Katex
-                                    </a>{' '}
-                                    expressions.
-                                </p>
-                            </div>
-                            <Image
-                                width={650}
-                                height={350}
-                                src="/markdown-based-img.png"
-                                alt="Markdown based showcase"
+                    <h1 className={classes['section-heading']}>Features</h1>
+                    <Container
+                        maxWidth="lg"
+                        classes={{ root: classes['feature-grid'] }}
+                    >
+                        <div className={classNames(classes.info, classes.left)}>
+                            <h1>Markdown-Based</h1>
+                            <p>
+                                <a
+                                    href="https://github.github.com/gfm/"
+                                    target="_blank"
+                                >
+                                    Github flavored markdown
+                                </a>{' '}
+                                is the format that notes are written in. You can
+                                also write math with{' '}
+                                <a href="https://katex.org/" target="_blank">
+                                    Katex
+                                </a>{' '}
+                                expressions.
+                            </p>
+                        </div>
+                        <div className={classes['feature-video-wrapper']}>
+                            <ReactPlayer
+                                className={classes['feature-video']}
+                                url="/showcase.mkv"
+                                controls={true}
+                                width="100%"
+                                height="100%"
                             />
                         </div>
-                        <div className={classes.feature}>
-                            <Image
-                                width={650}
-                                height={350}
-                                src="/markdown-based-img.png"
-                                alt="Markdown based showcase"
-                            />
-                            <div
-                                className={classNames(
-                                    classes.info,
-                                    classes.right
-                                )}
-                            >
-                                <h1>Vim and VSCode Keybindings</h1>
-                                <p>
-                                    MarkdownV has two editor modes,{' '}
-                                    <a
-                                        href="https://www.vim.org/docs.php"
-                                        target="_blank"
-                                    >
-                                        Vim
-                                    </a>{' '}
-                                    and{' '}
-                                    <a
-                                        href="https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf"
-                                        target="_blank"
-                                    >
-                                        VSCode
-                                    </a>
-                                    . Please note that there are some
-                                    restrictions since MarkdownV is web-based
-                                    and not actually a full fledged code editor
-                                    like the real vim and vscode. MarkdownV is
-                                    using{' '}
-                                    <a
-                                        href="https://ace.c9.io/"
-                                        target="_blank"
-                                    >
-                                        Ace Editor
-                                    </a>{' '}
-                                    under the hood
-                                </p>
-                            </div>
+                        <div
+                            className={classNames(classes.info, classes.right)}
+                        >
+                            <h1>Vim and VSCode Keybindings</h1>
+                            <p>
+                                MarkdownV has two editor modes,{' '}
+                                <a
+                                    href="https://www.vim.org/docs.php"
+                                    target="_blank"
+                                >
+                                    Vim
+                                </a>{' '}
+                                and{' '}
+                                <a
+                                    href="https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf"
+                                    target="_blank"
+                                >
+                                    VSCode
+                                </a>
+                                . Please note that there are some restrictions
+                                since MarkdownV is web-based and not actually a
+                                full fledged code editor like the real vim and
+                                vscode. MarkdownV is using{' '}
+                                <a href="https://ace.c9.io/" target="_blank">
+                                    Ace Editor
+                                </a>{' '}
+                                under the hood
+                            </p>
                         </div>
-                        <div className={classes.feature}>
-                            <div
-                                className={classNames(
-                                    classes.info,
-                                    classes.left
-                                )}
-                            >
-                                <h1>Fuzzy Searching</h1>
-                                <p>
-                                    MarkdownV uses fuzzy search for it's
-                                    searching algorithm. You can search while
-                                    respecting current filters or globally just
-                                    like in vscode by using Ctrl-P to bring up
-                                    the global search menu. When you are
-                                    searching the text in the results will be
-                                    highlighted appropriately to reflect the
-                                    current query
-                                </p>
-                            </div>
-                            <Image
-                                width={650}
-                                height={350}
-                                src="/markdown-based-img.png"
-                                alt="Markdown based showcase"
+                        <div className={classes['feature-video-wrapper']}>
+                            <ReactPlayer
+                                className={classes['feature-video']}
+                                url="/showcase.mkv"
+                                controls={true}
+                                width="100%"
+                                height="100%"
                             />
                         </div>
-                        <div className={classes.feature}>
-                            <Image
-                                width={650}
-                                height={350}
-                                src="/markdown-based-img.png"
-                                alt="Markdown based showcase"
-                            />
-                            <div
-                                className={classNames(
-                                    classes.info,
-                                    classes.right
-                                )}
-                            >
-                                <h1>Preview Mode</h1>
-                                <p>
-                                    MarkdownV lets you preview your markdown
-                                    while you are writing it with the use of a
-                                    split window that is adjustable
-                                </p>
-                            </div>
+                        <div className={classNames(classes.info, classes.left)}>
+                            <h1>Fuzzy Searching</h1>
+                            <p>
+                                MarkdownV uses fuzzy search for it's searching
+                                algorithm. You can search while respecting
+                                current filters or globally just like in vscode
+                                by using Ctrl-P to bring up the global search
+                                menu. When you are searching the text in the
+                                results will be highlighted appropriately to
+                                reflect the current query
+                            </p>
                         </div>
-                        <div className={classes.feature}>
-                            <div
-                                className={classNames(
-                                    classes.info,
-                                    classes.left
-                                )}
-                            >
-                                <h1>Sorting</h1>
-                                <p>
-                                    MarkdownV allows you to sort your notes
-                                    ascending or descending by title, date
-                                    created, and date updated
-                                </p>
-                            </div>
-                            <Image
-                                width={650}
-                                height={350}
-                                src="/markdown-based-img.png"
-                                alt="Markdown based showcase"
+                        <div className={classes['feature-video-wrapper']}>
+                            <ReactPlayer
+                                className={classes['feature-video']}
+                                url="/showcase.mkv"
+                                controls={true}
+                                width="100%"
+                                height="100%"
                             />
                         </div>
-                        <div className={classes.feature}>
-                            <Image
-                                width={650}
-                                height={350}
-                                src="/markdown-based-img.png"
-                                alt="Markdown based showcase"
-                            />
-                            <div
-                                className={classNames(
-                                    classes.info,
-                                    classes.right
-                                )}
-                            >
-                                <h1>Tagging and Favorites</h1>
-                                <p>
-                                    MarkdownV allows you to organize your notes
-                                    with the use of case insensitive tags. You
-                                    can also star your favorite notes in order
-                                    for it to appear in the favorites tab
-                                </p>
-                            </div>
+                        <div
+                            className={classNames(classes.info, classes.right)}
+                        >
+                            <h1>Preview Mode</h1>
+                            <p>
+                                MarkdownV lets you preview your markdown while
+                                you are writing it with the use of a split
+                                window that is adjustable
+                            </p>
                         </div>
-                        <div className={classes.feature}>
-                            <div
-                                className={classNames(
-                                    classes.info,
-                                    classes.left
-                                )}
-                            >
-                                <h1>Full Screen Mode</h1>
-                                <p>
-                                    You can hide the side menus by utilizing
-                                    full screen mode. During this mode only your
-                                    editor, top menu, and preview screen (if
-                                    enabled) will be shown. To navigate to other
-                                    notes in fullscreen mode, the global search
-                                    functionality (Ctrl+P) will be very useful
-                                    here
-                                </p>
-                            </div>
-                            <Image
-                                width={650}
-                                height={350}
-                                src="/markdown-based-img.png"
-                                alt="Markdown based showcase"
+                        <div className={classes['feature-video-wrapper']}>
+                            <ReactPlayer
+                                className={classes['feature-video']}
+                                url="/showcase.mkv"
+                                controls={true}
+                                width="100%"
+                                height="100%"
+                            />
+                        </div>
+                        <div className={classNames(classes.info, classes.left)}>
+                            <h1>Sorting</h1>
+                            <p>
+                                MarkdownV allows you to sort your notes
+                                ascending or descending by title, date created,
+                                and date updated
+                            </p>
+                        </div>
+                        <div className={classes['feature-video-wrapper']}>
+                            <ReactPlayer
+                                className={classes['feature-video']}
+                                url="/showcase.mkv"
+                                controls={true}
+                                width="100%"
+                                height="100%"
+                            />
+                        </div>
+                        <div
+                            className={classNames(classes.info, classes.right)}
+                        >
+                            <h1>Tagging and Favorites</h1>
+                            <p>
+                                MarkdownV allows you to organize your notes with
+                                the use of case insensitive tags. You can also
+                                star your favorite notes in order for it to
+                                appear in the favorites tab
+                            </p>
+                        </div>
+                        <div className={classes['feature-video-wrapper']}>
+                            <ReactPlayer
+                                className={classes['feature-video']}
+                                url="/showcase.mkv"
+                                controls={true}
+                                width="100%"
+                                height="100%"
+                            />
+                        </div>
+                        <div className={classNames(classes.info, classes.left)}>
+                            <h1>Full Screen Mode</h1>
+                            <p>
+                                You can hide the side menus by utilizing full
+                                screen mode. During this mode only your editor,
+                                top menu, and preview screen (if enabled) will
+                                be shown. To navigate to other notes in
+                                fullscreen mode, the global search functionality
+                                (Ctrl+P) will be very useful here
+                            </p>
+                        </div>
+                        <div className={classes['feature-video-wrapper']}>
+                            <ReactPlayer
+                                className={classes['feature-video']}
+                                url="/showcase.mkv"
+                                controls={true}
+                                width="100%"
+                                height="100%"
                             />
                         </div>
                     </Container>
