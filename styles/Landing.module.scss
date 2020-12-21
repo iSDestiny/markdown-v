@@ -48,6 +48,9 @@ $xl: 1920px;
             font-weight: 100;
             font-size: 3rem;
             margin-left: 1rem;
+            @media (max-width: $sm) {
+                font-size: 2rem;
+            }
         }
     }
 
@@ -55,6 +58,9 @@ $xl: 1920px;
         margin-top: 9px;
         font-size: 1.2rem;
         color: $primary;
+        @media (max-width: $sm) {
+            font-size: 1rem;
+        }
     }
 }
 
@@ -89,6 +95,10 @@ $xl: 1920px;
     grid-auto-flow: dense;
     div:nth-child(4n + 1) {
         grid-column: 2;
+    }
+
+    @media (max-width: $md) {
+        gap: 3rem 1.5rem;
     }
 
     @media (max-width: $sm) {
@@ -139,4 +149,8 @@ $xl: 1920px;
     font-size: 3rem;
     text-align: center;
     margin-bottom: 3rem;
+
+    @media (max-width: $md) {
+        font-size: 2rem;
+    }
 }
