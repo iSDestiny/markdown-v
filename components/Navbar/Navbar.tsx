@@ -3,16 +3,7 @@ import classes from './Navbar.module.scss';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import {
-    Button,
-    Container,
-    Drawer,
-    IconButton,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText
-} from '@material-ui/core';
+import { Button, Container, IconButton } from '@material-ui/core';
 import { useQuery } from 'react-query';
 import { fetchAuthInfo } from 'utility/fetchAuth';
 import Skeleton from '@material-ui/lab/Skeleton';
