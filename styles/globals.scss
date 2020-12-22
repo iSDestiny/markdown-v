@@ -4,7 +4,8 @@ html,
 body {
     scroll-behavior: smooth;
     background-color: $bg-dark-3;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
     color: $text-2;
     padding: 0;
     margin: 0;
