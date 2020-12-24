@@ -11,14 +11,17 @@ import MenuIcon from '@material-ui/icons/Menu';
 import CloseIcon from '@material-ui/icons/Close';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link as JumpLink, scroller as scroll } from 'react-scroll';
 
 const Navbar = () => {
     const router = useRouter();
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('xs'));
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(true);
+    const menuRef = useRef<HTMLDivElement>();
+    const buttonRef = useRef<HTMLButtonElement>();
+    const navRef = useRef<HTMLElement>();
     const { isLoading, isError, isSuccess } = useQuery(
         'authInfo',
         fetchAuthInfo,
@@ -31,14 +34,34 @@ const Navbar = () => {
         setIsMenuOpen((prev) => !prev);
     };
     const scrollToFeatures = () => {
-        // scroll.scrollTo('features');
         setIsMenuOpen(false);
         scroll.scrollTo('features', { smooth: true });
     };
 
+    const handleClickAway = (event: MouseEvent) => {
+        const { current: menuCurrent } = menuRef;
+        const { current: navCurrent } = navRef;
+        if (
+            navCurrent &&
+            menuCurrent &&
+            isMenuOpen &&
+            !navCurrent.contains(event.target as Node) &&
+            !menuCurrent.contains(event.target as Node)
+        ) {
+            setIsMenuOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('click', handleClickAway);
+        return () => {
+            document.removeEventListener('click', handleClickAway);
+        };
+    }, [isMenuOpen]);
+
     return (
-        <>
-            <nav id="navbar" className={classes['nav-container']}>
+        <header>
+            <nav id="navbar" className={classes['nav-container']} ref={navRef}>
                 <Container maxWidth="lg" classes={{ root: classes.navbar }}>
                     <div className={classes.left}>
                         <a href="#" className={classes.logo}>
@@ -61,7 +84,11 @@ const Navbar = () => {
                         )}
                     </div>
                     {matches && (
-                        <IconButton size="medium" onClick={toggleMenu}>
+                        <IconButton
+                            size="medium"
+                            onClick={toggleMenu}
+                            ref={buttonRef}
+                        >
                             {!isMenuOpen ? (
                                 <MenuIcon fontSize="inherit" />
                             ) : (
@@ -149,10 +176,12 @@ const Navbar = () => {
                     )}
                 </Container>
             </nav>
-            {matches && isMenuOpen && (
-                <div className={classes['menu']}>
+            {isMenuOpen && (
+                <div className={classes['menu']} ref={menuRef}>
                     <ul>
-                        <li onClick={scrollToFeatures}>Features</li>
+                        <li onClick={scrollToFeatures}>
+                            <a>Features</a>
+                        </li>
                         <li>
                             <a
                                 href="https://github.com/iSDestiny/markdown-v"
@@ -199,7 +228,7 @@ const Navbar = () => {
                     </ul>
                 </div>
             )}
-        </>
+        </header>
     );
 };
 
