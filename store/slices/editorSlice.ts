@@ -281,7 +281,7 @@ const editorSlice = createSlice({
             state.searchQuery = query;
             if (state.searchQuery.trim()) {
                 const result = fuzzysort.go(
-                    state.searchQuery,
+                    state.searchQuery.trim(),
                     state.nonSearchedNotes,
                     { key: 'title' }
                 );
