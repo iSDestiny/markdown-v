@@ -41,6 +41,10 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     margin-right: 1.4rem;
+    mark {
+        color: $primary;
+        background-color: transparent;
+    }
 }
 
 .sort-option-type {

@@ -56,6 +56,28 @@ const NotesMenu = () => {
         dispatch(setIsLocalSearchOpen({ open: false }));
     };
 
+    const highlightMatch = (id: string, title: string, indexes: number[]) => {
+        let highlightedText = [];
+        let indexSet = new Set(indexes);
+        [...title].forEach((char, index) => {
+            const highlightedChar = indexSet.has(index) ? (
+                <mark key={`${id}-${index}`}>{char}</mark>
+            ) : (
+                <span key={`${id}-${index}`}>{char}</span>
+            );
+            highlightedText.push(highlightedChar);
+        });
+        return (
+            <ListItemText
+                classes={{
+                    primary: classes['menu-item-text']
+                }}
+            >
+                {highlightedText}
+            </ListItemText>
+        );
+    };
+
     const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
         const index = notes.findIndex((note) => note._id === current);
         if (event.key === 'Enter') {
@@ -119,26 +141,30 @@ const NotesMenu = () => {
             </header>
             <List className={classes.list}>
                 {notes.length > 0 ? (
-                    notes.map((note: Note) => (
+                    notes.map(({ _id, title, indexes, isTemp }) => (
                         <ScrollIntoViewIfNeeded
-                            key={note._id}
-                            active={note._id === current}
+                            key={_id}
+                            active={_id === current}
                         >
                             <ListItem
                                 button
-                                selected={note._id === current}
+                                selected={_id === current}
                                 style={{
                                     display: 'flex'
                                 }}
-                                onClick={() => noteSelectionHandler(note._id)}
+                                onClick={() => noteSelectionHandler(_id)}
                             >
-                                <ListItemText
-                                    primary={note.title}
-                                    classes={{
-                                        primary: classes['menu-item-text']
-                                    }}
-                                />
-                                {note.isTemp && (
+                                {typeof indexes === 'undefined' ? (
+                                    <ListItemText
+                                        primary={title}
+                                        classes={{
+                                            primary: classes['menu-item-text']
+                                        }}
+                                    />
+                                ) : (
+                                    highlightMatch(_id, title, indexes)
+                                )}
+                                {isTemp && (
                                     <Chip
                                         label="unsaved"
                                         color="primary"

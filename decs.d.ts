@@ -20,5 +20,6 @@ interface Note {
     updatedAt: string;
     favorite: boolean;
     tags: Array<Tag>;
+    indexes?: number[];
     isTemp?: boolean;
 }

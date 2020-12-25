@@ -19,17 +19,13 @@ const ScrollIntoViewIfNeeded = dynamic(
     }
 );
 
-interface SearchResult extends Note {
-    indexes?: number[];
-}
-
 const GlobalSearchBar = () => {
     const { notes, nonFilteredNotes, isGlobalSearchOpen } = useSelector(
         selectEditor
     );
     const dispatch = useDispatch();
     const [selected, setSelected] = useState(0);
-    const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+    const [searchResults, setSearchResults] = useState<Note[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const searchRef = useRef<HTMLDivElement>();
     const selectedRef = useRef<HTMLLIElement>();
@@ -65,7 +61,7 @@ const GlobalSearchBar = () => {
         }
     };
 
-    type getSearch = () => SearchResult[];
+    type getSearch = () => Note[];
 
     const getSearchResults: getSearch = () => {
         return !searchQuery.trim() ? nonFilteredNotes : searchResults;
@@ -77,7 +73,7 @@ const GlobalSearchBar = () => {
             key: 'title'
         });
         const newNotes = result.map((res) => {
-            let newResult: SearchResult = { ...res.obj, indexes: res.indexes };
+            let newResult: Note = { ...res.obj, indexes: res.indexes };
             return newResult;
         });
         setSearchResults(newNotes);

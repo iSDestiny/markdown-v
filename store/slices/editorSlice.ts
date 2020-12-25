@@ -285,7 +285,9 @@ const editorSlice = createSlice({
                     state.nonSearchedNotes,
                     { key: 'title' }
                 );
-                state.notes = result.map((res) => res.obj);
+                state.notes = result.map((res) => {
+                    return { ...res.obj, indexes: res.indexes };
+                });
                 if (
                     state.notes.length > 0 &&
                     !state.notes.find((note) => note._id === state.current)

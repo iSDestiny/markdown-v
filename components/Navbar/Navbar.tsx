@@ -176,7 +176,7 @@ const Navbar = () => {
                     )}
                 </Container>
             </nav>
-            {isMenuOpen && (
+            {matches && isMenuOpen && (
                 <div className={classes['menu']} ref={menuRef}>
                     <ul>
                         <li onClick={scrollToFeatures}>
