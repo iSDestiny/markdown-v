@@ -18,7 +18,7 @@ const Navbar = () => {
     const router = useRouter();
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('xs'));
-    const [isMenuOpen, setIsMenuOpen] = useState(true);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>();
     const buttonRef = useRef<HTMLButtonElement>();
     const navRef = useRef<HTMLElement>();

@@ -91,7 +91,7 @@ const LandingPage = () => {
                             <div className={classes['feature-video-wrapper']}>
                                 <ReactPlayer
                                     className={classes['feature-video']}
-                                    url="/showcase.mkv"
+                                    url="/editor-showcase.mkv"
                                     controls={true}
                                     width="100%"
                                     height="100%"
@@ -136,7 +136,7 @@ const LandingPage = () => {
                             <div className={classes['feature-video-wrapper']}>
                                 <ReactPlayer
                                     className={classes['feature-video']}
-                                    url="/showcase.mkv"
+                                    url="/editor-showcase.mkv"
                                     controls={true}
                                     width="100%"
                                     height="100%"
@@ -163,7 +163,7 @@ const LandingPage = () => {
                             <div className={classes['feature-video-wrapper']}>
                                 <ReactPlayer
                                     className={classes['feature-video']}
-                                    url="/showcase.mkv"
+                                    url="/search-showcase.mkv"
                                     controls={true}
                                     width="100%"
                                     height="100%"
@@ -185,7 +185,7 @@ const LandingPage = () => {
                             <div className={classes['feature-video-wrapper']}>
                                 <ReactPlayer
                                     className={classes['feature-video']}
-                                    url="/showcase.mkv"
+                                    url="/preview-showcase.mkv"
                                     controls={true}
                                     width="100%"
                                     height="100%"
@@ -207,7 +207,7 @@ const LandingPage = () => {
                             <div className={classes['feature-video-wrapper']}>
                                 <ReactPlayer
                                     className={classes['feature-video']}
-                                    url="/showcase.mkv"
+                                    url="/sorting-showcase.mkv"
                                     controls={true}
                                     width="100%"
                                     height="100%"
@@ -230,7 +230,7 @@ const LandingPage = () => {
                             <div className={classes['feature-video-wrapper']}>
                                 <ReactPlayer
                                     className={classes['feature-video']}
-                                    url="/showcase.mkv"
+                                    url="/tagging-showcase.mkv"
                                     controls={true}
                                     width="100%"
                                     height="100%"
@@ -256,7 +256,7 @@ const LandingPage = () => {
                             <div className={classes['feature-video-wrapper']}>
                                 <ReactPlayer
                                     className={classes['feature-video']}
-                                    url="/showcase.mkv"
+                                    url="/fullscreen-showcase.mkv"
                                     controls={true}
                                     width="100%"
                                     height="100%"
