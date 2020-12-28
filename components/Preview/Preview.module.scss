@@ -15,9 +15,16 @@
     padding: 2rem 2rem;
     word-wrap: break-word;
     color: $text-1;
+
+    ul > li,
+    ol > li {
+        margin-left: 1rem;
+    }
+
     a {
         color: $primary;
     }
+
     h1 {
         font-size: 2rem;
         border-bottom: 2px solid #343848;
@@ -39,6 +46,10 @@
         font-size: 1rem;
     }
 
+    h6 {
+        font-size: 0.9rem;
+    }
+
     p {
         margin-bottom: 0.5rem;
     }
@@ -47,7 +58,8 @@
     h2,
     h3,
     h4,
-    h5 {
+    h5,
+    h6 {
         font-weight: 500;
         margin-bottom: 0.5rem;
     }

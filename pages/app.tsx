@@ -77,10 +77,6 @@ export default function Notes() {
     };
 
     useEffect(() => {
-        document.body.style.overflow = 'hidden';
-    }, []);
-
-    useEffect(() => {
         dispatch(setNotesFromOriginal({ originalNotes }));
     }, [originalNotes]);
 

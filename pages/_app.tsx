@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { ReactQueryCacheProvider, QueryCache } from 'react-query';
 import { Hydrate } from 'react-query/hydration';
 import type { AppProps } from 'next/app';
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'styles/globals.scss';
 import 'styles/authentication.scss';
 import 'katex/dist/katex.min.css';
@@ -13,7 +13,12 @@ import Head from 'next/head';
 
 const queryCache = new QueryCache();
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps, router }: AppProps) {
+    console.log(router);
+    useEffect(() => {
+        if (router.pathname === '/') require('styles/landing.scss');
+    }, []);
+
     return (
         <>
             <Head>

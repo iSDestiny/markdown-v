@@ -1,6 +1,6 @@
 import { Button, Container } from '@material-ui/core';
 import Navbar from 'components/Navbar/Navbar';
-import ReactPlayer from 'react-player';
+import ReactPlayer from 'react-player/lazy';
 import classes from 'styles/Landing.module.scss';
 import Image from 'next/image';
 import Link from 'next/link';
