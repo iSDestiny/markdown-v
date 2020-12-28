@@ -28,9 +28,12 @@ interface PreviewProps {
 
 interface MarkdownRenderProps {
     value?: string;
+    children?: ReactNode;
+}
+
+interface MarkdownTable extends MarkdownRenderProps {
     columnAlignment?: string[];
     align?: 'left' | 'center' | 'right' | 'justify' | 'inherit';
-    children?: ReactNode;
 }
 
 interface MarkdownImage {
@@ -56,26 +59,26 @@ const Preview = ({ isResizable }: PreviewProps) => {
                 style={{ maxWidth: '100%' }}
             />
         ),
-        table: ({ children }: MarkdownRenderProps) => (
+        table: ({ children }: MarkdownTable) => (
             <TableContainer classes={{ root: classes['table-root'] }}>
                 <Table size="small" aria-label="a dense table">
                     {children}
                 </Table>
             </TableContainer>
         ),
-        tableHead: ({ children }: MarkdownRenderProps) => (
+        tableHead: ({ children }: MarkdownTable) => (
             <TableHead>{children}</TableHead>
         ),
 
-        tableBody: ({ children }: MarkdownRenderProps) => (
+        tableBody: ({ children }: MarkdownTable) => (
             <TableBody>{children}</TableBody>
         ),
-        tableRow: ({ children }: MarkdownRenderProps) => (
+        tableRow: ({ children }: MarkdownTable) => (
             <TableRow classes={{ root: classes['table-row-root'] }}>
                 {children}
             </TableRow>
         ),
-        tableCell: ({ children, align }: MarkdownRenderProps) => (
+        tableCell: ({ children, align }: MarkdownTable) => (
             <TableCell
                 classes={{
                     head: classes['table-cell-head'],

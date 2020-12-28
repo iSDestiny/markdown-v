@@ -78,17 +78,19 @@
     * {
         width: auto;
         color: $text-1;
-        border: 1px solid #343848;
+        border: none;
     }
 }
 
 .table-cell-head {
     background-color: $bg-dark-4;
     font-weight: bold;
+    border: 1px solid #343848;
 }
 
 .table-cell-body {
     font-size: 14px;
+    border: 1px solid #343848;
 }
 
 .table-row-root {
