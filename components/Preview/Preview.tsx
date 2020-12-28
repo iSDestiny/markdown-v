@@ -7,6 +7,7 @@ import CodeBlock from './CodeBlock';
 import gfm from 'remark-gfm';
 import classes from './Preview.module.scss';
 import {
+    Checkbox,
     Table,
     TableBody,
     TableCell,
@@ -16,7 +17,7 @@ import {
 } from '@material-ui/core';
 import { InlineMath, BlockMath } from 'react-katex';
 import math from 'remark-math';
-import Image from 'next/image';
+import classnames from 'classnames';
 
 const ResizePanel: any = dynamic(() => import('react-resize-panel'), {
     ssr: false
@@ -28,7 +29,7 @@ interface PreviewProps {
 
 interface MarkdownRenderProps {
     value?: string;
-    children?: ReactNode;
+    children?: any[];
 }
 
 interface MarkdownTable extends MarkdownRenderProps {
@@ -40,6 +41,14 @@ interface MarkdownImage {
     alt?: string;
     src?: string;
     title?: string;
+}
+
+interface MarkdownList extends MarkdownRenderProps {
+    ordered: boolean;
+}
+
+interface MarkdownListItem extends MarkdownRenderProps {
+    checked: boolean | null;
 }
 
 const Preview = ({ isResizable }: PreviewProps) => {
@@ -88,6 +97,49 @@ const Preview = ({ isResizable }: PreviewProps) => {
             >
                 {children}
             </TableCell>
+        ),
+        listItem: ({ checked, children }: MarkdownListItem) => (
+            <>
+                <li>
+                    {checked !== null ? (
+                        <>
+                            <Checkbox
+                                color="primary"
+                                checked={checked}
+                                disabled
+                            />
+                            {children}
+                        </>
+                    ) : (
+                        children
+                    )}
+                </li>
+            </>
+        ),
+        list: ({ ordered, children }: MarkdownList) => (
+            <>
+                {ordered ? (
+                    <ol
+                        className={
+                            children.find(
+                                ({ props }) => props.checked !== null
+                            ) && classes['check-list']
+                        }
+                    >
+                        {children}
+                    </ol>
+                ) : (
+                    <ul
+                        className={
+                            children.find(
+                                ({ props }) => props.checked !== null
+                            ) && classes['check-list']
+                        }
+                    >
+                        {children}
+                    </ul>
+                )}
+            </>
         )
     };
 
