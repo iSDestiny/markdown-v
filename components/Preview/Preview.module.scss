@@ -16,6 +16,13 @@
     word-wrap: break-word;
     color: $text-1;
 
+    blockquote {
+        border-left: 5px solid $primary;
+        padding: 0 1rem;
+        margin-left: 0.5rem;
+        background-color: $bg-dark-2;
+    }
+
     ul > li,
     ol > li {
         margin-left: 1rem;
