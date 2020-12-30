@@ -91,7 +91,7 @@ const LandingPage = () => {
                             <div className={classes['feature-video-wrapper']}>
                                 <ReactPlayer
                                     className={classes['feature-video']}
-                                    url="/editor-showcase.mkv"
+                                    url="/markdown-showcase.mkv"
                                     controls={true}
                                     width="100%"
                                     height="100%"
