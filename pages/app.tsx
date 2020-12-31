@@ -37,7 +37,9 @@ export default function Notes() {
     } = useQuery('notes', fetchNotes, {
         staleTime: Infinity,
         onError: redirectOnFailedFetch,
-        retry: false
+        retry: false,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false
     });
     const { isLoading: isAuthLoading } = useQuery('authInfo', fetchAuthInfo, {
         staleTime: Infinity,

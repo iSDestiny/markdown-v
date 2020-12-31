@@ -16,6 +16,10 @@ const queryCache = new QueryCache();
 function MyApp({ Component, pageProps, router }: AppProps) {
     useEffect(() => {
         if (router.pathname === '/') require('styles/landing.scss');
+        const jssStyles = document.querySelector('#jss-server-side');
+        if (jssStyles) {
+            jssStyles.parentElement.removeChild(jssStyles);
+        }
     }, []);
 
     return (
