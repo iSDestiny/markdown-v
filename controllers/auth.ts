@@ -9,6 +9,7 @@ import nodemailer from 'nodemailer';
 import nodemailerSendgrid from 'nodemailer-sendgrid';
 import CustomStatusError from 'utility/CustomStatusError';
 import Email from 'email-templates';
+import path from 'path';
 
 const transport = nodemailer.createTransport(
     nodemailerSendgrid({ apiKey: process.env.SENDGRID_API_KEY })
@@ -21,6 +22,9 @@ const emailTemplate = new Email({
     send: true,
     transport
 });
+
+const verifyEmailTemplatePath = path.resolve('emails', 'verifyEmail');
+const resetPasswordTemplatePath = path.resolve('emails', 'resetPassword');
 
 export const getAuthInfo = (req: ExtendedRequest, res: NextApiResponse) => {
     return res
@@ -47,7 +51,7 @@ export const postSignup = async (
     res.status(201).end();
     try {
         await emailTemplate.send({
-            template: 'verifyEmail',
+            template: verifyEmailTemplatePath,
             message: {
                 to: email
             },
@@ -123,7 +127,7 @@ export const postResetPassword = async (
 
     try {
         await emailTemplate.send({
-            template: 'resetPassword',
+            template: resetPasswordTemplatePath,
             message: {
                 to: email
             },
@@ -195,7 +199,7 @@ export const sendVerification = async (
     res.status(200).end();
     try {
         await emailTemplate.send({
-            template: 'verifyEmail',
+            template: verifyEmailTemplatePath,
             message: {
                 to: email
             },
