@@ -27,6 +27,14 @@ function MyApp({ Component, pageProps, router }: AppProps) {
             <Head>
                 <title>MarkdownV</title>
                 <link rel="icon" href="/favicon.ico" />
+                <meta
+                    name="description"
+                    content="Markdown note-taking app with vim or vscode keybindings"
+                />
+                <meta
+                    name="keywords"
+                    content="markdown, vim, vscode, notes, note taking"
+                />
             </Head>
 
             <Provider store={store}>
