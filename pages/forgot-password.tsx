@@ -15,8 +15,6 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
 import InfoModal from 'components/InfoModal';
-import isUnauthenticated from 'utility/isUnauthenticated';
-import { GetServerSideProps } from 'next';
 
 interface FormInputs {
     email: string;
@@ -125,7 +123,3 @@ const forgotPassword = () => {
 };
 
 export default forgotPassword;
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-    return isUnauthenticated(ctx);
-};
