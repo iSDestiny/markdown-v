@@ -15,6 +15,7 @@ export default function SignUp() {
         type: 'verification' | 'invalidCredentials';
         message: string;
     }>();
+    const [isLoading, setIsLoading] = useState(false);
     const [signupSuccess, setSignupSuccess] = useState(false);
     const signup: SubmitHandler<SignUpFormValues> = async (
         { email, password },
@@ -22,10 +23,12 @@ export default function SignUp() {
     ) => {
         event.preventDefault();
         try {
+            setIsLoading(true);
             await axios.post(
                 `${process.env.NEXT_PUBLIC_SERVER_ORIGIN}/api/auth/signup`,
                 { email, password }
             );
+            setIsLoading(false);
             setSignupSuccess(true);
             setServerError(null);
         } catch ({
@@ -33,6 +36,7 @@ export default function SignUp() {
                 data: { errors }
             }
         }) {
+            setIsLoading(false);
             if (errors && errors.length > 0) {
                 console.log(errors);
                 setServerError({
@@ -55,6 +59,7 @@ export default function SignUp() {
             serverError={serverError}
             signupSuccess={signupSuccess}
             setSignupSuccess={setSignupSuccess}
+            isLoading={isLoading}
         />
     );
 }

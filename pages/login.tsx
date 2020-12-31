@@ -14,6 +14,7 @@ type LoginFormValues = {
 
 export default function Login() {
     const queryCache = useQueryCache();
+    const [isLoading, setIsLoading] = useState(false);
     const [email, setEmail] = useState('');
     const [serverError, setServerError] = useState<{
         type: 'verification' | 'invalidCredentials';
@@ -26,13 +27,16 @@ export default function Login() {
     ) => {
         event.preventDefault();
         try {
+            setIsLoading(true);
             await queryCache.fetchQuery(
                 ['isAuth', { email, password }],
                 fetchLogin
             );
+            setIsLoading(false);
             Router.push('/app');
         } catch ({ response }) {
             const { status, data } = response;
+            setIsLoading(false);
             if (status === 401)
                 setServerError({
                     type: 'invalidCredentials',
@@ -52,6 +56,7 @@ export default function Login() {
             onSubmit={login}
             serverError={serverError}
             email={email}
+            isLoading={isLoading}
         />
     );
 }

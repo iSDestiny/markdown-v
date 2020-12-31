@@ -7,6 +7,7 @@ import {
     Container,
     Fade,
     Grid,
+    LinearProgress,
     Modal,
     Paper,
     TextField,
@@ -33,6 +34,7 @@ interface AuthFormProps<T> {
         type: 'verification' | 'invalidCredentials';
         message: string;
     };
+    isLoading: boolean;
     signupSuccess?: boolean;
     setSignupSuccess?: React.Dispatch<React.SetStateAction<boolean>>;
     email?: string;
@@ -54,7 +56,8 @@ export default function AuthForm<T>({
     serverError,
     signupSuccess = false,
     setSignupSuccess,
-    email
+    email,
+    isLoading
 }: AuthFormProps<T>) {
     const [sentOpenType, setSentOpenType] = useState<'success' | 'failed' | ''>(
         ''
@@ -95,6 +98,7 @@ export default function AuthForm<T>({
 
     return (
         <>
+            {isLoading && <LinearProgress classes={{ root: classes.loader }} />}
             <Container component="main" maxWidth="xs">
                 <div className="auth-container">
                     <Paper className="auth-container paper">
