@@ -1,11 +1,9 @@
 import AuthForm from 'components/AuthForm';
-import { GetServerSideProps } from 'next';
 import Router from 'next/router';
 import { useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import { useQueryCache } from 'react-query';
 import { fetchLogin } from 'utility/fetchAuth';
-import isUnauthenticated from 'utility/isUnauthenticated';
 
 type LoginFormValues = {
     email: string;
@@ -60,7 +58,3 @@ export default function Login() {
         />
     );
 }
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-    return isUnauthenticated(ctx);
-};
