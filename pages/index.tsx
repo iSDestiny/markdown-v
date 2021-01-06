@@ -48,7 +48,7 @@ const LandingPage = () => {
                         <div className={classes['player-wrapper']}>
                             <ReactPlayer
                                 className={classes['react-player']}
-                                url="/showcase.mkv"
+                                url="/showcase.mp4"
                                 controls={true}
                                 width="100%"
                                 height="100%"
@@ -91,7 +91,7 @@ const LandingPage = () => {
                             <div className={classes['feature-video-wrapper']}>
                                 <ReactPlayer
                                     className={classes['feature-video']}
-                                    url="/markdown-showcase.mkv"
+                                    url="/markdown-showcase.mp4"
                                     controls={true}
                                     width="100%"
                                     height="100%"
@@ -136,7 +136,7 @@ const LandingPage = () => {
                             <div className={classes['feature-video-wrapper']}>
                                 <ReactPlayer
                                     className={classes['feature-video']}
-                                    url="/editor-showcase.mkv"
+                                    url="/editor-showcase.mp4"
                                     controls={true}
                                     width="100%"
                                     height="100%"
@@ -163,7 +163,7 @@ const LandingPage = () => {
                             <div className={classes['feature-video-wrapper']}>
                                 <ReactPlayer
                                     className={classes['feature-video']}
-                                    url="/search-showcase.mkv"
+                                    url="/search-showcase.mp4"
                                     controls={true}
                                     width="100%"
                                     height="100%"
@@ -185,7 +185,7 @@ const LandingPage = () => {
                             <div className={classes['feature-video-wrapper']}>
                                 <ReactPlayer
                                     className={classes['feature-video']}
-                                    url="/preview-showcase.mkv"
+                                    url="/preview-showcase.mp4"
                                     controls={true}
                                     width="100%"
                                     height="100%"
@@ -207,7 +207,7 @@ const LandingPage = () => {
                             <div className={classes['feature-video-wrapper']}>
                                 <ReactPlayer
                                     className={classes['feature-video']}
-                                    url="/sorting-showcase.mkv"
+                                    url="/sorting-showcase.mp4"
                                     controls={true}
                                     width="100%"
                                     height="100%"
@@ -230,7 +230,7 @@ const LandingPage = () => {
                             <div className={classes['feature-video-wrapper']}>
                                 <ReactPlayer
                                     className={classes['feature-video']}
-                                    url="/tagging-showcase.mkv"
+                                    url="/tagging-showcase.mp4"
                                     controls={true}
                                     width="100%"
                                     height="100%"
@@ -256,7 +256,7 @@ const LandingPage = () => {
                             <div className={classes['feature-video-wrapper']}>
                                 <ReactPlayer
                                     className={classes['feature-video']}
-                                    url="/fullscreen-showcase.mkv"
+                                    url="/fullscreen-showcase.mp4"
                                     controls={true}
                                     width="100%"
                                     height="100%"
