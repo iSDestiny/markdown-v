@@ -10,6 +10,7 @@ import 'katex/dist/katex.min.css';
 import theme from 'styles/muiTheme';
 import store from 'store';
 import Head from 'next/head';
+import * as gtag from 'utility/gtag';
 
 const queryCache = new QueryCache();
 
@@ -21,6 +22,16 @@ function MyApp({ Component, pageProps, router }: AppProps) {
             jssStyles.parentElement.removeChild(jssStyles);
         }
     }, []);
+
+    useEffect(() => {
+        const handleRouteChange = (url: URL) => {
+            gtag.pageview(url);
+        };
+        router.events.on('routeChangeComplete', handleRouteChange);
+        return () => {
+            router.events.off('routeChangeComplete', handleRouteChange);
+        };
+    }, [router.events]);
 
     return (
         <>
